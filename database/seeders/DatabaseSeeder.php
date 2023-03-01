@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '081381039900',
             'foto' => 'default.png',
             'email' => 'iqbalseptyan@gmail.com',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'password' => '$2y$10$JVvTwdejEE2b3vhy19yQqOjwDh5Y1OKrmNpUl.h54PWlVtbXALdxG',
         ]);
     }
 }
