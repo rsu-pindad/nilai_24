@@ -43,7 +43,17 @@ Route::middleware('auth')->group(function () {
         Route::get('self', 'index')->name('self');
         Route::get('atasan', 'index')->name('atasan');
         Route::get('selevel', 'index')->name('selevel');
+        Route::get('staff', 'index')->name('staff');
     });
 
-    Route::get('profile', [ProfileController::class, 'index'])->name('profile');
+
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('profile', 'index')->name('profile');
+
+        Route::patch('profile/update/{user}', 'update')->name('profile/update');
+
+        Route::patch('profile/update_photo/{user}', 'update_photo')->name('profile/update_photo');
+
+        Route::patch('profile/update_password/{user}', 'update_password')->name('profile/update_password');
+    });
 });

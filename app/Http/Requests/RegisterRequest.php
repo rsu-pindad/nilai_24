@@ -30,8 +30,9 @@ class RegisterRequest extends FormRequest
             'level' => 'required',
             'no_hp' => 'required|unique:tbl_pengguna',
             'email' => 'required|unique:tbl_pengguna',
-            'password' => 'required',
-            'confirm_password' => 'required|same:password',
+            'foto' => 'required|mimes:png,jpeg,jpg',
+            // 'password' => 'required',
+            // 'confirm_password' => 'required|same:password',
         ];
     }
 }

@@ -27,7 +27,7 @@
             <div class="card-body register-card-body">
                 <p class="login-box-msg">Form Pendaftaran</p>
 
-                <form action="{{ route('register/create') }}" method="post">
+                <form action="{{ route('register/create') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-lg-6">
@@ -127,6 +127,7 @@
                                 @enderror
                             </div>
                         </div>
+                        {{-- </div>
                         <div class="col-lg-6">
                             <div class="input-group mb-3">
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
@@ -155,9 +156,21 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+                        </div> --}}
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input @error('foto') is-invalid @enderror"
+                                        id="customFile" name="foto" accept="image/jpeg, image/png"
+                                        value="{{ old('foto') }}">
+                                    <label class="custom-file-label" for="customFile">Pilih Foto</label>
+                                    @error('foto')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Daftar</button>
+                        <button type="submit" class="btn btn-primary btn-block">Daftar</button>
                 </form>
 
 
@@ -174,6 +187,14 @@
     <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
+
+    <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
 </body>
 
 </html>

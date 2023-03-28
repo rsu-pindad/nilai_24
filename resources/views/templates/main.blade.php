@@ -50,6 +50,7 @@
             <a href="{{ route('profile') }}" class="brand-link">
                 <img src="dist/img/logo.png" alt="Logo" class="brand-image img-circle elevation-3"
                     style="opacity: .8">
+
                 <span class="brand-text font-weight-light">PINDAD MEDIKA</span>
             </a>
 
@@ -77,14 +78,17 @@
                                         <li class="nav-item ">
                                             <a href="{{ route('self', ['page' => 'SELF ASSESSMENT', 'link' => $item['LINK_SELF-ASSESSMENT']]) }}"
                                                 class="nav-link {{ $item['LINK_SELF-ASSESSMENT'] == $link ? 'active' : '' }}">
-                                                <i class="fa fa-link nav-icon"></i>
-                                                <p>Link </p>
+                                                <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="foto"
+                                                    width="32" height="32" class="img-circle">
+                                                <p>{{ Auth::user()->npp . ' - ' . Auth::user()->nama }}
+                                                </p>
                                             </a>
                                         </li>
                                     @endif
                                 @endforeach
                             </ul>
                         </li>
+
                         <li class="nav-item  {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }} ">
                             <a href="#" class="nav-link {{ $page == 'MENILAI ATASAN' ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-sticky-note"></i>
@@ -99,8 +103,15 @@
                                         <li class="nav-item">
                                             <a href="{{ route('atasan', ['page' => 'MENILAI ATASAN', 'link' => $item['LINK_MENILAI_ATASAN']]) }}"
                                                 class="nav-link {{ $item['LINK_MENILAI_ATASAN'] == $link ? 'active' : '' }}">
-                                                <i class="fa fa-link nav-icon"></i>
-                                                <p>{{ $item['NPP_ATASAN'] }}
+                                                @if (App\Models\User::where('npp', $item['NPP_ATASAN'])->first())
+                                                    <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_ATASAN'])->first()->foto) }}"
+                                                        alt="foto" width="32" height="32" class="img-circle">
+                                                @else
+                                                    <img src="dist/img/avatar.png" alt="foto" width="32"
+                                                        height="32" class="img-circle">
+                                                @endif
+                                                <p>{{ $item['NPP_ATASAN'] }} -
+                                                    {{ App\Models\Employee::where('npp', $item['NPP_ATASAN'])->first()->nama }}
                                                 </p>
                                             </a>
                                         </li>
@@ -108,6 +119,7 @@
                                 @endforeach
                             </ul>
                         </li>
+
                         <li class="nav-item {{ $page == 'MENILAI SELEVEL' ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link  {{ $page == 'MENILAI SELEVEL' ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-sticky-note"></i>
@@ -121,9 +133,47 @@
                                     @if ($item['LINK_MENILAI_SELEVEL'])
                                         <li class="nav-item">
                                             <a href="{{ route('selevel', ['page' => 'MENILAI SELEVEL', 'link' => $item['LINK_MENILAI_SELEVEL']]) }}"
-                                                class="nav-link {{ $item['LINK_MENILAI_SELEVEL'] == $link ? 'active' : '' }}">
-                                                <i class="fa fa-link nav-icon"></i>
-                                                <p>{{ $item['NPP_SELEVEL'] }}
+                                                class="nav-link {{ $item['LINK_MENILAI_SELEVEL'] == $link ? 'active' : '' }} ">
+                                                @if (App\Models\User::where('npp', $item['NPP_SELEVEL'])->first())
+                                                    <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_SELEVEL'])->first()->foto) }}"
+                                                        alt="foto" width="32" height="32" class="img-circle">
+                                                @else
+                                                    <img src="dist/img/avatar.png" alt="foto" width="32"
+                                                        height="32" class="img-circle">
+                                                @endif
+                                                <p>{{ $item['NPP_SELEVEL'] }} -
+                                                    {{ App\Models\Employee::where('npp', $item['NPP_SELEVEL'])->first()->nama }}
+                                                </p>
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </li>
+                        <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link  {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-sticky-note"></i>
+                                <p>
+                                    LINK MENILAI STAFF
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                @foreach ($sheet as $item)
+                                    @if ($item['LINK_MENILAI_STAFF'])
+                                        <li class="nav-item">
+                                            <a href="{{ route('staff', ['page' => 'MENILAI STAFF', 'link' => $item['LINK_MENILAI_STAFF']]) }}"
+                                                class="nav-link {{ $item['LINK_MENILAI_STAFF'] == $link ? 'active' : '' }}">
+                                                @if (App\Models\User::where('npp', $item['NPP_STAFF'])->first())
+                                                    <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_STAFF'])->first()->foto) }}"
+                                                        alt="foto" width="32" height="32"
+                                                        class="img-circle">
+                                                @else
+                                                    <img src="dist/img/avatar.png" alt="foto" width="32"
+                                                        height="32" class="img-circle">
+                                                @endif
+                                                <p>{{ $item['NPP_STAFF'] }} -
+                                                    {{ App\Models\Employee::where('npp', $item['NPP_STAFF'])->first()->nama }}
                                                 </p>
                                             </a>
                                         </li>
@@ -194,6 +244,14 @@
     {{-- <script src="dist/js/demo.js"></script> --}}
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     {{-- <script src="dist/js/pages/dashboard2.js"></script> --}}
+
+    <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
 </body>
 
 </html>
