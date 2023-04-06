@@ -19,6 +19,7 @@
     <link rel="icon" href="dist/img/logo.png" type="image/x-icon">
     <link rel="shortcut icon" href="dist/img/logo.png" type="image/x-icon">
 
+
 </head>
 
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed ">
@@ -252,6 +253,8 @@
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
     </script>
+
+    @include('sweetalert::alert')
 </body>
 
 </html>

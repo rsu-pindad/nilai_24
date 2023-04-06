@@ -28,7 +28,7 @@ class ProfileController extends Controller
             'email' => ['required', Rule::unique('tbl_pengguna')->ignore($user)],
         ]);
         $user->update($validated);
-        return redirect()->back()->withSuccess('Berhasil ubah data profil');
+        return redirect()->back()->withToastSuccess('Berhasil ubah data profil');
     }
 
     public function update_photo(Request $request, User $user)
@@ -44,7 +44,7 @@ class ProfileController extends Controller
 
         $user->update($validated);
 
-        return redirect()->back()->withSuccess('Berhasil ubah foto profil');
+        return redirect()->back()->withToastSuccess('Berhasil ubah foto profil');
     }
 
     public function update_password(Request $request, User $user)
@@ -57,6 +57,6 @@ class ProfileController extends Controller
 
         $user->update($validated);
 
-        return redirect()->back()->withSuccess('Berhasil ubah password');
+        return redirect()->back()->withToastSuccess('Berhasil ubah password');
     }
 }

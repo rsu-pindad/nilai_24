@@ -154,6 +154,7 @@
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
     </script>
+    @include('sweetalert::alert')
 </body>
 
 </html>
