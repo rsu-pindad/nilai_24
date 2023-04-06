@@ -36,7 +36,7 @@
                         <div class="col-lg-6">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control @error('npp') is-invalid @enderror"
-                                    placeholder="NPP" name="npp">
+                                    placeholder="NPP" name="npp" value="{{ old('npp') }}">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-id-card"></span>
@@ -52,9 +52,16 @@
                                 <select class="form-control @error('penempatan') is-invalid @enderror"
                                     name="penempatan">
                                     <option value="">Pilih Penempatan</option>
-                                    <option value="PMU">PMU</option>
-                                    <option value="RSUP BANDUNG">RSUP BANDUNG</option>
-                                    <option value="RSUP TUREN">RSUP TUREN</option>
+                                    <option value="PMU" {{ old('penempatan') == 'PMU' ? 'selected' : '' }}>PMU
+                                    </option>
+                                    <option value="RSUP BANDUNG"
+                                        {{ old('penempatan') == 'RSUP BANDUNG' ? 'selected' : '' }}>
+                                        RSUP
+                                        BANDUNG</option>
+                                    <option value="RSUP TUREN"
+                                        {{ old('penempatan') == 'RSUP TUREN' ? 'selected' : '' }}>RSUP
+                                        TUREN
+                                    </option>
                                 </select>
                                 @error('penempatan')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -64,7 +71,7 @@
                         <div class="col-lg-6">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control @error('jabatan') is-invalid @enderror"
-                                    placeholder="Jabatan" name="jabatan">
+                                    placeholder="Jabatan" name="jabatan" value="{{ old('jabatan') }}">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-user-tie"></span>
@@ -80,7 +87,10 @@
                                 <select class="form-control @error('level') is-invalid @enderror" name="level">
                                     <option value="">Pilih Level</option>
                                     @for ($i = 1; $i <= 5; $i++)
-                                        <option value="{{ $i }}">{{ $i }}</option>
+                                        <option value="{{ $i }}"
+                                            {{ old('level') == $i ? 'selected' : '' }}>
+                                            {{ $i }}
+                                        </option>
                                     @endfor
                                 </select>
                                 @error('level')
@@ -91,7 +101,7 @@
                         <div class="col-lg-6">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control @error('no_hp') is-invalid @enderror"
-                                    placeholder="No HP" name="no_hp">
+                                    placeholder="No HP" name="no_hp" value="{{ old('no_hp') }}">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fab fa-whatsapp"></span>
@@ -105,7 +115,7 @@
                         <div class="col-lg-6">
                             <div class="input-group mb-3">
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    placeholder="Email" name="email">
+                                    placeholder="Email" name="email" value="{{ old('email') }}">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-envelope"></span>

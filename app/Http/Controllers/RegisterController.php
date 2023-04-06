@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\View;
 use App\Http\Requests\RegisterRequest;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
@@ -20,7 +21,11 @@ class RegisterController extends Controller
 
     public function create(RegisterRequest $request)
     {
-        $employee = Employee::where('npp', $request->npp)->firstOrFail();
+        $employee = Employee::where('npp', $request->npp)->first();
+
+        if (!$employee) {
+            return redirect()->back()->with('toast_error', 'NPP tidak ditemukan')->withInput($request->input());
+        }
 
         $newUser = $request->all();
 
@@ -33,18 +38,20 @@ class RegisterController extends Controller
 
         $newUser['foto'] = $path;
 
-
         User::create($newUser);
 
         // send message wa
         $text = "Silahkan login menggunakan
-        
+
 NPP : $request->npp
-Password : $password";
+Password : $password
+
+assessment.pindadmedika.com
+";
 
         $this->sendMessage($request->no_hp, $text);
 
-        return redirect()->route('login')->with('success', 'Berhasil melakukan registrasi');
+        return redirect()->route('login')->with('toast_success', 'Berhasil melakukan registrasi');
     }
 
     public function sendMessage($phone, $text)

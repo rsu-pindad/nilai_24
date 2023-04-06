@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -24,12 +25,15 @@ class LoginController extends Controller
      */
     public function authenticate(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
+        $credentials = Validator::make($request->all(), [
             'npp' => ['required'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if ($credentials->fails()) {
+            return back()->with('toast_error', $credentials->messages()->all())->withInput();
+        }
+        if (Auth::attempt($credentials->validated())) {
             $request->session()->regenerate();
 
             return redirect()->intended('profile');
