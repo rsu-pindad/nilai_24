@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
 
@@ -49,10 +50,11 @@ class ProfileController extends Controller
 
     public function update_password(Request $request, User $user)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'password' => 'required|min:5',
             'confirm_password' => 'required|min:5|same:password',
         ]);
+        $validated = $validator->validated();
 
 
         $user->update($validated);
