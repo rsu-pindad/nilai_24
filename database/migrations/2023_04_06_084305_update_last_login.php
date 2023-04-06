@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tbl_pengguna', function (Blueprint $table) {
-            $table->timestamp('last_login')->after('password');
+            $table->timestamp('last_login')->nullable()->after('password');
         });
     }
 
