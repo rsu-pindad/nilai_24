@@ -30,9 +30,6 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-        if ($credentials->fails()) {
-            return back()->with('toast_error', $credentials->messages()->all())->withInput();
-        }
         if (Auth::attempt($credentials->validated())) {
             $request->session()->regenerate();
 

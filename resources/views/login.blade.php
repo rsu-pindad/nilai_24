@@ -42,7 +42,7 @@
                     @csrf
                     <div class="input-group mb-3">
                         <input type="text" class="form-control @error('npp') is-invalid @enderror" placeholder="NPP"
-                            name="npp">
+                            name="npp" value="{{ old('npp') }}">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-id-card"></span>
