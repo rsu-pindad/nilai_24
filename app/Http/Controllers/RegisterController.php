@@ -21,13 +21,27 @@ class RegisterController extends Controller
 
     public function create(RegisterRequest $request)
     {
-        $employee = Employee::where('npp', $request->npp)->first();
+        $npp = $request->session()->get('npp');
+        $nama = $request->session()->get('nama');
+        $employee = Employee::where('npp', $npp)->first();
+
 
         if (!$employee) {
+            $request->session()->flush();
             return redirect()->back()->with('toast_error', 'NPP tidak ditemukan')->withInput($request->input());
         }
 
+        $user = User::where('npp', $npp)->first();
+        if ($user) {
+            $request->session()->flush();
+            return redirect()->back()->with('toast_error', 'NPP sudah terdaftar')->withInput($request->input());
+        }
+
         $newUser = $request->all();
+
+        $newUser['npp'] = $npp;
+        $newUser['nama'] = $nama;
+
 
         $password = Str::random(10);
 
@@ -46,11 +60,11 @@ class RegisterController extends Controller
 NPP : $request->npp
 Password : $password
 
-assessment.pindadmedika.com
+https://assessment.pindadmedika.com/
 ";
 
         $this->sendMessage($request->no_hp, $text);
-
+        $request->session()->flush();
         return redirect()->route('login')->with('toast_success', 'Berhasil melakukan registrasi');
     }
 
@@ -81,5 +95,19 @@ assessment.pindadmedika.com
 
         curl_close($curl);
         echo $response;
+    }
+
+    public function check(Request $request)
+    {
+        $employee = Employee::where('npp', $request->npp)->first();
+
+        if (!$employee) {
+            $request->session()->flush();
+            return redirect()->back()->with('toast_error', 'NPP tidak ditemukan');
+        }
+
+        session()->put(['npp' => $employee->npp, 'nama' => $employee->nama]);
+
+        return redirect()->route('register');
     }
 }
