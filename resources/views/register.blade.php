@@ -10,17 +10,20 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+
+    <link rel="icon" href="dist/img/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="dist/img/logo.png" type="image/x-icon">
 </head>
 
 <body class="hold-transition register-page">
     <div class="register-box w-75">
         <div class="register-logo">
-            <a href="../../index2.html"><b>PINDAD MEDIKA</b></a>
+            <a href="index2.html"><b>PINDAD MEDIKA</b></a>
         </div>
 
         <div class="card">
@@ -45,20 +48,6 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                                    placeholder="Nama" name="nama">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-user"></span>
-                                    </div>
-                                </div>
-                                @error('nama')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
                             <div class="form-group">
                                 <select class="form-control @error('penempatan') is-invalid @enderror"
                                     name="penempatan">
@@ -72,7 +61,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control @error('jabatan') is-invalid @enderror"
                                     placeholder="Jabatan" name="jabatan">
@@ -86,7 +75,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <div class="form-group">
                                 <select class="form-control @error('level') is-invalid @enderror" name="level">
                                     <option value="">Pilih Level</option>
@@ -127,36 +116,6 @@
                                 @enderror
                             </div>
                         </div>
-                        {{-- </div>
-                        <div class="col-lg-6">
-                            <div class="input-group mb-3">
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    placeholder="Password" name="password">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-lock"></span>
-                                    </div>
-                                </div>
-                                @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="input-group mb-3">
-                                <input type="password"
-                                    class="form-control @error('confirm_password') is-invalid @enderror"
-                                    placeholder="Retype password" name="confirm_password">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-lock"></span>
-                                    </div>
-                                </div>
-                                @error('confirm_password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div> --}}
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <div class="custom-file">
@@ -182,11 +141,11 @@
     <!-- /.register-box -->
 
     <!-- jQuery -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <script src="plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="../../dist/js/adminlte.min.js"></script>
+    <script src="dist/js/adminlte.min.js"></script>
 
     <script>
         // Add the following code if you want the name of the file appear on select

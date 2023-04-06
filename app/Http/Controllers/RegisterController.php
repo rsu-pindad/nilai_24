@@ -20,10 +20,7 @@ class RegisterController extends Controller
 
     public function create(RegisterRequest $request)
     {
-        // dd($request->all());
         $employee = Employee::where('npp', $request->npp)->firstOrFail();
-
-        // dd($employee);
 
         $newUser = $request->all();
 

@@ -16,8 +16,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
 
-    <link rel="icon" href="dist/img/logo/png" type="image/x-icon">
-    <link rel="shortcut icon" href="dist/img/logo/png" type="image/x-icon">
+    <link rel="icon" href="dist/img/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="dist/img/logo.png" type="image/x-icon">
 
 </head>
 

@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'npp' => 'required|unique:tbl_pengguna',
-            'nama' => 'required',
+            // 'nama' => 'required',
             'penempatan' => 'required',
             'jabatan' => 'required',
             'level' => 'required',
