@@ -33,6 +33,8 @@ Route::middleware('guest')->group(function () {
         Route::get('register', 'index')->name('register');
 
         Route::post('register/create', 'create')->name('register/create');
+
+        Route::post('register/check', 'check')->name('register/check');
     });
 });
 

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\View;
 use App\Http\Requests\RegisterRequest;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
@@ -20,9 +21,27 @@ class RegisterController extends Controller
 
     public function create(RegisterRequest $request)
     {
-        $employee = Employee::where('npp', $request->npp)->firstOrFail();
+        $npp = $request->session()->get('npp');
+        $nama = $request->session()->get('nama');
+        $employee = Employee::where('npp', $npp)->first();
+
+
+        if (!$employee) {
+            $request->session()->flush();
+            return redirect()->back()->with('toast_error', 'NPP tidak ditemukan')->withInput($request->input());
+        }
+
+        $user = User::where('npp', $npp)->first();
+        if ($user) {
+            $request->session()->flush();
+            return redirect()->back()->with('toast_error', 'NPP sudah terdaftar')->withInput($request->input());
+        }
 
         $newUser = $request->all();
+
+        $newUser['npp'] = $npp;
+        $newUser['nama'] = $nama;
+
 
         $password = Str::random(10);
 
@@ -33,18 +52,20 @@ class RegisterController extends Controller
 
         $newUser['foto'] = $path;
 
-
         User::create($newUser);
 
         // send message wa
         $text = "Silahkan login menggunakan
-        
-NPP : $request->npp
-Password : $password";
+
+NPP : $npp
+Password : $password
+
+https://assessment.pindadmedika.com/
+";
 
         $this->sendMessage($request->no_hp, $text);
-
-        return redirect()->route('login')->with('success', 'Berhasil melakukan registrasi');
+        $request->session()->flush();
+        return redirect()->route('login')->with('toast_success', 'Berhasil melakukan registrasi');
     }
 
     public function sendMessage($phone, $text)
@@ -74,5 +95,19 @@ Password : $password";
 
         curl_close($curl);
         echo $response;
+    }
+
+    public function check(Request $request)
+    {
+        $employee = Employee::where('npp', $request->npp)->first();
+
+        if (!$employee) {
+            $request->session()->flush();
+            return redirect()->back()->with('toast_error', 'NPP tidak ditemukan');
+        }
+
+        session()->put(['npp' => $employee->npp, 'nama' => $employee->nama]);
+
+        return redirect()->route('register');
     }
 }

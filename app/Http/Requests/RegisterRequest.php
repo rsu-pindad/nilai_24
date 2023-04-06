@@ -23,7 +23,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'npp' => 'required|unique:tbl_pengguna',
+            // 'npp' => 'required|unique:tbl_pengguna',
             // 'nama' => 'required',
             'penempatan' => 'required',
             'jabatan' => 'required',

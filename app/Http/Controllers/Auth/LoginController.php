@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -24,14 +27,14 @@ class LoginController extends Controller
      */
     public function authenticate(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
+        $credentials = Validator::make($request->all(), [
             'npp' => ['required'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials->validated())) {
             $request->session()->regenerate();
-
+            User::where('npp', $request->npp)->update(['last_login' => Carbon::now()]);
             return redirect()->intended('profile');
         }
 
