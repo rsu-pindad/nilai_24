@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -32,7 +34,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials->validated())) {
             $request->session()->regenerate();
-
+            User::where('npp', $request->npp)->update(['last_login' => Carbon::now()]);
             return redirect()->intended('profile');
         }
 
