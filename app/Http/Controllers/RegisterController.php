@@ -57,7 +57,7 @@ class RegisterController extends Controller
         // send message wa
         $text = "Silahkan login menggunakan
 
-NPP : $request->npp
+NPP : $npp
 Password : $password
 
 https://assessment.pindadmedika.com/
