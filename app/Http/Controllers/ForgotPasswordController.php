@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
-class ForgotPaswwordController extends Controller
+class ForgotPasswordController extends Controller
 {
     public function index()
     {
@@ -22,7 +23,7 @@ class ForgotPaswwordController extends Controller
         if ($user) {
             if ($user->no_hp == $request->no_hp) {
 
-                $user->update(['password' => $password]);
+                $user->update(['password' => Hash::make($password)]);
 
                 $curl = curl_init();
 
