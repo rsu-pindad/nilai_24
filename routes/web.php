@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\ForgotPaswwordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
@@ -35,6 +36,12 @@ Route::middleware('guest')->group(function () {
         Route::post('register/create', 'create')->name('register/create');
 
         Route::post('register/check', 'check')->name('register/check');
+    });
+
+    Route::controller(ForgotPaswwordController::class)->group(function () {
+        Route::get('forgot', 'index')->name('forgot');
+
+        Route::post('forgot/send', 'send')->name('forgot/send');
     });
 });
 

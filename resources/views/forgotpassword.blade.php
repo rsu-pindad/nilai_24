@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PT PINDAD MEDIKA UTAMA | Halaman Login</title>
+    <title>PT PINDAD MEDIKA UTAMA | Halaman Lupa Password</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -36,9 +36,9 @@
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Form Login</p>
+                <p class="login-box-msg">Form Lupa Password</p>
 
-                <form action="{{ route('login/authenticate') }}" method="post">
+                <form action="{{ route('forgot/send') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
                         <input type="text" class="form-control @error('npp') is-invalid @enderror" placeholder="NPP"
@@ -55,27 +55,27 @@
                         @enderror
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control @error('password') is-invalid @enderror"
-                            placeholder="Password" name="password">
+                        <input type="no_hp" class="form-control @error('no_hp') is-invalid @enderror"
+                            placeholder="No HP" name="no_hp">
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
+                                <span class="fas fa-phone"></span>
                             </div>
                         </div>
-                        @error('password')
+                        @error('no_hp')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+                    <button type="submit" class="btn btn-primary btn-block">Kirim</button>
                 </form>
-
                 <p class="mb-0">
                     Belum punya akun? <a href="{{ route('register') }}" class="text-center">Daftar</a>
                 </p>
-                <p class="mb-0"> <a href="{{ route('forgot') }}" class="text-center">Lupa password</a>
+                <p class="mb-0">
+                    Sudah punya akun? <a href="{{ route('login') }}" class="text-center">Masuk</a>
                 </p>
             </div>
             <!-- /.login-card-body -->
