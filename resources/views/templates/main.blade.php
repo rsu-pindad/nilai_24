@@ -201,6 +201,16 @@
                                 <p>Logout</p>
                             </a>
                         </li>
+                        <li class="text-center">
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                data-target="#popup">
+                                <i class="fas fa-info-circle"></i> Help
+                            </button>
+
+
+
+                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -208,6 +218,77 @@
             <!-- /.sidebar -->
         </aside>
 
+
+        <!-- Modal -->
+        <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <h2>Selamat Datang</h2>
+                            <p>
+                                Anda berada di portal penilaian tahunan karyawan PT Pindad Medika Utama
+                                dalam penilaian ini anda akan menilai dan dinilai dari beberapa kriteria yang
+                                ditetapkan.
+                                Pilihlah pernyataan yang sesuai, yang menggambarkan kondisi objek penilaian.
+                                Untuk mendapatkan nilai yang utuh, setiap karyawan melakukan penilaian terhadap :
+                            </p>
+                            <ol>
+                                <li>
+                                    Diri sendiri (self assessment), isilah bagian ini secara jujur sebagaimana anda apa
+                                    adanya
+                                    sesuai kondisi sebenarnya yang relevan dengan kriteria penilaian yang ditetapkan
+                                    pada
+                                    bagian
+                                    deskripsi.
+                                </li>
+                                <li>
+                                    Atasan, isilah bagian ini secara jujur sebagaimana atasan anda apa adanya sesuai
+                                    kondisi
+                                    sebenarnya yang relevan dengan kriteria penilaian yang ditetapkan pada bagian
+                                    deskripsi.
+                                </li>
+                                <li>
+                                    Rekan kerja, isilah bagian ini secara jujur sebagaimana rekan kerja anda apa adanya
+                                    sesuai
+                                    kondisi sebenarnya yang relevan dengan kriteria penilaian yang ditetapkan pada
+                                    bagian
+                                    deskripsi.
+                                </li>
+                                <li>
+                                    Bawahan, isilah bagian ini secara jujur sebagaimana staff anda apa adanya sesuai
+                                    kondisi
+                                    sebenarnya yang relevan dengan kriteria penilaian yang ditetapkan pada bagian
+                                    deskripsi.
+                                </li>
+                            </ol>
+                            <p>
+                                Keterangan : pemilihan untuk siapa rekan kerja yang dinilai, dipilih berdasarkan
+                                kriteria
+                                tertentu dengan pertimbangan seringnya koordinasi perihal pekerjaan dan interaksi, serta
+                                level
+                                jabatan.
+                            </p>
+
+                            <p>
+
+                                Jika ada hal yang kurang jelas maupun permasalahan dalam melakukan penilaian ini,
+                                silakan
+                                klik
+                                <a href="https://wa.me/6282240028580" target="_blank" rel="noopener noreferrer">WA
+                                    ME</a>
+                                untuk
+                                pelaporan kendala.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         @yield('content')
 
         <!-- Control Sidebar -->
@@ -221,7 +302,8 @@
             <strong>Copyright &copy; 2023 <a href="https://pindadmedika.com">PT PINDAD MEDIKA UTAMA</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 1.0.0
+                <small>BUG REPORT <a href="mailto:iqbalseptyan@gmail.com" target="_blank"
+                        rel="noopener noreferrer">iqbalseptyan@gmail.com</a></small>
             </div>
         </footer>
     </div>
@@ -256,6 +338,18 @@
         $(".custom-file-input").on("change", function() {
             var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var isshow = localStorage.getItem('isshow');
+            if (isshow == null) {
+                localStorage.setItem('isshow', 1);
+
+                // Show popup here
+                $('#popup').modal('show');
+            }
         });
     </script>
 
