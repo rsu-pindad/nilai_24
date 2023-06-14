@@ -74,8 +74,12 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview ">
+                                <?php $count = 0; ?>
                                 @foreach ($sheet as $item)
-                                    @if ($item['LINK_SELF-ASSESSMENT'])
+                                    @if ($item['LINK_SELF-ASSESSMENT'] && $item['LINK_MENILAI_SELEVEL'] != '#N/A')
+                                        <?php if ($count == 1) {
+                                            break;
+                                        } ?>
                                         <li class="nav-item ">
                                             <a href="{{ route('self', ['page' => 'SELF ASSESSMENT', 'link' => $item['LINK_SELF-ASSESSMENT']]) }}"
                                                 class="nav-link {{ $item['LINK_SELF-ASSESSMENT'] == $link ? 'active' : '' }}">
@@ -85,6 +89,7 @@
                                                 </p>
                                             </a>
                                         </li>
+                                        <?php $count++; ?>
                                     @endif
                                 @endforeach
                             </ul>
@@ -100,7 +105,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 @foreach ($sheet as $item)
-                                    @if ($item['LINK_MENILAI_ATASAN'])
+                                    @if ($item['LINK_MENILAI_ATASAN'] && $item['LINK_MENILAI_SELEVEL'] != '#N/A')
                                         <li class="nav-item">
                                             <a href="{{ route('atasan', ['page' => 'MENILAI ATASAN', 'link' => $item['LINK_MENILAI_ATASAN']]) }}"
                                                 class="nav-link {{ $item['LINK_MENILAI_ATASAN'] == $link ? 'active' : '' }}">
@@ -112,7 +117,7 @@
                                                         height="32" class="img-circle">
                                                 @endif
                                                 <p>{{ $item['NPP_ATASAN'] }} -
-                                                    {{ App\Models\Employee::where('npp', $item['NPP_ATASAN'])->first()->nama }}
+                                                    {{ optional(App\Models\Employee::where('npp', $item['NPP_ATASAN'])->first())->nama }}
                                                 </p>
                                             </a>
                                         </li>
@@ -131,7 +136,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 @foreach ($sheet as $item)
-                                    @if ($item['LINK_MENILAI_SELEVEL'])
+                                    @if ($item['LINK_MENILAI_SELEVEL'] && $item['LINK_MENILAI_SELEVEL'] != '#N/A')
                                         <li class="nav-item">
                                             <a href="{{ route('selevel', ['page' => 'MENILAI SELEVEL', 'link' => $item['LINK_MENILAI_SELEVEL']]) }}"
                                                 class="nav-link {{ $item['LINK_MENILAI_SELEVEL'] == $link ? 'active' : '' }} ">
@@ -143,7 +148,7 @@
                                                         height="32" class="img-circle">
                                                 @endif
                                                 <p>{{ $item['NPP_SELEVEL'] }} -
-                                                    {{ App\Models\Employee::where('npp', $item['NPP_SELEVEL'])->first()->nama }}
+                                                    {{ optional(App\Models\Employee::where('npp', $item['NPP_SELEVEL'])->first())->nama }}
                                                 </p>
                                             </a>
                                         </li>
@@ -174,7 +179,7 @@
                                                         height="32" class="img-circle">
                                                 @endif
                                                 <p>{{ $item['NPP_STAFF'] }} -
-                                                    {{ App\Models\Employee::where('npp', $item['NPP_STAFF'])->first()->nama }}
+                                                    {{ optional(App\Models\Employee::where('npp', $item['NPP_STAFF'])->first())->nama }}
                                                 </p>
                                             </a>
                                         </li>
