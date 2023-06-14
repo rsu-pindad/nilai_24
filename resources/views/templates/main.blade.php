@@ -76,7 +76,7 @@
                             <ul class="nav nav-treeview ">
                                 <?php $count = 0; ?>
                                 @foreach ($sheet as $item)
-                                    @if ($item['LINK_SELF-ASSESSMENT'] && $item['LINK_MENILAI_SELEVEL'] != '#N/A')
+                                    @if ($item['LINK_SELF-ASSESSMENT'] && $item['LINK_SELF-ASSESSMENT'] != '#N/A')
                                         <?php if ($count == 1) {
                                             break;
                                         } ?>
@@ -105,7 +105,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 @foreach ($sheet as $item)
-                                    @if ($item['LINK_MENILAI_ATASAN'] && $item['LINK_MENILAI_SELEVEL'] != '#N/A')
+                                    @if ($item['LINK_MENILAI_ATASAN'] && $item['LINK_MENILAI_ATASAN'] != '#N/A')
                                         <li class="nav-item">
                                             <a href="{{ route('atasan', ['page' => 'MENILAI ATASAN', 'link' => $item['LINK_MENILAI_ATASAN']]) }}"
                                                 class="nav-link {{ $item['LINK_MENILAI_ATASAN'] == $link ? 'active' : '' }}">
@@ -166,7 +166,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 @foreach ($sheet as $item)
-                                    @if ($item['LINK_MENILAI_STAFF'])
+                                    @if ($item['LINK_MENILAI_STAFF'] && $item['LINK_MENILAI_STAFF'] != '#N/A')
                                         <li class="nav-item">
                                             <a href="{{ route('staff', ['page' => 'MENILAI STAFF', 'link' => $item['LINK_MENILAI_STAFF']]) }}"
                                                 class="nav-link {{ $item['LINK_MENILAI_STAFF'] == $link ? 'active' : '' }}">
