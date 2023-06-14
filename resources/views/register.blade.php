@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PT PINDAD MEDIKA UTAMA | {{ $title }}</title>
+    <title>PT PINDAD MEDIKA UTAMA ASSESSMENT | {{ $title }}</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -68,63 +68,10 @@
                     </div>
                 </form>
                 @if (Session::get('nama'))
-
                     <form action="{{ route('register/create') }}" method="post" enctype="multipart/form-data"
                         id="formDaftar">
                         <div class="row">
                             @csrf
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <select class="form-control @error('penempatan') is-invalid @enderror"
-                                        name="penempatan">
-                                        <option value="">Pilih Penempatan</option>
-                                        <option value="PMU" {{ old('penempatan') == 'PMU' ? 'selected' : '' }}>PMU
-                                        </option>
-                                        <option value="RSUP BANDUNG"
-                                            {{ old('penempatan') == 'RSUP BANDUNG' ? 'selected' : '' }}>
-                                            RSUP
-                                            BANDUNG</option>
-                                        <option value="RSUP TUREN"
-                                            {{ old('penempatan') == 'RSUP TUREN' ? 'selected' : '' }}>
-                                            RSUP
-                                            TUREN
-                                        </option>
-                                    </select>
-                                    @error('penempatan')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control @error('jabatan') is-invalid @enderror"
-                                        placeholder="Jabatan" name="jabatan" value="{{ old('jabatan') }}">
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">
-                                            <span class="fas fa-user-tie"></span>
-                                        </div>
-                                    </div>
-                                    @error('jabatan')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <select class="form-control @error('level') is-invalid @enderror" name="level">
-                                        <option value="">Pilih Level</option>
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            <option value="{{ $i }}"
-                                                {{ old('level') == $i ? 'selected' : '' }}>
-                                                {{ $i }}
-                                            </option>
-                                        @endfor
-                                    </select>
-                                    @error('level')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
                             <div class="col-lg-6">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control @error('no_hp') is-invalid @enderror"
