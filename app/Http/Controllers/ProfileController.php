@@ -23,9 +23,6 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required',
-            'penempatan' => 'required',
-            'jabatan' => 'required',
-            'level' => 'required',
             'no_hp' => ['required', Rule::unique('tbl_pengguna')->ignore($user)],
             'email' => ['required', Rule::unique('tbl_pengguna')->ignore($user)],
         ]);
@@ -52,13 +49,17 @@ class ProfileController extends Controller
     public function update_password(Request $request, User $user)
     {
         $validated = $request->validate([
+            'oldPassword' => 'required|min:5',
             'password' => 'required|min:5',
             'confirm_password' => 'required|min:5|same:password',
         ]);
 
-        $validated['password'] = Hash::make($request->password);
-        $user->update($validated);
-
-        return redirect()->back()->withToastSuccess('Berhasil ubah password');
+        if (Hash::check($request->oldPassword, auth()->user()->password)) {
+            $validated['password'] = Hash::make($request->password);
+            $user->update($validated);
+            return redirect()->back()->withToastSuccess('Berhasil ubah password');
+        } else {
+            return redirect()->back()->with('toast_error', 'Password lama salah');
+        }
     }
 }

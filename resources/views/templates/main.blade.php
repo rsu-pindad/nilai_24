@@ -73,7 +73,7 @@
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview ">
+                            <ul class="nav nav-treeview small">
                                 <?php $count = 0; ?>
                                 @foreach ($sheet as $item)
                                     @if ($item['LINK_SELF-ASSESSMENT'] && $item['LINK_SELF-ASSESSMENT'] != '#N/A')
@@ -103,7 +103,7 @@
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview">
+                            <ul class="nav nav-treeview small">
                                 @foreach ($sheet as $item)
                                     @if ($item['LINK_MENILAI_ATASAN'] && $item['LINK_MENILAI_ATASAN'] != '#N/A')
                                         <li class="nav-item">
@@ -134,7 +134,7 @@
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview">
+                            <ul class="nav nav-treeview small">
                                 @foreach ($sheet as $item)
                                     @if ($item['LINK_MENILAI_SELEVEL'] && $item['LINK_MENILAI_SELEVEL'] != '#N/A')
                                         <li class="nav-item">
@@ -164,7 +164,7 @@
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview">
+                            <ul class="nav nav-treeview small">
                                 @foreach ($sheet as $item)
                                     @if ($item['LINK_MENILAI_STAFF'] && $item['LINK_MENILAI_STAFF'] != '#N/A')
                                         <li class="nav-item">
@@ -228,7 +228,7 @@
                         <div class="container-fluid">
                             <h2>Selamat Datang</h2>
                             <p>
-                                Anda berada di portal penilaian tahunan karyawan PT Pindad Medika Utama
+                                Anda berada di portal penilaian tahunan karyawan <b>PT Pindad Medika Utama</b>.
                                 dalam penilaian ini anda akan menilai dan dinilai dari beberapa kriteria yang
                                 ditetapkan.
                                 Pilihlah pernyataan yang sesuai, yang menggambarkan kondisi objek penilaian.
@@ -276,8 +276,8 @@
                                 Jika ada hal yang kurang jelas maupun permasalahan dalam melakukan penilaian ini,
                                 silakan
                                 klik
-                                <a href="https://wa.me/6282240028580" target="_blank" rel="noopener noreferrer">WA
-                                    ME</a>
+                                <a href="https://wa.me/6282240028580" target="_blank"
+                                    rel="noopener noreferrer">disini</a>
                                 untuk
                                 pelaporan kendala.
                             </p>

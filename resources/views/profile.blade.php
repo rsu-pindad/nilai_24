@@ -196,12 +196,26 @@
                                             @csrf
                                             @method('PATCH')
                                             <div class="form-group row">
-                                                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                                                <label for="password" class="col-sm-2 col-form-label">Password
+                                                    Lama</label>
                                                 <div class="col-sm-10">
                                                     <input type="password"
                                                         class="form-control @error('password') is-invalid @enderror"
-                                                        id="password" name="password" placeholder="Password"
-                                                        value="{{ old('password') }}">
+                                                        id="oldPassword" name="oldPassword" placeholder="Password lama">
+                                                    @error('oldPassword')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="password" class="col-sm-2 col-form-label">Password
+                                                    Baru</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password"
+                                                        class="form-control @error('password') is-invalid @enderror"
+                                                        id="password" name="password" placeholder="Password baru">
                                                     @error('password')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
@@ -216,7 +230,7 @@
                                                     <input type="password"
                                                         class="form-control @error('confirm_password') is-invalid @enderror"
                                                         id="confirm_password" name="confirm_password"
-                                                        placeholder="Konfirmasi Password" value="{{ old('password') }}">
+                                                        placeholder="Konfirmasi Password">
                                                     @error('confirm_password')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
