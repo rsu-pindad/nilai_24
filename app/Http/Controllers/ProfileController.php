@@ -23,9 +23,6 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required',
-            'penempatan' => 'required',
-            'jabatan' => 'required',
-            'level' => 'required',
             'no_hp' => ['required', Rule::unique('tbl_pengguna')->ignore($user)],
             'email' => ['required', Rule::unique('tbl_pengguna')->ignore($user)],
         ]);
