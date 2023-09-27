@@ -301,10 +301,7 @@
         <footer class="main-footer">
             <strong>Copyright &copy; 2023 <a href="https://pindadmedika.com">PT PINDAD MEDIKA UTAMA</a>.</strong>
             All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <small>BUG REPORT <a href="mailto:iqbalseptyan@gmail.com" target="_blank"
-                        rel="noopener noreferrer">iqbalseptyan@gmail.com</a></small>
-            </div>
+
         </footer>
     </div>
     <!-- ./wrapper -->
