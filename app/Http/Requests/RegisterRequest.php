@@ -28,7 +28,7 @@ class RegisterRequest extends FormRequest
             // 'penempatan' => 'required',
             // 'jabatan' => 'required',
             // 'level' => 'required',
-            'no_hp' => 'required|unique:tbl_pengguna',
+            'no_hp' => 'required|numeric|unique:tbl_pengguna',
             'email' => 'required|unique:tbl_pengguna',
             'foto' => 'required|mimes:png,jpeg,jpg',
             // 'password' => 'required',
