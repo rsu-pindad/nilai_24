@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         FacadesView::composer('*', function (View $view) {
             if (Auth::user()) {
-                $sheet = Sheets::spreadsheet('1banzT8ab9tWTv2eqxU84tIGmnmkBxRTNwhN4o5OpQO8')->sheet('link')->get();
+                $sheet = Sheets::spreadsheet('1banzT8ab9tWTv2eqxU84tIGmnmkBxRTNwhN4o5OpQO8')->sheet('link')->get() ?? [];
                 $header = $sheet->pull(0);
                 $values = Sheets::collection(header: $header, rows: $sheet);
                 $arr =  $values->toArray();

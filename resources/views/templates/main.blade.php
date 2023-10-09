@@ -19,10 +19,13 @@
     <link rel="icon" href="dist/img/logo.png" type="image/x-icon">
     <link rel="shortcut icon" href="dist/img/logo.png" type="image/x-icon">
 
-
+    <!-- DataTables -->
+    <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 </head>
 
-<body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed ">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed ">
     <div class="wrapper">
 
         {{-- <!-- Preloader -->
@@ -187,6 +190,8 @@
                                 @endforeach
                             </ul>
                         </li>
+
+                        @include('templates.partials.sidebar-hc')
                         <li class="nav-header">SETTINGS</li>
                         <li class="nav-item">
                             <a href="{{ route('profile') }}"
@@ -325,11 +330,23 @@
     <!-- ChartJS -->
     <script src="plugins/chart.js/Chart.min.js"></script>
 
-    <!-- AdminLTE for demo purposes -->
-    {{-- <script src="dist/js/demo.js"></script> --}}
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    {{-- <script src="dist/js/pages/dashboard2.js"></script> --}}
+    <!-- DataTables  & Plugins -->
+    <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="../../plugins/jszip/jszip.min.js"></script>
+    <script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
+    <script>
+        $("#dataTables").DataTable({});
+    </script>
     <script>
         // Add the following code if you want the name of the file appear on select
         $(".custom-file-input").on("change", function() {
