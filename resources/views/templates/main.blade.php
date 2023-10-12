@@ -10,11 +10,11 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
     <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <link rel="stylesheet" href="../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 
     <link rel="icon" href="dist/img/logo.png" type="image/x-icon">
     <link rel="shortcut icon" href="dist/img/logo.png" type="image/x-icon">
@@ -23,6 +23,10 @@
     <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed ">
@@ -52,7 +56,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{ route('profile') }}" class="brand-link">
-                <img src="dist/img/logo.png" alt="Logo" class="brand-image img-circle">
+                <img src="../../dist/img/logo.png" alt="Logo" class="brand-image img-circle">
 
                 <span class="brand-text font-weight-light">PINDAD
                     MEDIKA</span>
@@ -313,22 +317,22 @@
 
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="../../plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap -->
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- overlayScrollbars -->
-    <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <script src="../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.js"></script>
+    <script src="../../dist/js/adminlte.js"></script>
 
     <!-- PAGE PLUGINS -->
     <!-- jQuery Mapael -->
-    <script src="plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-    <script src="plugins/raphael/raphael.min.js"></script>
-    <script src="plugins/jquery-mapael/jquery.mapael.min.js"></script>
-    <script src="plugins/jquery-mapael/maps/usa_states.min.js"></script>
+    <script src="../../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+    <script src="../../plugins/raphael/raphael.min.js"></script>
+    <script src="../../plugins/jquery-mapael/jquery.mapael.min.js"></script>
+    <script src="../../plugins/jquery-mapael/maps/usa_states.min.js"></script>
     <!-- ChartJS -->
-    <script src="plugins/chart.js/Chart.min.js"></script>
+    <script src="../../plugins/chart.js/Chart.min.js"></script>
 
     <!-- DataTables  & Plugins -->
     <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
@@ -343,6 +347,12 @@
     <script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
     <script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+    <!-- (Optional) Latest compiled and minified JavaScript translation files -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
 
     <script>
         $("#dataTables").DataTable({});

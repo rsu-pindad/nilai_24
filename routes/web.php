@@ -33,6 +33,8 @@ Route::controller(ResponseController::class)->group(function () {
     Route::get('/response', 'index')->name('response');
 
     Route::get('/response/detail/{npp}', 'detail')->name('response/detail');
+    Route::post('/response/detail/store', 'store_detail')->name('response/detail/store');
+    Route::post('/response/detail/delete/{id}', 'delete_detail')->name('response/detail/delete');
 
     Route::get('/result/import', 'import')->name('result/import');
 });

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\HC;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\ScoreResponse;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -284,6 +286,124 @@ class ResponseController extends Controller
 
     public function detail($npp)
     {
-        dd($npp);
+        $responScore = DB::table('tbl_respon_skor as t1')
+            ->select('t1.*')
+            ->join(DB::raw('(SELECT npp_penilai,npp_dinilai, MAX(id) id FROM tbl_respon_skor GROUP BY npp_penilai,npp_dinilai) as t2'), 't1.id', '=', 't2.id')
+            ->get();
+
+        $groupByNpp = $responScore->reduce(function ($group, $currentData) {
+            $group[$currentData->npp_dinilai][] = $currentData;
+            return $group;
+        });
+
+        $employee = Employee::all();
+
+        $data = [
+            'title' => 'Detail Data Respon', 'page' => 'Detail Respon', 'sheet' => [],
+            'response' => collect($groupByNpp[$npp]),
+            'employee' => $employee,
+            'npp' => $npp
+        ];
+
+        return view('hc.form_respon.detail', $data);
+    }
+
+    public function store_detail(Request $request)
+    {
+        $validated = $request->validate([
+            'npp_penilai' => 'required|numeric',
+            'npp_dinilai' => 'required|numeric',
+            "kpmn_perencanaan" => "required|numeric",
+            "kpmn_pengawasan" => "required|numeric",
+            "kpmn_inovasi" => "required|numeric",
+            "kpmn_kepemimpinan" => "required|numeric",
+            "kpmn_membimbing" => "required|numeric",
+            "kpmn_keputusan" => "required|numeric",
+            "nnpp_kerjasama" => "required|numeric",
+            "nnpp_komunikasi" => "required|numeric",
+            "nnpp_disiplin" => "required|numeric",
+            "nnpp_dedikasi" => "required|numeric",
+            "nnpp_etika" => "required|numeric",
+            "skpp_goal" => "required|numeric",
+            "skpp_error" => "required|numeric",
+            "skpp_dokumen" => "required|numeric",
+            "skpp_inisiatif" => "required|numeric",
+            "skpp_pola_pikir" => "required|numeric"
+        ]);
+        $employees = Employee::all();
+
+        $employeeEvaluator = $employees->filter(function ($emp) use ($validated) {
+            return $emp->npp == $validated['npp_penilai'];
+        })->first();
+
+        $employeeAssessed = $employees->filter(function ($emp) use ($validated) {
+            return $emp->npp == $validated['npp_dinilai'];
+        })->first();
+
+        $level = [
+            'I A' => 1,
+            'I B' => 1,
+            'I C' => 1,
+            'I A NS' => 1,
+            'IA NS' => 1,
+            'II' => 2,
+            'II NS' => 2,
+            'III' => 3,
+            'III NS' => 3,
+            'IV A' => 4,
+            'I V A' => 4,
+            'IV B' => 4,
+            'I V B' => 4,
+            'V' => 5,
+        ];
+
+        $selfLevel = $level[$employeeEvaluator->level] ?? false;
+        $otherLevel = $level[$employeeAssessed->level] ?? false;
+
+        if ($selfLevel > $otherLevel) {
+            $assessed = 'atasan';
+        } else if ($selfLevel == $otherLevel) {
+            if ($employeeEvaluator->npp == $employeeAssessed->npp) {
+                $assessed = 'self';
+            } else {
+                $assessed = 'selevel';
+            }
+        } else if ($selfLevel < $otherLevel) {
+            $assessed = 'staff';
+        } else {
+            $assessed = 'tidak diketahui';
+        }
+
+        if ($selfLevel < $otherLevel) {
+            $evaluator = 'atasan';
+        } else if ($selfLevel == $otherLevel) {
+            if ($employeeEvaluator->npp == $employeeAssessed->npp) {
+                $evaluator = 'self';
+            } else {
+                $evaluator = 'selevel';
+            }
+        } else if ($selfLevel > $otherLevel) {
+            $evaluator = 'staff';
+        } else {
+            $evaluator = 'tidak diketahui';
+        }
+
+        $validated['nama_penilai'] = $employeeEvaluator->nama;
+        $validated['level_penilai'] = $employeeEvaluator->level;
+        $validated['relasi_penilai'] = $evaluator;
+
+        $validated['nama_dinilai'] = $employeeAssessed->nama;
+        $validated['level_dinilai'] = $employeeAssessed->level;
+        $validated['relasi_dinilai'] = $assessed;
+
+        ScoreResponse::create($validated);
+
+        return back()->with('success', 'berhasil menambah data penilaian');
+    }
+
+    public function delete_detail($id)
+    {
+        ScoreResponse::find($id)->delete();
+        return back()->with('success', 'berhasil menghapus data penilaian');
     }
 }
