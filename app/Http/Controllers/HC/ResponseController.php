@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\HC;
 
 use App\Http\Controllers\Controller;
+use App\Imports\DP3Import;
 use App\Models\Employee;
 use App\Models\ScoreResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ResponseController extends Controller
 {
@@ -405,5 +407,11 @@ class ResponseController extends Controller
     {
         ScoreResponse::find($id)->delete();
         return back()->with('success', 'berhasil menghapus data penilaian');
+    }
+
+    public function import()
+    {
+        Excel::import(new DP3Import, 'form_respon_DP3.xlsx');
+        return redirect()->route('response')->with('success', 'berhasil mengimpor data penilaian');
     }
 }

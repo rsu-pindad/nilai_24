@@ -36,7 +36,7 @@ Route::controller(ResponseController::class)->group(function () {
     Route::post('/response/detail/store', 'store_detail')->name('response/detail/store');
     Route::post('/response/detail/delete/{id}', 'delete_detail')->name('response/detail/delete');
 
-    Route::get('/result/import', 'import')->name('result/import');
+    Route::get('/response/import', 'import')->name('response/import');
 });
 
 Route::middleware('guest')->group(function () {

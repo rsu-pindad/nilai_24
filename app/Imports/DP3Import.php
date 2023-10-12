@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Employee;
 use App\Models\PercentRelation;
 use App\Models\Score;
 use App\Models\ScoreResponse;
@@ -31,7 +32,7 @@ class DP3Import implements ToCollection, WithCalculatedFormulas, WithStartRow
         ];
 
         foreach ($rows as $val) {
-            $userLevel = User::where('npp', $val[1])->first()->level ?? '';
+            $userLevel = Employee::where('npp', $val[1])->first()->level ?? '';
 
             // userlevel = level sendiri | $val[5] level dinilai
             $selfLevel = $level[$userLevel] ?? false;
@@ -74,11 +75,11 @@ class DP3Import implements ToCollection, WithCalculatedFormulas, WithStartRow
             $scoreKpDema = $this->score('Kepemimpinan', 'Pengambilan Keputusan', $val[11]);
 
             // Nilai-nilai perusahaan dan perilaku
-            $scoreNnppTeam = $this->score('Nilai-nilai perusahaan dan perilaku', 'Kerjasama', $val[12]);
-            $scoreNnppComm = $this->score('Nilai-nilai perusahaan dan perilaku', 'Komunikasi', $val[13]);
-            $scoreNnppDisc = $this->score('Nilai-nilai perusahaan dan perilaku', 'Disiplin dan Kehadiran / Absensi', $val[14]);
-            $scoreNnppDedi = $this->score('Nilai-nilai perusahaan dan perilaku', 'Dedikasi dan Integritas', $val[15]);
-            $scoreNnppEthi = $this->score('Nilai-nilai perusahaan dan perilaku', 'Etika', $val[16]);
+            $scoreNnppTeam = $this->score('Nilai-nilai Perusahaan dan Perilaku', 'Kerjasama', $val[12]);
+            $scoreNnppComm = $this->score('Nilai-nilai Perusahaan dan Perilaku', 'Komunikasi', $val[13]);
+            $scoreNnppDisc = $this->score('Nilai-nilai Perusahaan dan Perilaku', 'Disiplin dan Kehadiran / Absensi', $val[14]);
+            $scoreNnppDedi = $this->score('Nilai-nilai Perusahaan dan Perilaku', 'Dedikasi dan Integritas', $val[15]);
+            $scoreNnppEthi = $this->score('Nilai-nilai Perusahaan dan Perilaku', 'Etika', $val[16]);
 
             // Sasaran Kinerja dan Proses Pencapaian
             $scoreSkppGoal = $this->score('Sasaran Kinerja dan Proses Pencapaian', 'Goal - Pencapaian Kinerja', $val[17]);
@@ -88,77 +89,39 @@ class DP3Import implements ToCollection, WithCalculatedFormulas, WithStartRow
             $scoreSkppMind = $this->score('Sasaran Kinerja dan Proses Pencapaian', 'Proses - Pencapaian Kinerja ( Pola Pikir )', $val[21]);
 
 
-            // $recap[] = [
-            //     'npp_penilai' => $val[1],
-            //     'nama_penilai' => $val[2],
-            //     'level_penilai' => $userLevel,
-            //     'npp_dinilai' => $val[3],
-            //     'nama_dinilai' => $val[4],
-            //     'level_dinilai' => $val[5],
-            //     'kepemimpinan' => [
-            //         'skor_kp_perencanaan' => $scoreKpPlan,
-            //         'skor_kp_pengawasan' =>  $scoreKpSuvi,
-            //         'skor_kp_inovasi' =>  $scoreKpInov,
-            //         'skor_kp_kepemimpinan' =>  $scoreKpLead,
-            //         'skor_kp_membimbing' => $scoreKpGuide,
-            //         'skor_kp_keputusan' => $scoreKpDema,
-            //         'relasi_penilai' => $evaluator,
-            //         'relasi_dinilai' => $assessed,
-            //     ],
-            //     'nilai_perusahaan_prilaku' => [
-            //         'skor_nnpp_kerjasama' => $scoreNnppTeam,
-            //         'skor_nnpp_komunikasi' => $scoreNnppComm,
-            //         'skor_nnpp_disiplin' => $scoreNnppDisc,
-            //         'skor_nnpp_dedikasi' => $scoreNnppDedi,
-            //         'skor_nnpp_etika' => $scoreNnppEthi,
-            //         'relasi_penilai' => $evaluator,
-            //         'relasi_dinilai' => $assessed,
-            //     ],
-            //     'kinerja_pencapaian' => [
-            //         'skor_skpp_goal' => $scoreSkppGoal,
-            //         'skor_skpp_error' => $scoreSkppError,
-            //         'skor_skpp_dokumen' => $scoreSkppDocu,
-            //         'skor_skpp_inisiatif' => $scoreSkppInit,
-            //         'skor_skpp_pola_pikir' => $scoreSkppMind,
-            //         'relasi_penilai' => $evaluator,
-            //         'relasi_dinilai' => $assessed,
-            //     ],
 
+            ScoreResponse::create(
+                [
+                    'npp_penilai' => $val[1],
+                    'nama_penilai' => $val[2],
+                    'level_penilai' => $userLevel,
+                    'relasi_penilai' => $evaluator,
 
-            // ];
+                    'npp_dinilai' => $val[3],
+                    'nama_dinilai' => $val[4],
+                    'level_dinilai' => $val[5],
+                    'relasi_dinilai' => $assessed,
 
-            // ScoreResponse::create(
-            $responScore[] = [
-                'npp_penilai' => $val[1],
-                'nama_penilai' => $val[2],
-                'level_penilai' => $userLevel,
-                'relasi_penilai' => $evaluator,
+                    'kpmn_perencanaan' => $scoreKpPlan,
+                    'kpmn_pengawasan' =>  $scoreKpSuvi,
+                    'kpmn_inovasi' =>  $scoreKpInov,
+                    'kpmn_kepemimpinan' =>  $scoreKpLead,
+                    'kpmn_membimbing' => $scoreKpGuide,
+                    'kpmn_keputusan' => $scoreKpDema,
 
-                'npp_dinilai' => $val[3],
-                'nama_dinilai' => $val[4],
-                'level_dinilai' => $val[5],
-                'relasi_dinilai' => $assessed,
+                    'nnpp_kerjasama' => $scoreNnppTeam,
+                    'nnpp_komunikasi' => $scoreNnppComm,
+                    'nnpp_disiplin' => $scoreNnppDisc,
+                    'nnpp_dedikasi' => $scoreNnppDedi,
+                    'nnpp_etika' => $scoreNnppEthi,
 
-                'kpmn_perencanaan' => $scoreKpPlan,
-                'kpmn_pengawasan' =>  $scoreKpSuvi,
-                'kpmn_inovasi' =>  $scoreKpInov,
-                'kpmn_kepemimpinan' =>  $scoreKpLead,
-                'kpmn_membimbing' => $scoreKpGuide,
-                'kpmn_keputusan' => $scoreKpDema,
-
-                'nnpp_kerjasama' => $scoreNnppTeam,
-                'nnpp_komunikasi' => $scoreNnppComm,
-                'nnpp_disiplin' => $scoreNnppDisc,
-                'nnpp_dedikasi' => $scoreNnppDedi,
-                'nnpp_etika' => $scoreNnppEthi,
-
-                'skpp_goal' => $scoreSkppGoal,
-                'skpp_error' => $scoreSkppError,
-                'skpp_dokumen' => $scoreSkppDocu,
-                'skpp_inisiatif' => $scoreSkppInit,
-                'skpp_pola_pikir' => $scoreSkppMind,
-            ];
-            // ]);
+                    'skpp_goal' => $scoreSkppGoal,
+                    'skpp_error' => $scoreSkppError,
+                    'skpp_dokumen' => $scoreSkppDocu,
+                    'skpp_inisiatif' => $scoreSkppInit,
+                    'skpp_pola_pikir' => $scoreSkppMind,
+                ]
+            );
         }
     }
 
