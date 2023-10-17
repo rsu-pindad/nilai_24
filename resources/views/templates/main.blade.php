@@ -72,130 +72,136 @@
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-header">INTERFACE</li>
-                        <li class="nav-item  {{ $page == 'SELF ASSESSMENT' ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ $page == 'SELF ASSESSMENT' ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-sticky-note"></i>
-                                <p>
-                                    LINK SELF ASSESSMENT
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview small">
-                                <?php $count = 0; ?>
-                                @foreach ($sheet as $item)
-                                    @if ($item['LINK_SELF-ASSESSMENT'] && $item['LINK_SELF-ASSESSMENT'] != '#N/A')
-                                        <?php if ($count == 1) {
-                                            break;
-                                        } ?>
-                                        <li class="nav-item ">
-                                            <a href="{{ route('self', ['page' => 'SELF ASSESSMENT', 'link' => $item['LINK_SELF-ASSESSMENT']]) }}"
-                                                class="nav-link {{ $item['LINK_SELF-ASSESSMENT'] == $link ? 'active' : '' }}">
-                                                <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="foto"
-                                                    width="32" height="32" class="img-circle">
-                                                <p>{{ Auth::user()->npp . ' - ' . Auth::user()->nama }}
-                                                </p>
-                                            </a>
-                                        </li>
-                                        <?php $count++; ?>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </li>
-
-                        <li class="nav-item  {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }} ">
-                            <a href="#" class="nav-link {{ $page == 'MENILAI ATASAN' ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-sticky-note"></i>
-                                <p>
-                                    LINK MENILAI ATASAN
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview small">
-                                @foreach ($sheet as $item)
-                                    @if ($item['LINK_MENILAI_ATASAN'] && $item['LINK_MENILAI_ATASAN'] != '#N/A')
-                                        <li class="nav-item">
-                                            <a href="{{ route('atasan', ['page' => 'MENILAI ATASAN', 'link' => $item['LINK_MENILAI_ATASAN']]) }}"
-                                                class="nav-link {{ $item['LINK_MENILAI_ATASAN'] == $link ? 'active' : '' }}">
-                                                @if (App\Models\User::where('npp', $item['NPP_ATASAN'])->first())
-                                                    <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_ATASAN'])->first()->foto) }}"
+                        <div style="display: none">
+                            <li class="nav-item  {{ $page == 'SELF ASSESSMENT' ? 'menu-open' : '' }}">
+                                <a href="#" class="nav-link {{ $page == 'SELF ASSESSMENT' ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-sticky-note"></i>
+                                    <p>
+                                        LINK SELF ASSESSMENT
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview small">
+                                    <?php $count = 0; ?>
+                                    @foreach ($sheet as $item)
+                                        @if ($item['LINK_SELF-ASSESSMENT'] && $item['LINK_SELF-ASSESSMENT'] != '#N/A')
+                                            <?php if ($count == 1) {
+                                                break;
+                                            } ?>
+                                            <li class="nav-item ">
+                                                <a href="{{ route('self', ['page' => 'SELF ASSESSMENT', 'link' => $item['LINK_SELF-ASSESSMENT']]) }}"
+                                                    class="nav-link {{ $item['LINK_SELF-ASSESSMENT'] == $link ? 'active' : '' }}">
+                                                    <img src="{{ asset('storage/' . Auth::user()->foto) }}"
                                                         alt="foto" width="32" height="32" class="img-circle">
-                                                @else
-                                                    <img src="dist/img/avatar.png" alt="foto" width="32"
-                                                        height="32" class="img-circle">
-                                                @endif
-                                                <p>{{ $item['NPP_ATASAN'] }} -
-                                                    {{ optional(App\Models\Employee::where('npp', $item['NPP_ATASAN'])->first())->nama }}
-                                                </p>
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </li>
+                                                    <p>{{ Auth::user()->npp . ' - ' . Auth::user()->nama }}
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <?php $count++; ?>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </li>
 
-                        <li class="nav-item {{ $page == 'MENILAI SELEVEL' ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link  {{ $page == 'MENILAI SELEVEL' ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-sticky-note"></i>
-                                <p>
-                                    LINK MENILAI SELEVEL
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview small">
-                                @foreach ($sheet as $item)
-                                    @if ($item['LINK_MENILAI_SELEVEL'] && $item['LINK_MENILAI_SELEVEL'] != '#N/A')
-                                        <li class="nav-item">
-                                            <a href="{{ route('selevel', ['page' => 'MENILAI SELEVEL', 'link' => $item['LINK_MENILAI_SELEVEL']]) }}"
-                                                class="nav-link {{ $item['LINK_MENILAI_SELEVEL'] == $link ? 'active' : '' }} ">
-                                                @if (App\Models\User::where('npp', $item['NPP_SELEVEL'])->first())
-                                                    <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_SELEVEL'])->first()->foto) }}"
-                                                        alt="foto" width="32" height="32" class="img-circle">
-                                                @else
-                                                    <img src="dist/img/avatar.png" alt="foto" width="32"
-                                                        height="32" class="img-circle">
-                                                @endif
-                                                <p>{{ $item['NPP_SELEVEL'] }} -
-                                                    {{ optional(App\Models\Employee::where('npp', $item['NPP_SELEVEL'])->first())->nama }}
-                                                </p>
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </li>
-                        <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link  {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-sticky-note"></i>
-                                <p>
-                                    LINK MENILAI STAFF
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview small">
-                                @foreach ($sheet as $item)
-                                    @if ($item['LINK_MENILAI_STAFF'] && $item['LINK_MENILAI_STAFF'] != '#N/A')
-                                        <li class="nav-item">
-                                            <a href="{{ route('staff', ['page' => 'MENILAI STAFF', 'link' => $item['LINK_MENILAI_STAFF']]) }}"
-                                                class="nav-link {{ $item['LINK_MENILAI_STAFF'] == $link ? 'active' : '' }}">
-                                                @if (App\Models\User::where('npp', $item['NPP_STAFF'])->first())
-                                                    <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_STAFF'])->first()->foto) }}"
-                                                        alt="foto" width="32" height="32"
-                                                        class="img-circle">
-                                                @else
-                                                    <img src="dist/img/avatar.png" alt="foto" width="32"
-                                                        height="32" class="img-circle">
-                                                @endif
-                                                <p>{{ $item['NPP_STAFF'] }} -
-                                                    {{ optional(App\Models\Employee::where('npp', $item['NPP_STAFF'])->first())->nama }}
-                                                </p>
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </li>
+                            <li class="nav-item  {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }} ">
+                                <a href="#" class="nav-link {{ $page == 'MENILAI ATASAN' ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-sticky-note"></i>
+                                    <p>
+                                        LINK MENILAI ATASAN
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview small">
+                                    @foreach ($sheet as $item)
+                                        @if ($item['LINK_MENILAI_ATASAN'] && $item['LINK_MENILAI_ATASAN'] != '#N/A')
+                                            <li class="nav-item">
+                                                <a href="{{ route('atasan', ['page' => 'MENILAI ATASAN', 'link' => $item['LINK_MENILAI_ATASAN']]) }}"
+                                                    class="nav-link {{ $item['LINK_MENILAI_ATASAN'] == $link ? 'active' : '' }}">
+                                                    @if (App\Models\User::where('npp', $item['NPP_ATASAN'])->first())
+                                                        <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_ATASAN'])->first()->foto) }}"
+                                                            alt="foto" width="32" height="32"
+                                                            class="img-circle">
+                                                    @else
+                                                        <img src="dist/img/avatar.png" alt="foto" width="32"
+                                                            height="32" class="img-circle">
+                                                    @endif
+                                                    <p>{{ $item['NPP_ATASAN'] }} -
+                                                        {{ optional(App\Models\Employee::where('npp', $item['NPP_ATASAN'])->first())->nama }}
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </li>
 
-                        @include('templates.partials.sidebar-hc')
+                            <li class="nav-item {{ $page == 'MENILAI SELEVEL' ? 'menu-open' : '' }}">
+                                <a href="#" class="nav-link  {{ $page == 'MENILAI SELEVEL' ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-sticky-note"></i>
+                                    <p>
+                                        LINK MENILAI SELEVEL
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview small">
+                                    @foreach ($sheet as $item)
+                                        @if ($item['LINK_MENILAI_SELEVEL'] && $item['LINK_MENILAI_SELEVEL'] != '#N/A')
+                                            <li class="nav-item">
+                                                <a href="{{ route('selevel', ['page' => 'MENILAI SELEVEL', 'link' => $item['LINK_MENILAI_SELEVEL']]) }}"
+                                                    class="nav-link {{ $item['LINK_MENILAI_SELEVEL'] == $link ? 'active' : '' }} ">
+                                                    @if (App\Models\User::where('npp', $item['NPP_SELEVEL'])->first())
+                                                        <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_SELEVEL'])->first()->foto) }}"
+                                                            alt="foto" width="32" height="32"
+                                                            class="img-circle">
+                                                    @else
+                                                        <img src="dist/img/avatar.png" alt="foto" width="32"
+                                                            height="32" class="img-circle">
+                                                    @endif
+                                                    <p>{{ $item['NPP_SELEVEL'] }} -
+                                                        {{ optional(App\Models\Employee::where('npp', $item['NPP_SELEVEL'])->first())->nama }}
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </li>
+                            <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
+                                <a href="#" class="nav-link  {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-sticky-note"></i>
+                                    <p>
+                                        LINK MENILAI STAFF
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview small">
+                                    @foreach ($sheet as $item)
+                                        @if ($item['LINK_MENILAI_STAFF'] && $item['LINK_MENILAI_STAFF'] != '#N/A')
+                                            <li class="nav-item">
+                                                <a href="{{ route('staff', ['page' => 'MENILAI STAFF', 'link' => $item['LINK_MENILAI_STAFF']]) }}"
+                                                    class="nav-link {{ $item['LINK_MENILAI_STAFF'] == $link ? 'active' : '' }}">
+                                                    @if (App\Models\User::where('npp', $item['NPP_STAFF'])->first())
+                                                        <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_STAFF'])->first()->foto) }}"
+                                                            alt="foto" width="32" height="32"
+                                                            class="img-circle">
+                                                    @else
+                                                        <img src="dist/img/avatar.png" alt="foto" width="32"
+                                                            height="32" class="img-circle">
+                                                    @endif
+                                                    <p>{{ $item['NPP_STAFF'] }} -
+                                                        {{ optional(App\Models\Employee::where('npp', $item['NPP_STAFF'])->first())->nama }}
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </li>
+                        </div>
+                        @if (Auth::user()->level == 1)
+                            @include('templates.partials.sidebar-hc')
+                        @endif
+
                         <li class="nav-header">SETTINGS</li>
                         <li class="nav-item">
                             <a href="{{ route('profile') }}"

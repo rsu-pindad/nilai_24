@@ -7,11 +7,9 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
-use RealRashid\SweetAlert\Facades\Alert;
 
 class LoginController extends Controller
 {
@@ -34,9 +32,13 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials->validated())) {
             $request->session()->regenerate();
-            User::where('npp', $request->npp)->update(['last_login' => Carbon::now()]);
+
+            $user = User::where('npp', $request->npp)->first();
+            $user->update(['last_login' => Carbon::now()]);
+
             return redirect()->intended('profile');
         }
+
 
         return back()->with('toast_error', 'username atau password salah')->withInput();
     }
