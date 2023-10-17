@@ -7,7 +7,6 @@ use App\Imports\DP3Import;
 use App\Models\Employee;
 use App\Models\PercentRelation;
 use App\Models\ScoreResponse;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,6 +18,7 @@ class ResponseController extends Controller
         $responScore = DB::table('tbl_respon_skor as t1')
             ->select('t1.*')
             ->join(DB::raw('(SELECT npp_penilai,npp_dinilai, MAX(id) id FROM tbl_respon_skor GROUP BY npp_penilai,npp_dinilai) as t2'), 't1.id', '=', 't2.id')
+            ->where('deleted_at', null)
             ->get();
 
         $groupByNpp = $responScore->reduce(function ($group, $currentData) {
