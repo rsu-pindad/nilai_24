@@ -90,7 +90,8 @@ class DP3Import implements ToCollection, WithCalculatedFormulas, WithStartRow
 
 
 
-            ScoreResponse::create(
+            ScoreResponse::updateOrCreate(
+                ['npp_penilai' => $val[1], 'npp_dinilai' => $val[3]],
                 [
                     'npp_penilai' => $val[1],
                     'nama_penilai' => $val[2],

@@ -36,7 +36,7 @@
                             </div>
                             <div class="card-body ">
                                 <div class="table-responsive px-4">
-                                    <table class="table">
+                                    <table class="table" id="dataTables">
                                         <thead>
                                             <tr>
                                                 <th rowspan="2">#</th>
@@ -114,31 +114,262 @@
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        <tfoot>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Header
+                            </div>
+                            <div class="card-body ">
+                                <div class="table-responsive px-4">
+                                    <table class="table table-bordered">
+                                        <tbody>
                                             <tr>
-                                                <td colspan="5">Total</td>
-
-                                                <td>{{ $response->sum('kpmn_perencanaan') }}</td>
-                                                <td>{{ $response->sum('kpmn_pengawasan') }}</td>
-                                                <td>{{ $response->sum('kpmn_inovasi') }}</td>
-                                                <td>{{ $response->sum('kpmn_kepemimpinan') }}</td>
-                                                <td>{{ $response->sum('kpmn_membimbing') }}</td>
-                                                <td>{{ $response->sum('kpmn_keputusan') }}</td>
-
-                                                <td>{{ $response->sum('nnpp_kerjasama') }}</td>
-                                                <td>{{ $response->sum('nnpp_komunikasi') }}</td>
-                                                <td>{{ $response->sum('nnpp_disiplin') }}</td>
-                                                <td>{{ $response->sum('nnpp_dedikasi') }}</td>
-                                                <td>{{ $response->sum('nnpp_etika') }}</td>
-
-                                                <td>{{ $response->sum('skpp_goal') }}</td>
-                                                <td>{{ $response->sum('skpp_error') }}</td>
-                                                <td>{{ $response->sum('skpp_dokumen') }}</td>
-                                                <td>{{ $response->sum('skpp_inisiatif') }}</td>
-                                                <td>{{ $response->sum('skpp_pola_pikir') }}</td>
+                                                <td colspan="5" class="text-center text-bold">1. Kepemimpinan</td>
+                                            </tr>
+                                            <tr class="text-bold">
+                                                <td></td>
+                                                <td>Self</td>
+                                                <td>Atasan</td>
+                                                <td>Rekan</td>
+                                                <td>Staff</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Strategi Perencanaan
+                                                </td>
+                                                @foreach ($result['kepemimpinan']['perencanaan'] as $kpPc)
+                                                    <td>{{ $kpPc }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Strategi Pengawasan
+                                                </td>
+                                                @foreach ($result['kepemimpinan']['pengawasan'] as $kpPg)
+                                                    <td>{{ $kpPg }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Strategi Inovasi
+                                                </td>
+                                                @foreach ($result['kepemimpinan']['inovasi'] as $kpIv)
+                                                    <td>{{ $kpIv }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Kepemimpinan
+                                                </td>
+                                                @foreach ($result['kepemimpinan']['kepemimpinan'] as $kpKp)
+                                                    <td>{{ $kpKp }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Membimbing & Membangun
+                                                </td>
+                                                @foreach ($result['kepemimpinan']['membimbing'] as $kpMb)
+                                                    <td>{{ $kpMb }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Pengambilan Keputusan
+                                                </td>
+                                                @foreach ($result['kepemimpinan']['keputusan'] as $kpKt)
+                                                    <td>{{ $kpKt }}</td>
+                                                @endforeach
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="text-info">
+                                                <th>Total Nilai Indikator</th>
+                                                <th>{{ collect($result['kepemimpinan'])->sum('self') }}</th>
+                                                <th>{{ collect($result['kepemimpinan'])->sum('atasan') }}</th>
+                                                <th>{{ collect($result['kepemimpinan'])->sum('selevel') }}</th>
+                                                <th>{{ collect($result['kepemimpinan'])->sum('staff') }}</th>
+                                            </tr>
+                                            <tr class="bg-light">
+                                                <th class="text-primary">Total Nilai Kepemimpinan</th>
+                                                <th class="text-primary text-center" colspan="4">
+                                                    {{ collect($result['kepemimpinan'])->sum('self') +
+                                                        collect($result['kepemimpinan'])->sum('atasan') +
+                                                        collect($result['kepemimpinan'])->sum('selevel') +
+                                                        collect($result['kepemimpinan'])->sum('staff') }}
+                                                </th>
                                             </tr>
                                         </tfoot>
                                     </table>
+
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5" class="text-center text-bold">2. Nilai Perusahaan &
+                                                    Perilaku</td>
+                                            </tr>
+                                            <tr class="text-bold">
+                                                <td></td>
+                                                <td>Self</td>
+                                                <td>Atasan</td>
+                                                <td>Rekan</td>
+                                                <td>Staff</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Kerjasama
+                                                </td>
+                                                @foreach ($result['nilai_perusahaan']['kerjasama'] as $npKs)
+                                                    <td>{{ $npKs }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Komunikasi
+                                                </td>
+                                                @foreach ($result['nilai_perusahaan']['komunikasi'] as $npKk)
+                                                    <td>{{ $npKk }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Disiplin & Kehadiran
+                                                </td>
+                                                @foreach ($result['nilai_perusahaan']['disiplin'] as $npDp)
+                                                    <td>{{ $npDp }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Dedikasi & Integritas
+                                                </td>
+                                                @foreach ($result['nilai_perusahaan']['dedikasi'] as $npDd)
+                                                    <td>{{ $npDd }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Etika
+                                                </td>
+                                                @foreach ($result['nilai_perusahaan']['etika'] as $npEt)
+                                                    <td>{{ $npEt }}</td>
+                                                @endforeach
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="text-info">
+                                                <th>Total Nilai Indikator</th>
+                                                <th>{{ collect($result['nilai_perusahaan'])->sum('self') }}</th>
+                                                <th>{{ collect($result['nilai_perusahaan'])->sum('atasan') }}</th>
+                                                <th>{{ collect($result['nilai_perusahaan'])->sum('selevel') }}</th>
+                                                <th>{{ collect($result['nilai_perusahaan'])->sum('staff') }}</th>
+                                            </tr>
+                                            <tr class="bg-light">
+                                                <th class="text-primary">Total Nilai Nilai Perusahaan & Prilaku</th>
+                                                <th class="text-primary text-center" colspan="4">
+                                                    {{ collect($result['nilai_perusahaan'])->sum('self') +
+                                                        collect($result['nilai_perusahaan'])->sum('atasan') +
+                                                        collect($result['nilai_perusahaan'])->sum('selevel') +
+                                                        collect($result['nilai_perusahaan'])->sum('staff') }}
+                                                </th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5" class="text-center text-bold">3. Tugas Sasaran Kinerja &
+                                                    Profesi</td>
+                                            </tr>
+                                            <tr class="text-bold">
+                                                <td></td>
+                                                <td>Self</td>
+                                                <td>Atasan</td>
+                                                <td>Rekan</td>
+                                                <td>Staff</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Goal Pencapaian
+                                                </td>
+                                                @foreach ($result['sasaran_kerja']['goal'] as $skGl)
+                                                    <td>{{ $skGl }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Error Pencapaian
+                                                </td>
+                                                @foreach ($result['sasaran_kerja']['error'] as $skEr)
+                                                    <td>{{ $skEr }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Proses - Pencapaian Kinerja ( Dokumen )
+                                                </td>
+                                                @foreach ($result['sasaran_kerja']['dokumen'] as $skDm)
+                                                    <td>{{ $skDm }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Proses - Pencapaian Kinerja ( Inisiatif )
+                                                </td>
+                                                @foreach ($result['sasaran_kerja']['inisiatif'] as $skIn)
+                                                    <td>{{ $skIn }}</td>
+                                                @endforeach
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">
+                                                    Proses - Pencapaian Kinerja ( Pola Pikir )
+                                                </td>
+                                                @foreach ($result['sasaran_kerja']['pola_pikir'] as $skPp)
+                                                    <td>{{ $skPp }}</td>
+                                                @endforeach
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="text-info">
+                                                <th>Total Nilai Indikator</th>
+                                                <th>{{ collect($result['sasaran_kerja'])->sum('self') }}</th>
+                                                <th>{{ collect($result['sasaran_kerja'])->sum('atasan') }}</th>
+                                                <th>{{ collect($result['sasaran_kerja'])->sum('selevel') }}</th>
+                                                <th>{{ collect($result['sasaran_kerja'])->sum('staff') }}</th>
+                                            </tr>
+                                            <tr class="bg-light">
+                                                <th class="text-primary">Total Nilai Tugas Sasaran Kinerja & Profesi </th>
+                                                <th class="text-primary text-center" colspan="4">
+                                                    {{ collect($result['sasaran_kerja'])->sum('self') +
+                                                        collect($result['sasaran_kerja'])->sum('atasan') +
+                                                        collect($result['sasaran_kerja'])->sum('selevel') +
+                                                        collect($result['sasaran_kerja'])->sum('staff') }}
+                                                </th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+
+                                    <table class="table table-borderless table-success rounded">
+                                        <tbody>
+                                            <tr>
+                                                <td>Total Penilaian Keseluruhan</td>
+                                                <td>{{ $scoreDp3 }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Kriteria</td>
+                                                <td>{{ $criteria }}</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
                                 </div>
                             </div>
                         </div>
@@ -152,7 +383,8 @@
     <!-- /.content-wrapper -->
 
     <!-- Modal -->
-    <div class="modal fade " id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade " id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <form action="{{ route('response/detail/store') }}" method="post">
                 @csrf
@@ -173,7 +405,8 @@
                                         data-live-search="true">
                                         <option value="">Pilih Pegawai</option>
                                         @foreach ($employee as $e)
-                                            <option value="{{ $e->npp }}">{{ $e->npp . ' - ' . $e->nama }}</option>
+                                            <option value="{{ $e->npp }}">
+                                                {{ $e->npp . ' - ' . $e->nama . ' (' . $e->level . ') ' }}</option>
                                         @endforeach
                                     </select>
                                 </div>

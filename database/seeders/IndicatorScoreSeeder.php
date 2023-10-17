@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Score;
+use App\Models\ScoreResponse;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -109,5 +111,7 @@ class IndicatorScoreSeeder extends Seeder
             ['aspek' => 'Sasaran Kinerja dan Proses Pencapaian', 'indikator' => 'Proses - Pencapaian Kinerja ( Pola Pikir )', 'jawaban' => 'Berpikir positif dan tetap konsisten dalam melakukan pencapaian kinerja.', 'skor' => 4],
             ['aspek' => 'Sasaran Kinerja dan Proses Pencapaian', 'indikator' => 'Proses - Pencapaian Kinerja ( Pola Pikir )', 'jawaban' => 'Selalu berpikir positif dan selalu tetap konsisten dalam melakukan pencapaian kinerja.', 'skor' => 5],
         ];
+
+        Score::insert($data);
     }
 }

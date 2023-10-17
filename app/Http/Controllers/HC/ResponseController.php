@@ -5,6 +5,7 @@ namespace App\Http\Controllers\HC;
 use App\Http\Controllers\Controller;
 use App\Imports\DP3Import;
 use App\Models\Employee;
+use App\Models\PercentRelation;
 use App\Models\ScoreResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -300,12 +301,753 @@ class ResponseController extends Controller
 
         $employee = Employee::all();
 
+        $countSelfEvaluator = 0;
+        $countStaffEvaluator = 0;
+        $countBossEvaluator = 0;
+        $countLevelEvaluator = 0;
+
+        $sumCalc = [
+            'kepemimpinan' => [
+                'perencanaan' => ['self' => 0, 'atasan' =>  0, 'selevel' => 0, 'staff' => 0],
+
+                'pengawasan' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'inovasi' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'kepemimpinan' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'membimbing' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'keputusan' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+            ],
+
+            'nilai_perusahaan' => [
+                'kerjasama' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'komunikasi' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'disiplin' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'dedikasi' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'etika' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+            ],
+
+            'sasaran_kerja' => [
+                'goal' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'error' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'dokumen' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'inisiatif' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+
+                'pola_pikir' => ['self' => 0, 'atasan' => 0, 'selevel' => 0, 'staff' => 0],
+            ],
+        ];
+
+        foreach ($groupByNpp[$npp] as $vEmp) {
+            // staff menilai atasan
+            if ($vEmp->relasi_penilai == "staff" && $vEmp->relasi_dinilai == "atasan") {
+
+                // jumlah staff yang menilai
+                $countStaffEvaluator += 1;
+
+                // jumlah score dari seluruh staff
+                // kepemimpinan
+                $sumCalc['kepemimpinan']['perencanaan']['staff'] += $vEmp->kpmn_perencanaan;
+                $sumCalc['kepemimpinan']['pengawasan']['staff'] += $vEmp->kpmn_pengawasan;
+                $sumCalc['kepemimpinan']['inovasi']['staff'] += $vEmp->kpmn_inovasi;
+                $sumCalc['kepemimpinan']['kepemimpinan']['staff'] += $vEmp->kpmn_kepemimpinan;
+                $sumCalc['kepemimpinan']['membimbing']['staff'] += $vEmp->kpmn_membimbing;
+                $sumCalc['kepemimpinan']['keputusan']['staff'] += $vEmp->kpmn_keputusan;
+
+                // nilai2 perusahaan
+                $sumCalc['nilai_perusahaan']['kerjasama']['staff'] += $vEmp->nnpp_kerjasama;
+                $sumCalc['nilai_perusahaan']['komunikasi']['staff'] += $vEmp->nnpp_komunikasi;
+                $sumCalc['nilai_perusahaan']['disiplin']['staff'] += $vEmp->nnpp_disiplin;
+                $sumCalc['nilai_perusahaan']['dedikasi']['staff'] += $vEmp->nnpp_dedikasi;
+                $sumCalc['nilai_perusahaan']['etika']['staff'] += $vEmp->nnpp_etika;
+
+                // sasaran kinerja
+                $sumCalc['sasaran_kerja']['goal']['staff'] += $vEmp->skpp_goal;
+                $sumCalc['sasaran_kerja']['error']['staff'] += $vEmp->skpp_error;
+                $sumCalc['sasaran_kerja']['dokumen']['staff'] += $vEmp->skpp_dokumen;
+                $sumCalc['sasaran_kerja']['inisiatif']['staff'] += $vEmp->skpp_inisiatif;
+                $sumCalc['sasaran_kerja']['pola_pikir']['staff'] += $vEmp->skpp_pola_pikir;
+            }
+            // self menilai self
+            else if ($vEmp->relasi_penilai == "self" && $vEmp->relasi_dinilai == "self") {
+                // jumlah self yang menilai
+                $countSelfEvaluator += 1;
+
+                // jumlah score dari seluruh self
+                // kepemimpinan
+                $sumCalc['kepemimpinan']['perencanaan']['self'] += $vEmp->kpmn_perencanaan;
+                $sumCalc['kepemimpinan']['pengawasan']['self'] += $vEmp->kpmn_pengawasan;
+                $sumCalc['kepemimpinan']['inovasi']['self'] += $vEmp->kpmn_inovasi;
+                $sumCalc['kepemimpinan']['kepemimpinan']['self'] += $vEmp->kpmn_kepemimpinan;
+                $sumCalc['kepemimpinan']['membimbing']['self'] += $vEmp->kpmn_membimbing;
+                $sumCalc['kepemimpinan']['keputusan']['self'] += $vEmp->kpmn_keputusan;
+
+                // nilai2 perusahaan
+                $sumCalc['nilai_perusahaan']['kerjasama']['self'] += $vEmp->nnpp_kerjasama;
+                $sumCalc['nilai_perusahaan']['komunikasi']['self'] += $vEmp->nnpp_komunikasi;
+                $sumCalc['nilai_perusahaan']['disiplin']['self'] += $vEmp->nnpp_disiplin;
+                $sumCalc['nilai_perusahaan']['dedikasi']['self'] += $vEmp->nnpp_dedikasi;
+                $sumCalc['nilai_perusahaan']['etika']['self'] += $vEmp->nnpp_etika;
+
+                // sasaran kinerja
+                $sumCalc['sasaran_kerja']['goal']['self'] += $vEmp->skpp_goal;
+                $sumCalc['sasaran_kerja']['error']['self'] += $vEmp->skpp_error;
+                $sumCalc['sasaran_kerja']['dokumen']['self'] += $vEmp->skpp_dokumen;
+                $sumCalc['sasaran_kerja']['inisiatif']['self'] += $vEmp->skpp_inisiatif;
+                $sumCalc['sasaran_kerja']['pola_pikir']['self'] += $vEmp->skpp_pola_pikir;
+            }
+            // atasan menilai staff
+            else if ($vEmp->relasi_penilai == "atasan" && $vEmp->relasi_dinilai == "staff") {
+                // jumlah atasan yang menilai
+                $countBossEvaluator += 1;
+
+                // jumlah score dari seluruh atasan
+                // kepemimpinan
+                $sumCalc['kepemimpinan']['perencanaan']['atasan'] += $vEmp->kpmn_perencanaan;
+                $sumCalc['kepemimpinan']['pengawasan']['atasan'] += $vEmp->kpmn_pengawasan;
+                $sumCalc['kepemimpinan']['inovasi']['atasan'] += $vEmp->kpmn_inovasi;
+                $sumCalc['kepemimpinan']['kepemimpinan']['atasan'] += $vEmp->kpmn_kepemimpinan;
+                $sumCalc['kepemimpinan']['membimbing']['atasan'] += $vEmp->kpmn_membimbing;
+                $sumCalc['kepemimpinan']['keputusan']['atasan'] += $vEmp->kpmn_keputusan;
+
+                // nilai2 perusahaan
+                $sumCalc['nilai_perusahaan']['kerjasama']['atasan'] += $vEmp->nnpp_kerjasama;
+                $sumCalc['nilai_perusahaan']['komunikasi']['atasan'] += $vEmp->nnpp_komunikasi;
+                $sumCalc['nilai_perusahaan']['disiplin']['atasan'] += $vEmp->nnpp_disiplin;
+                $sumCalc['nilai_perusahaan']['dedikasi']['atasan'] += $vEmp->nnpp_dedikasi;
+                $sumCalc['nilai_perusahaan']['etika']['atasan'] += $vEmp->nnpp_etika;
+
+                // sasaran kinerja
+                $sumCalc['sasaran_kerja']['goal']['atasan'] += $vEmp->skpp_goal;
+                $sumCalc['sasaran_kerja']['error']['atasan'] += $vEmp->skpp_error;
+                $sumCalc['sasaran_kerja']['dokumen']['atasan'] += $vEmp->skpp_dokumen;
+                $sumCalc['sasaran_kerja']['inisiatif']['atasan'] += $vEmp->skpp_inisiatif;
+                $sumCalc['sasaran_kerja']['pola_pikir']['atasan'] += $vEmp->skpp_pola_pikir;
+            }
+            // selevel menilai selevel
+            else if ($vEmp->relasi_penilai == "selevel" && $vEmp->relasi_dinilai == "selevel") {
+                // jumlah rekan kerja yang menilai
+                $countLevelEvaluator += 1;
+
+                // jumlah score dari seluruh rekan kerja
+                // kepemimpinan
+                $sumCalc['kepemimpinan']['perencanaan']['selevel'] += $vEmp->kpmn_perencanaan;
+                $sumCalc['kepemimpinan']['pengawasan']['selevel'] += $vEmp->kpmn_pengawasan;
+                $sumCalc['kepemimpinan']['inovasi']['selevel'] += $vEmp->kpmn_inovasi;
+                $sumCalc['kepemimpinan']['kepemimpinan']['selevel'] += $vEmp->kpmn_kepemimpinan;
+                $sumCalc['kepemimpinan']['membimbing']['selevel'] += $vEmp->kpmn_membimbing;
+                $sumCalc['kepemimpinan']['keputusan']['selevel'] += $vEmp->kpmn_keputusan;
+
+                // nilai2 perusahaan
+                $sumCalc['nilai_perusahaan']['kerjasama']['selevel'] += $vEmp->nnpp_kerjasama;
+                $sumCalc['nilai_perusahaan']['komunikasi']['selevel'] += $vEmp->nnpp_komunikasi;
+                $sumCalc['nilai_perusahaan']['disiplin']['selevel'] += $vEmp->nnpp_disiplin;
+                $sumCalc['nilai_perusahaan']['dedikasi']['selevel'] += $vEmp->nnpp_dedikasi;
+                $sumCalc['nilai_perusahaan']['etika']['selevel'] += $vEmp->nnpp_etika;
+
+                // sasaran kinerja
+                $sumCalc['sasaran_kerja']['goal']['selevel'] += $vEmp->skpp_goal;
+                $sumCalc['sasaran_kerja']['error']['selevel'] += $vEmp->skpp_error;
+                $sumCalc['sasaran_kerja']['dokumen']['selevel'] += $vEmp->skpp_dokumen;
+                $sumCalc['sasaran_kerja']['inisiatif']['selevel'] += $vEmp->skpp_inisiatif;
+                $sumCalc['sasaran_kerja']['pola_pikir']['selevel'] += $vEmp->skpp_pola_pikir;
+            }
+        }
+
+        $indctrSelfLvlVal = PercentRelation::where(['status' => 'self', 'level' => $groupByNpp[$npp][0]->level_dinilai])->first()->nilai;
+        $indctrBossLvlVal = PercentRelation::where(['status' => 'atasan', 'level' => $groupByNpp[$npp][0]->level_dinilai])->first()->nilai;
+        $indctrLevelLvlVal = PercentRelation::where(['status' => 'rekan kerja', 'level' => $groupByNpp[$npp][0]->level_dinilai])->first()->nilai;
+        $indctrStaffLvlVal = PercentRelation::where(['status' => 'staff', 'level' => $groupByNpp[$npp][0]->level_dinilai])->first()->nilai;
+
+        if ($countBossEvaluator == 0) {
+            $countBossEvaluator = 1;
+        }
+        if ($countSelfEvaluator == 0) {
+            $countSelfEvaluator = 1;
+        }
+        if ($countLevelEvaluator == 0) {
+            $countLevelEvaluator = 1;
+        }
+        if ($countStaffEvaluator == 0) {
+            $countStaffEvaluator = 1;
+        }
+
+
+        foreach ($groupByNpp[$npp] as $vEmp2) {
+
+            // level 1
+            if ($vEmp2->level_dinilai == 'I A' || $vEmp2->level_dinilai == 'I B' || $vEmp2->level_dinilai == 'I C') {
+                // kepemimpinan
+                // ((jumlah score penilai / jumlah penilai * 30 * 40%) * 5%) * 100
+                $kPcnSelf = (($sumCalc['kepemimpinan']['perencanaan']['self'] / $countSelfEvaluator / 30 * 0.4) * $indctrSelfLvlVal) * 100;
+                $kPgnSelf = (($sumCalc['kepemimpinan']['pengawasan']['self'] / $countSelfEvaluator / 30 * 0.4) * $indctrSelfLvlVal) * 100;
+                $kIvsSelf = (($sumCalc['kepemimpinan']['inovasi']['self'] / $countSelfEvaluator / 30 * 0.4) * $indctrSelfLvlVal) * 100;
+                $kKpmSelf = (($sumCalc['kepemimpinan']['kepemimpinan']['self'] / $countSelfEvaluator / 30 * 0.4) * $indctrSelfLvlVal) * 100;
+                $kMbgSelf = (($sumCalc['kepemimpinan']['membimbing']['self'] / $countSelfEvaluator / 30 * 0.4) * $indctrSelfLvlVal) * 100;
+                $kKptSelf = (($sumCalc['kepemimpinan']['keputusan']['self'] / $countSelfEvaluator / 30 * 0.4) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 40%) * 60%) * 100
+                $kPcnBoss = (($sumCalc['kepemimpinan']['perencanaan']['atasan'] / $countBossEvaluator / 30 * 0.4) * $indctrBossLvlVal) * 100;
+                $kPgnBoss = (($sumCalc['kepemimpinan']['pengawasan']['atasan'] / $countBossEvaluator / 30 * 0.4) * $indctrBossLvlVal) * 100;
+                $kIvsBoss = (($sumCalc['kepemimpinan']['inovasi']['atasan'] / $countBossEvaluator / 30 * 0.4) * $indctrBossLvlVal) * 100;
+                $kKpmBoss = (($sumCalc['kepemimpinan']['kepemimpinan']['atasan'] / $countBossEvaluator / 30 * 0.4) * $indctrBossLvlVal) * 100;
+                $kMbgBoss = (($sumCalc['kepemimpinan']['membimbing']['atasan'] / $countBossEvaluator / 30 * 0.4) * $indctrBossLvlVal) * 100;
+                $kKptBoss = (($sumCalc['kepemimpinan']['keputusan']['atasan'] / $countBossEvaluator / 30 * 0.4) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 40%) * 20%) * 100
+                $kPcnLevel = (($sumCalc['kepemimpinan']['perencanaan']['selevel'] / $countLevelEvaluator / 30 * 0.4) * $indctrLevelLvlVal) * 100;
+                $kPgnLevel = (($sumCalc['kepemimpinan']['pengawasan']['selevel'] / $countLevelEvaluator / 30 * 0.4) * $indctrLevelLvlVal) * 100;
+                $kIvsLevel = (($sumCalc['kepemimpinan']['inovasi']['selevel'] / $countLevelEvaluator / 30 * 0.4) * $indctrLevelLvlVal) * 100;
+                $kKpmLevel = (($sumCalc['kepemimpinan']['kepemimpinan']['selevel'] / $countLevelEvaluator / 30 * 0.4) * $indctrLevelLvlVal) * 100;
+                $kMbgLevel = (($sumCalc['kepemimpinan']['membimbing']['selevel'] / $countLevelEvaluator / 30 * 0.4) * $indctrLevelLvlVal) * 100;
+                $kKptLevel = (($sumCalc['kepemimpinan']['keputusan']['selevel'] / $countLevelEvaluator / 30 * 0.4) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 40%) * 15%) * 100
+                $kPcnStaff = (($sumCalc['kepemimpinan']['perencanaan']['staff'] / $countStaffEvaluator / 30 * 0.4) * $indctrStaffLvlVal) * 100;
+                $kPgnStaff = (($sumCalc['kepemimpinan']['pengawasan']['staff'] / $countStaffEvaluator / 30 * 0.4) * $indctrStaffLvlVal) * 100;
+                $kIvsStaff = (($sumCalc['kepemimpinan']['inovasi']['staff'] / $countStaffEvaluator / 30 * 0.4) * $indctrStaffLvlVal) * 100;
+                $kKpmStaff = (($sumCalc['kepemimpinan']['kepemimpinan']['staff'] / $countStaffEvaluator / 30 * 0.4) * $indctrStaffLvlVal) * 100;
+                $kMbgStaff = (($sumCalc['kepemimpinan']['membimbing']['staff'] / $countStaffEvaluator / 30 * 0.4) * $indctrStaffLvlVal) * 100;
+                $kKptStaff = (($sumCalc['kepemimpinan']['keputusan']['staff'] / $countStaffEvaluator / 30 * 0.4) * $indctrStaffLvlVal) * 100;
+
+                // nilai2 perusahaan
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 5%) * 100
+                $npKsmSelf = (($sumCalc['nilai_perusahaan']['kerjasama']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npKmkSelf = (($sumCalc['nilai_perusahaan']['komunikasi']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npDpnSelf = (($sumCalc['nilai_perusahaan']['disiplin']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npDdkSelf = (($sumCalc['nilai_perusahaan']['dedikasi']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npEtkSelf = (($sumCalc['nilai_perusahaan']['etika']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 60%) * 100
+                $npKsmBoss = (($sumCalc['nilai_perusahaan']['kerjasama']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npKmkBoss = (($sumCalc['nilai_perusahaan']['komunikasi']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npDpnBoss = (($sumCalc['nilai_perusahaan']['disiplin']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npDdkBoss = (($sumCalc['nilai_perusahaan']['dedikasi']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npEtkBoss = (($sumCalc['nilai_perusahaan']['etika']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 20%) * 100
+                $npKsmLevel = (($sumCalc['nilai_perusahaan']['kerjasama']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npKmkLevel = (($sumCalc['nilai_perusahaan']['komunikasi']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npDpnLevel = (($sumCalc['nilai_perusahaan']['disiplin']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npDdkLevel = (($sumCalc['nilai_perusahaan']['dedikasi']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npEtkLevel = (($sumCalc['nilai_perusahaan']['etika']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 15%) * 100
+                $npKsmStaff = (($sumCalc['nilai_perusahaan']['kerjasama']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npKmkStaff = (($sumCalc['nilai_perusahaan']['komunikasi']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npDpnStaff = (($sumCalc['nilai_perusahaan']['disiplin']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npDdkStaff = (($sumCalc['nilai_perusahaan']['dedikasi']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npEtkStaff = (($sumCalc['nilai_perusahaan']['etika']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+
+                // sasaran kinerja
+                // ((jumlah score penilai / jumlah penilai * 25 * 35%) * 5%) * 100
+                $skGolSelf = (($sumCalc['sasaran_kerja']['goal']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+                $skErrSelf = (($sumCalc['sasaran_kerja']['error']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+                $skDocSelf = (($sumCalc['sasaran_kerja']['dokumen']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+                $skIniSelf = (($sumCalc['sasaran_kerja']['inisiatif']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+                $skPprSelf = (($sumCalc['sasaran_kerja']['pola_pikir']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 35%) * 60%) * 100
+                $skGolBoss = (($sumCalc['sasaran_kerja']['goal']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+                $skErrBoss = (($sumCalc['sasaran_kerja']['error']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+                $skDocBoss = (($sumCalc['sasaran_kerja']['dokumen']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+                $skIniBoss = (($sumCalc['sasaran_kerja']['inisiatif']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+                $skPprBoss = (($sumCalc['sasaran_kerja']['pola_pikir']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 35%) * 20%) * 100
+                $skGolLevel = (($sumCalc['sasaran_kerja']['goal']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+                $skErrLevel = (($sumCalc['sasaran_kerja']['error']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+                $skDocLevel = (($sumCalc['sasaran_kerja']['dokumen']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+                $skIniLevel = (($sumCalc['sasaran_kerja']['inisiatif']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+                $skPprLevel = (($sumCalc['sasaran_kerja']['pola_pikir']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 35%) * 15%) * 100
+                $skGolStaff = (($sumCalc['sasaran_kerja']['goal']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+                $skErrStaff = (($sumCalc['sasaran_kerja']['error']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+                $skDocStaff = (($sumCalc['sasaran_kerja']['dokumen']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+                $skIniStaff = (($sumCalc['sasaran_kerja']['inisiatif']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+                $skPprStaff = (($sumCalc['sasaran_kerja']['pola_pikir']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+            }
+            // level 2
+            elseif ($vEmp2->level_dinilai == 'II' || $vEmp2->level_dinilai == 'II NS') {
+                // kepemimpinan
+                // ((jumlah score penilai / jumlah penilai * 30 * 35%) * 5%) * 100
+                $kPcnSelf = (($sumCalc['kepemimpinan']['perencanaan']['self'] / $countSelfEvaluator / 30 * 0.35) * $indctrSelfLvlVal) * 100;
+                $kPgnSelf = (($sumCalc['kepemimpinan']['pengawasan']['self'] / $countSelfEvaluator / 30 * 0.35) * $indctrSelfLvlVal) * 100;
+                $kIvsSelf = (($sumCalc['kepemimpinan']['inovasi']['self'] / $countSelfEvaluator / 30 * 0.35) * $indctrSelfLvlVal) * 100;
+                $kKpmSelf = (($sumCalc['kepemimpinan']['kepemimpinan']['self'] / $countSelfEvaluator / 30 * 0.35) * $indctrSelfLvlVal) * 100;
+                $kMbgSelf = (($sumCalc['kepemimpinan']['membimbing']['self'] / $countSelfEvaluator / 30 * 0.35) * $indctrSelfLvlVal) * 100;
+                $kKptSelf = (($sumCalc['kepemimpinan']['keputusan']['self'] / $countSelfEvaluator / 30 * 0.35) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 35%) * 60%) * 100
+                $kPcnBoss = (($sumCalc['kepemimpinan']['perencanaan']['atasan'] / $countBossEvaluator / 30 * 0.35) * $indctrBossLvlVal) * 100;
+                $kPgnBoss = (($sumCalc['kepemimpinan']['pengawasan']['atasan'] / $countBossEvaluator / 30 * 0.35) * $indctrBossLvlVal) * 100;
+                $kIvsBoss = (($sumCalc['kepemimpinan']['inovasi']['atasan'] / $countBossEvaluator / 30 * 0.35) * $indctrBossLvlVal) * 100;
+                $kKpmBoss = (($sumCalc['kepemimpinan']['kepemimpinan']['atasan'] / $countBossEvaluator / 30 * 0.35) * $indctrBossLvlVal) * 100;
+                $kMbgBoss = (($sumCalc['kepemimpinan']['membimbing']['atasan'] / $countBossEvaluator / 30 * 0.35) * $indctrBossLvlVal) * 100;
+                $kKptBoss = (($sumCalc['kepemimpinan']['keputusan']['atasan'] / $countBossEvaluator / 30 * 0.35) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 35%) * 20%) * 100
+                $kPcnLevel = (($sumCalc['kepemimpinan']['perencanaan']['selevel'] / $countLevelEvaluator / 30 * 0.35) * $indctrLevelLvlVal) * 100;
+                $kPgnLevel = (($sumCalc['kepemimpinan']['pengawasan']['selevel'] / $countLevelEvaluator / 30 * 0.35) * $indctrLevelLvlVal) * 100;
+                $kIvsLevel = (($sumCalc['kepemimpinan']['inovasi']['selevel'] / $countLevelEvaluator / 30 * 0.35) * $indctrLevelLvlVal) * 100;
+                $kKpmLevel = (($sumCalc['kepemimpinan']['kepemimpinan']['selevel'] / $countLevelEvaluator / 30 * 0.35) * $indctrLevelLvlVal) * 100;
+                $kMbgLevel = (($sumCalc['kepemimpinan']['membimbing']['selevel'] / $countLevelEvaluator / 30 * 0.35) * $indctrLevelLvlVal) * 100;
+                $kKptLevel = (($sumCalc['kepemimpinan']['keputusan']['selevel'] / $countLevelEvaluator / 30 * 0.35) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 35%) * 15%) * 100
+                $kPcnStaff = (($sumCalc['kepemimpinan']['perencanaan']['staff'] / $countStaffEvaluator / 30 * 0.35) * $indctrStaffLvlVal) * 100;
+                $kPgnStaff = (($sumCalc['kepemimpinan']['pengawasan']['staff'] / $countStaffEvaluator / 30 * 0.35) * $indctrStaffLvlVal) * 100;
+                $kIvsStaff = (($sumCalc['kepemimpinan']['inovasi']['staff'] / $countStaffEvaluator / 30 * 0.35) * $indctrStaffLvlVal) * 100;
+                $kKpmStaff = (($sumCalc['kepemimpinan']['kepemimpinan']['staff'] / $countStaffEvaluator / 30 * 0.35) * $indctrStaffLvlVal) * 100;
+                $kMbgStaff = (($sumCalc['kepemimpinan']['membimbing']['staff'] / $countStaffEvaluator / 30 * 0.35) * $indctrStaffLvlVal) * 100;
+                $kKptStaff = (($sumCalc['kepemimpinan']['keputusan']['staff'] / $countStaffEvaluator / 30 * 0.35) * $indctrStaffLvlVal) * 100;
+
+                // nilai2 perusahaan
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 5%) * 100
+                $npKsmSelf = (($sumCalc['nilai_perusahaan']['kerjasama']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npKmkSelf = (($sumCalc['nilai_perusahaan']['komunikasi']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npDpnSelf = (($sumCalc['nilai_perusahaan']['disiplin']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npDdkSelf = (($sumCalc['nilai_perusahaan']['dedikasi']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npEtkSelf = (($sumCalc['nilai_perusahaan']['etika']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 60%) * 100
+                $npKsmBoss = (($sumCalc['nilai_perusahaan']['kerjasama']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npKmkBoss = (($sumCalc['nilai_perusahaan']['komunikasi']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npDpnBoss = (($sumCalc['nilai_perusahaan']['disiplin']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npDdkBoss = (($sumCalc['nilai_perusahaan']['dedikasi']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npEtkBoss = (($sumCalc['nilai_perusahaan']['etika']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 20%) * 100
+                $npKsmLevel = (($sumCalc['nilai_perusahaan']['kerjasama']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npKmkLevel = (($sumCalc['nilai_perusahaan']['komunikasi']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npDpnLevel = (($sumCalc['nilai_perusahaan']['disiplin']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npDdkLevel = (($sumCalc['nilai_perusahaan']['dedikasi']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npEtkLevel = (($sumCalc['nilai_perusahaan']['etika']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 15%) * 100
+                $npKsmStaff = (($sumCalc['nilai_perusahaan']['kerjasama']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npKmkStaff = (($sumCalc['nilai_perusahaan']['komunikasi']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npDpnStaff = (($sumCalc['nilai_perusahaan']['disiplin']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npDdkStaff = (($sumCalc['nilai_perusahaan']['dedikasi']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npEtkStaff = (($sumCalc['nilai_perusahaan']['etika']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+
+                // sasaran kinerja
+                // ((jumlah score penilai / jumlah penilai * 25 * 40%) * 5%) * 100
+                $skGolSelf = (($sumCalc['sasaran_kerja']['goal']['self'] / $countSelfEvaluator / 25 * 0.40) * $indctrSelfLvlVal) * 100;
+                $skErrSelf = (($sumCalc['sasaran_kerja']['error']['self'] / $countSelfEvaluator / 25 * 0.40) * $indctrSelfLvlVal) * 100;
+                $skDocSelf = (($sumCalc['sasaran_kerja']['dokumen']['self'] / $countSelfEvaluator / 25 * 0.40) * $indctrSelfLvlVal) * 100;
+                $skIniSelf = (($sumCalc['sasaran_kerja']['inisiatif']['self'] / $countSelfEvaluator / 25 * 0.40) * $indctrSelfLvlVal) * 100;
+                $skPprSelf = (($sumCalc['sasaran_kerja']['pola_pikir']['self'] / $countSelfEvaluator / 25 * 0.40) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 40%) * 60%) * 100
+                $skGolBoss = (($sumCalc['sasaran_kerja']['goal']['atasan'] / $countBossEvaluator / 25 * 0.40) * $indctrBossLvlVal) * 100;
+                $skErrBoss = (($sumCalc['sasaran_kerja']['error']['atasan'] / $countBossEvaluator / 25 * 0.40) * $indctrBossLvlVal) * 100;
+                $skDocBoss = (($sumCalc['sasaran_kerja']['dokumen']['atasan'] / $countBossEvaluator / 25 * 0.40) * $indctrBossLvlVal) * 100;
+                $skIniBoss = (($sumCalc['sasaran_kerja']['inisiatif']['atasan'] / $countBossEvaluator / 25 * 0.40) * $indctrBossLvlVal) * 100;
+                $skPprBoss = (($sumCalc['sasaran_kerja']['pola_pikir']['atasan'] / $countBossEvaluator / 25 * 0.40) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 40%) * 20%) * 100
+                $skGolLevel = (($sumCalc['sasaran_kerja']['goal']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
+                $skErrLevel = (($sumCalc['sasaran_kerja']['error']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
+                $skDocLevel = (($sumCalc['sasaran_kerja']['dokumen']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
+                $skIniLevel = (($sumCalc['sasaran_kerja']['inisiatif']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
+                $skPprLevel = (($sumCalc['sasaran_kerja']['pola_pikir']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 40%) * 15%) * 100
+                $skGolStaff = (($sumCalc['sasaran_kerja']['goal']['staff'] / $countStaffEvaluator / 25 * 0.40) * $indctrStaffLvlVal) * 100;
+                $skErrStaff = (($sumCalc['sasaran_kerja']['error']['staff'] / $countStaffEvaluator / 25 * 0.40) * $indctrStaffLvlVal) * 100;
+                $skDocStaff = (($sumCalc['sasaran_kerja']['dokumen']['staff'] / $countStaffEvaluator / 25 * 0.40) * $indctrStaffLvlVal) * 100;
+                $skIniStaff = (($sumCalc['sasaran_kerja']['inisiatif']['staff'] / $countStaffEvaluator / 25 * 0.40) * $indctrStaffLvlVal) * 100;
+                $skPprStaff = (($sumCalc['sasaran_kerja']['pola_pikir']['staff'] / $countStaffEvaluator / 25 * 0.40) * $indctrStaffLvlVal) * 100;
+            }
+            // level 3
+            elseif ($vEmp2->level_dinilai == 'III' || $vEmp2->level_dinilai == 'III NS') {
+                // kepemimpinan
+                // ((jumlah score penilai / jumlah penilai * 30 * 30%) * 5%) * 100
+                $kPcnSelf = (($sumCalc['kepemimpinan']['perencanaan']['self'] / $countSelfEvaluator / 30 * 0.30) * $indctrSelfLvlVal) * 100;
+                $kPgnSelf = (($sumCalc['kepemimpinan']['pengawasan']['self'] / $countSelfEvaluator / 30 * 0.30) * $indctrSelfLvlVal) * 100;
+                $kIvsSelf = (($sumCalc['kepemimpinan']['inovasi']['self'] / $countSelfEvaluator / 30 * 0.30) * $indctrSelfLvlVal) * 100;
+                $kKpmSelf = (($sumCalc['kepemimpinan']['kepemimpinan']['self'] / $countSelfEvaluator / 30 * 0.30) * $indctrSelfLvlVal) * 100;
+                $kMbgSelf = (($sumCalc['kepemimpinan']['membimbing']['self'] / $countSelfEvaluator / 30 * 0.30) * $indctrSelfLvlVal) * 100;
+                $kKptSelf = (($sumCalc['kepemimpinan']['keputusan']['self'] / $countSelfEvaluator / 30 * 0.30) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 30%) * 60%) * 100
+                $kPcnBoss = (($sumCalc['kepemimpinan']['perencanaan']['atasan'] / $countBossEvaluator / 30 * 0.30) * $indctrBossLvlVal) * 100;
+                $kPgnBoss = (($sumCalc['kepemimpinan']['pengawasan']['atasan'] / $countBossEvaluator / 30 * 0.30) * $indctrBossLvlVal) * 100;
+                $kIvsBoss = (($sumCalc['kepemimpinan']['inovasi']['atasan'] / $countBossEvaluator / 30 * 0.30) * $indctrBossLvlVal) * 100;
+                $kKpmBoss = (($sumCalc['kepemimpinan']['kepemimpinan']['atasan'] / $countBossEvaluator / 30 * 0.30) * $indctrBossLvlVal) * 100;
+                $kMbgBoss = (($sumCalc['kepemimpinan']['membimbing']['atasan'] / $countBossEvaluator / 30 * 0.30) * $indctrBossLvlVal) * 100;
+                $kKptBoss = (($sumCalc['kepemimpinan']['keputusan']['atasan'] / $countBossEvaluator / 30 * 0.30) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 30%) * 20%) * 100
+                $kPcnLevel = (($sumCalc['kepemimpinan']['perencanaan']['selevel'] / $countLevelEvaluator / 30 * 0.30) * $indctrLevelLvlVal) * 100;
+                $kPgnLevel = (($sumCalc['kepemimpinan']['pengawasan']['selevel'] / $countLevelEvaluator / 30 * 0.30) * $indctrLevelLvlVal) * 100;
+                $kIvsLevel = (($sumCalc['kepemimpinan']['inovasi']['selevel'] / $countLevelEvaluator / 30 * 0.30) * $indctrLevelLvlVal) * 100;
+                $kKpmLevel = (($sumCalc['kepemimpinan']['kepemimpinan']['selevel'] / $countLevelEvaluator / 30 * 0.30) * $indctrLevelLvlVal) * 100;
+                $kMbgLevel = (($sumCalc['kepemimpinan']['membimbing']['selevel'] / $countLevelEvaluator / 30 * 0.30) * $indctrLevelLvlVal) * 100;
+                $kKptLevel = (($sumCalc['kepemimpinan']['keputusan']['selevel'] / $countLevelEvaluator / 30 * 0.30) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 30%) * 15%) * 100
+                $kPcnStaff = (($sumCalc['kepemimpinan']['perencanaan']['staff'] / $countStaffEvaluator / 30 * 0.30) * $indctrStaffLvlVal) * 100;
+                $kPgnStaff = (($sumCalc['kepemimpinan']['pengawasan']['staff'] / $countStaffEvaluator / 30 * 0.30) * $indctrStaffLvlVal) * 100;
+                $kIvsStaff = (($sumCalc['kepemimpinan']['inovasi']['staff'] / $countStaffEvaluator / 30 * 0.30) * $indctrStaffLvlVal) * 100;
+                $kKpmStaff = (($sumCalc['kepemimpinan']['kepemimpinan']['staff'] / $countStaffEvaluator / 30 * 0.30) * $indctrStaffLvlVal) * 100;
+                $kMbgStaff = (($sumCalc['kepemimpinan']['membimbing']['staff'] / $countStaffEvaluator / 30 * 0.30) * $indctrStaffLvlVal) * 100;
+                $kKptStaff = (($sumCalc['kepemimpinan']['keputusan']['staff'] / $countStaffEvaluator / 30 * 0.30) * $indctrStaffLvlVal) * 100;
+
+                // nilai2 perusahaan
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 5%) * 100
+                $npKsmSelf = (($sumCalc['nilai_perusahaan']['kerjasama']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npKmkSelf = (($sumCalc['nilai_perusahaan']['komunikasi']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npDpnSelf = (($sumCalc['nilai_perusahaan']['disiplin']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npDdkSelf = (($sumCalc['nilai_perusahaan']['dedikasi']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+                $npEtkSelf = (($sumCalc['nilai_perusahaan']['etika']['self'] / $countSelfEvaluator / 25 * 0.25) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 60%) * 100
+                $npKsmBoss = (($sumCalc['nilai_perusahaan']['kerjasama']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npKmkBoss = (($sumCalc['nilai_perusahaan']['komunikasi']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npDpnBoss = (($sumCalc['nilai_perusahaan']['disiplin']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npDdkBoss = (($sumCalc['nilai_perusahaan']['dedikasi']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+                $npEtkBoss = (($sumCalc['nilai_perusahaan']['etika']['atasan'] / $countBossEvaluator / 25 * 0.25) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 20%) * 100
+                $npKsmLevel = (($sumCalc['nilai_perusahaan']['kerjasama']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npKmkLevel = (($sumCalc['nilai_perusahaan']['komunikasi']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npDpnLevel = (($sumCalc['nilai_perusahaan']['disiplin']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npDdkLevel = (($sumCalc['nilai_perusahaan']['dedikasi']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $npEtkLevel = (($sumCalc['nilai_perusahaan']['etika']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 15%) * 100
+                $npKsmStaff = (($sumCalc['nilai_perusahaan']['kerjasama']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npKmkStaff = (($sumCalc['nilai_perusahaan']['komunikasi']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npDpnStaff = (($sumCalc['nilai_perusahaan']['disiplin']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npDdkStaff = (($sumCalc['nilai_perusahaan']['dedikasi']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+                $npEtkStaff = (($sumCalc['nilai_perusahaan']['etika']['staff'] / $countStaffEvaluator / 25 * 0.25) * $indctrStaffLvlVal) * 100;
+
+                // sasaran kinerja
+                // ((jumlah score penilai / jumlah penilai * 25 * 45%) * 5%) * 100
+                $skGolSelf = (($sumCalc['sasaran_kerja']['goal']['self'] / $countSelfEvaluator / 25 * 0.45) * $indctrSelfLvlVal) * 100;
+                $skErrSelf = (($sumCalc['sasaran_kerja']['error']['self'] / $countSelfEvaluator / 25 * 0.45) * $indctrSelfLvlVal) * 100;
+                $skDocSelf = (($sumCalc['sasaran_kerja']['dokumen']['self'] / $countSelfEvaluator / 25 * 0.45) * $indctrSelfLvlVal) * 100;
+                $skIniSelf = (($sumCalc['sasaran_kerja']['inisiatif']['self'] / $countSelfEvaluator / 25 * 0.45) * $indctrSelfLvlVal) * 100;
+                $skPprSelf = (($sumCalc['sasaran_kerja']['pola_pikir']['self'] / $countSelfEvaluator / 25 * 0.45) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 45%) * 60%) * 100
+                $skGolBoss = (($sumCalc['sasaran_kerja']['goal']['atasan'] / $countBossEvaluator / 25 * 0.45) * $indctrBossLvlVal) * 100;
+                $skErrBoss = (($sumCalc['sasaran_kerja']['error']['atasan'] / $countBossEvaluator / 25 * 0.45) * $indctrBossLvlVal) * 100;
+                $skDocBoss = (($sumCalc['sasaran_kerja']['dokumen']['atasan'] / $countBossEvaluator / 25 * 0.45) * $indctrBossLvlVal) * 100;
+                $skIniBoss = (($sumCalc['sasaran_kerja']['inisiatif']['atasan'] / $countBossEvaluator / 25 * 0.45) * $indctrBossLvlVal) * 100;
+                $skPprBoss = (($sumCalc['sasaran_kerja']['pola_pikir']['atasan'] / $countBossEvaluator / 25 * 0.45) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 45%) * 20%) * 100
+                $skGolLevel = (($sumCalc['sasaran_kerja']['goal']['selevel'] / $countLevelEvaluator / 25 * 0.45) * $indctrLevelLvlVal) * 100;
+                $skErrLevel = (($sumCalc['sasaran_kerja']['error']['selevel'] / $countLevelEvaluator / 25 * 0.45) * $indctrLevelLvlVal) * 100;
+                $skDocLevel = (($sumCalc['sasaran_kerja']['dokumen']['selevel'] / $countLevelEvaluator / 25 * 0.45) * $indctrLevelLvlVal) * 100;
+                $skIniLevel = (($sumCalc['sasaran_kerja']['inisiatif']['selevel'] / $countLevelEvaluator / 25 * 0.45) * $indctrLevelLvlVal) * 100;
+                $skPprLevel = (($sumCalc['sasaran_kerja']['pola_pikir']['selevel'] / $countLevelEvaluator / 25 * 0.45) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 45%) * 15%) * 100
+                $skGolStaff = (($sumCalc['sasaran_kerja']['goal']['staff'] / $countStaffEvaluator / 25 * 0.45) * $indctrStaffLvlVal) * 100;
+                $skErrStaff = (($sumCalc['sasaran_kerja']['error']['staff'] / $countStaffEvaluator / 25 * 0.45) * $indctrStaffLvlVal) * 100;
+                $skDocStaff = (($sumCalc['sasaran_kerja']['dokumen']['staff'] / $countStaffEvaluator / 25 * 0.45) * $indctrStaffLvlVal) * 100;
+                $skIniStaff = (($sumCalc['sasaran_kerja']['inisiatif']['staff'] / $countStaffEvaluator / 25 * 0.45) * $indctrStaffLvlVal) * 100;
+                $skPprStaff = (($sumCalc['sasaran_kerja']['pola_pikir']['staff'] / $countStaffEvaluator / 25 * 0.45) * $indctrStaffLvlVal) * 100;
+            }
+            // level 4 A
+            elseif ($vEmp2->level_dinilai == 'IV A') {
+                // kepemimpinan
+                // ((jumlah score penilai / jumlah penilai * 30 * 10%) * 5%) * 100
+                $kPcnSelf = (($sumCalc['kepemimpinan']['perencanaan']['self'] / $countSelfEvaluator / 30 * 0.10) * $indctrSelfLvlVal) * 100;
+                $kPgnSelf = (($sumCalc['kepemimpinan']['pengawasan']['self'] / $countSelfEvaluator / 30 * 0.10) * $indctrSelfLvlVal) * 100;
+                $kIvsSelf = (($sumCalc['kepemimpinan']['inovasi']['self'] / $countSelfEvaluator / 30 * 0.10) * $indctrSelfLvlVal) * 100;
+                $kKpmSelf = (($sumCalc['kepemimpinan']['kepemimpinan']['self'] / $countSelfEvaluator / 30 * 0.10) * $indctrSelfLvlVal) * 100;
+                $kMbgSelf = (($sumCalc['kepemimpinan']['membimbing']['self'] / $countSelfEvaluator / 30 * 0.10) * $indctrSelfLvlVal) * 100;
+                $kKptSelf = (($sumCalc['kepemimpinan']['keputusan']['self'] / $countSelfEvaluator / 30 * 0.10) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 10%) * 60%) * 100
+                $kPcnBoss = (($sumCalc['kepemimpinan']['perencanaan']['atasan'] / $countBossEvaluator / 30 * 0.10) * $indctrBossLvlVal) * 100;
+                $kPgnBoss = (($sumCalc['kepemimpinan']['pengawasan']['atasan'] / $countBossEvaluator / 30 * 0.10) * $indctrBossLvlVal) * 100;
+                $kIvsBoss = (($sumCalc['kepemimpinan']['inovasi']['atasan'] / $countBossEvaluator / 30 * 0.10) * $indctrBossLvlVal) * 100;
+                $kKpmBoss = (($sumCalc['kepemimpinan']['kepemimpinan']['atasan'] / $countBossEvaluator / 30 * 0.10) * $indctrBossLvlVal) * 100;
+                $kMbgBoss = (($sumCalc['kepemimpinan']['membimbing']['atasan'] / $countBossEvaluator / 30 * 0.10) * $indctrBossLvlVal) * 100;
+                $kKptBoss = (($sumCalc['kepemimpinan']['keputusan']['atasan'] / $countBossEvaluator / 30 * 0.10) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 10%) * 20%) * 100
+                $kPcnLevel = (($sumCalc['kepemimpinan']['perencanaan']['selevel'] / $countLevelEvaluator / 30 * 0.10) * $indctrLevelLvlVal) * 100;
+                $kPgnLevel = (($sumCalc['kepemimpinan']['pengawasan']['selevel'] / $countLevelEvaluator / 30 * 0.10) * $indctrLevelLvlVal) * 100;
+                $kIvsLevel = (($sumCalc['kepemimpinan']['inovasi']['selevel'] / $countLevelEvaluator / 30 * 0.10) * $indctrLevelLvlVal) * 100;
+                $kKpmLevel = (($sumCalc['kepemimpinan']['kepemimpinan']['selevel'] / $countLevelEvaluator / 30 * 0.10) * $indctrLevelLvlVal) * 100;
+                $kMbgLevel = (($sumCalc['kepemimpinan']['membimbing']['selevel'] / $countLevelEvaluator / 30 * 0.10) * $indctrLevelLvlVal) * 100;
+                $kKptLevel = (($sumCalc['kepemimpinan']['keputusan']['selevel'] / $countLevelEvaluator / 30 * 0.10) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 10%) * 15%) * 100
+                $kPcnStaff = (($sumCalc['kepemimpinan']['perencanaan']['staff'] / $countStaffEvaluator / 30 * 0.10) * $indctrStaffLvlVal) * 100;
+                $kPgnStaff = (($sumCalc['kepemimpinan']['pengawasan']['staff'] / $countStaffEvaluator / 30 * 0.10) * $indctrStaffLvlVal) * 100;
+                $kIvsStaff = (($sumCalc['kepemimpinan']['inovasi']['staff'] / $countStaffEvaluator / 30 * 0.10) * $indctrStaffLvlVal) * 100;
+                $kKpmStaff = (($sumCalc['kepemimpinan']['kepemimpinan']['staff'] / $countStaffEvaluator / 30 * 0.10) * $indctrStaffLvlVal) * 100;
+                $kMbgStaff = (($sumCalc['kepemimpinan']['membimbing']['staff'] / $countStaffEvaluator / 30 * 0.10) * $indctrStaffLvlVal) * 100;
+                $kKptStaff = (($sumCalc['kepemimpinan']['keputusan']['staff'] / $countStaffEvaluator / 30 * 0.10) * $indctrStaffLvlVal) * 100;
+
+                // nilai2 perusahaan
+                // ((jumlah score penilai / jumlah penilai * 25 * 30%) * 5%) * 100
+                $npKsmSelf = (($sumCalc['nilai_perusahaan']['kerjasama']['self'] / $countSelfEvaluator / 25 * 0.30) * $indctrSelfLvlVal) * 100;
+                $npKmkSelf = (($sumCalc['nilai_perusahaan']['komunikasi']['self'] / $countSelfEvaluator / 25 * 0.30) * $indctrSelfLvlVal) * 100;
+                $npDpnSelf = (($sumCalc['nilai_perusahaan']['disiplin']['self'] / $countSelfEvaluator / 25 * 0.30) * $indctrSelfLvlVal) * 100;
+                $npDdkSelf = (($sumCalc['nilai_perusahaan']['dedikasi']['self'] / $countSelfEvaluator / 25 * 0.30) * $indctrSelfLvlVal) * 100;
+                $npEtkSelf = (($sumCalc['nilai_perusahaan']['etika']['self'] / $countSelfEvaluator / 25 * 0.30) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 30%) * 60%) * 100
+                $npKsmBoss = (($sumCalc['nilai_perusahaan']['kerjasama']['atasan'] / $countBossEvaluator / 25 * 0.30) * $indctrBossLvlVal) * 100;
+                $npKmkBoss = (($sumCalc['nilai_perusahaan']['komunikasi']['atasan'] / $countBossEvaluator / 25 * 0.30) * $indctrBossLvlVal) * 100;
+                $npDpnBoss = (($sumCalc['nilai_perusahaan']['disiplin']['atasan'] / $countBossEvaluator / 25 * 0.30) * $indctrBossLvlVal) * 100;
+                $npDdkBoss = (($sumCalc['nilai_perusahaan']['dedikasi']['atasan'] / $countBossEvaluator / 25 * 0.30) * $indctrBossLvlVal) * 100;
+                $npEtkBoss = (($sumCalc['nilai_perusahaan']['etika']['atasan'] / $countBossEvaluator / 25 * 0.30) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 30%) * 20%) * 100
+                $npKsmLevel = (($sumCalc['nilai_perusahaan']['kerjasama']['selevel'] / $countLevelEvaluator / 25 * 0.30) * $indctrLevelLvlVal) * 100;
+                $npKmkLevel = (($sumCalc['nilai_perusahaan']['komunikasi']['selevel'] / $countLevelEvaluator / 25 * 0.30) * $indctrLevelLvlVal) * 100;
+                $npDpnLevel = (($sumCalc['nilai_perusahaan']['disiplin']['selevel'] / $countLevelEvaluator / 25 * 0.30) * $indctrLevelLvlVal) * 100;
+                $npDdkLevel = (($sumCalc['nilai_perusahaan']['dedikasi']['selevel'] / $countLevelEvaluator / 25 * 0.30) * $indctrLevelLvlVal) * 100;
+                $npEtkLevel = (($sumCalc['nilai_perusahaan']['etika']['selevel'] / $countLevelEvaluator / 25 * 0.30) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 30%) * 15%) * 100
+                $npKsmStaff = (($sumCalc['nilai_perusahaan']['kerjasama']['staff'] / $countStaffEvaluator / 25 * 0.30) * $indctrStaffLvlVal) * 100;
+                $npKmkStaff = (($sumCalc['nilai_perusahaan']['komunikasi']['staff'] / $countStaffEvaluator / 25 * 0.30) * $indctrStaffLvlVal) * 100;
+                $npDpnStaff = (($sumCalc['nilai_perusahaan']['disiplin']['staff'] / $countStaffEvaluator / 25 * 0.30) * $indctrStaffLvlVal) * 100;
+                $npDdkStaff = (($sumCalc['nilai_perusahaan']['dedikasi']['staff'] / $countStaffEvaluator / 25 * 0.30) * $indctrStaffLvlVal) * 100;
+                $npEtkStaff = (($sumCalc['nilai_perusahaan']['etika']['staff'] / $countStaffEvaluator / 25 * 0.30) * $indctrStaffLvlVal) * 100;
+
+                // sasaran kinerja
+                // ((jumlah score penilai / jumlah penilai * 25 * 60%) * 5%) * 100
+                $skGolSelf = (($sumCalc['sasaran_kerja']['goal']['self'] / $countSelfEvaluator / 25 * 0.60) * $indctrSelfLvlVal) * 100;
+                $skErrSelf = (($sumCalc['sasaran_kerja']['error']['self'] / $countSelfEvaluator / 25 * 0.60) * $indctrSelfLvlVal) * 100;
+                $skDocSelf = (($sumCalc['sasaran_kerja']['dokumen']['self'] / $countSelfEvaluator / 25 * 0.60) * $indctrSelfLvlVal) * 100;
+                $skIniSelf = (($sumCalc['sasaran_kerja']['inisiatif']['self'] / $countSelfEvaluator / 25 * 0.60) * $indctrSelfLvlVal) * 100;
+                $skPprSelf = (($sumCalc['sasaran_kerja']['pola_pikir']['self'] / $countSelfEvaluator / 25 * 0.60) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 60%) * 60%) * 100
+                $skGolBoss = (($sumCalc['sasaran_kerja']['goal']['atasan'] / $countBossEvaluator / 25 * 0.60) * $indctrBossLvlVal) * 100;
+                $skErrBoss = (($sumCalc['sasaran_kerja']['error']['atasan'] / $countBossEvaluator / 25 * 0.60) * $indctrBossLvlVal) * 100;
+                $skDocBoss = (($sumCalc['sasaran_kerja']['dokumen']['atasan'] / $countBossEvaluator / 25 * 0.60) * $indctrBossLvlVal) * 100;
+                $skIniBoss = (($sumCalc['sasaran_kerja']['inisiatif']['atasan'] / $countBossEvaluator / 25 * 0.60) * $indctrBossLvlVal) * 100;
+                $skPprBoss = (($sumCalc['sasaran_kerja']['pola_pikir']['atasan'] / $countBossEvaluator / 25 * 0.60) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 60%) * 20%) * 100
+                $skGolLevel = (($sumCalc['sasaran_kerja']['goal']['selevel'] / $countLevelEvaluator / 25 * 0.60) * $indctrLevelLvlVal) * 100;
+                $skErrLevel = (($sumCalc['sasaran_kerja']['error']['selevel'] / $countLevelEvaluator / 25 * 0.60) * $indctrLevelLvlVal) * 100;
+                $skDocLevel = (($sumCalc['sasaran_kerja']['dokumen']['selevel'] / $countLevelEvaluator / 25 * 0.60) * $indctrLevelLvlVal) * 100;
+                $skIniLevel = (($sumCalc['sasaran_kerja']['inisiatif']['selevel'] / $countLevelEvaluator / 25 * 0.60) * $indctrLevelLvlVal) * 100;
+                $skPprLevel = (($sumCalc['sasaran_kerja']['pola_pikir']['selevel'] / $countLevelEvaluator / 25 * 0.60) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 60%) * 15%) * 100
+                $skGolStaff = (($sumCalc['sasaran_kerja']['goal']['staff'] / $countStaffEvaluator / 25 * 0.60) * $indctrStaffLvlVal) * 100;
+                $skErrStaff = (($sumCalc['sasaran_kerja']['error']['staff'] / $countStaffEvaluator / 25 * 0.60) * $indctrStaffLvlVal) * 100;
+                $skDocStaff = (($sumCalc['sasaran_kerja']['dokumen']['staff'] / $countStaffEvaluator / 25 * 0.60) * $indctrStaffLvlVal) * 100;
+                $skIniStaff = (($sumCalc['sasaran_kerja']['inisiatif']['staff'] / $countStaffEvaluator / 25 * 0.60) * $indctrStaffLvlVal) * 100;
+                $skPprStaff = (($sumCalc['sasaran_kerja']['pola_pikir']['staff'] / $countStaffEvaluator / 25 * 0.60) * $indctrStaffLvlVal) * 100;
+            }
+            // level 4 B & 5
+            elseif ($vEmp2->level_dinilai == 'IV B' || $vEmp2->level_dinilai == 'V') {
+                // kepemimpinan
+                // ((jumlah score penilai / jumlah penilai * 30 * 50%) * 5%) * 100
+                $kPcnSelf = (($sumCalc['kepemimpinan']['perencanaan']['self'] / $countSelfEvaluator / 30 * 0.50) * 0.05) * 100;
+                $kPgnSelf = (($sumCalc['kepemimpinan']['pengawasan']['self'] / $countSelfEvaluator / 30 * 0.50) * 0.05) * 100;
+                $kIvsSelf = (($sumCalc['kepemimpinan']['inovasi']['self'] / $countSelfEvaluator / 30 * 0.50) * 0.05) * 100;
+                $kKpmSelf = (($sumCalc['kepemimpinan']['kepemimpinan']['self'] / $countSelfEvaluator / 30 * 0.50) * 0.05) * 100;
+                $kMbgSelf = (($sumCalc['kepemimpinan']['membimbing']['self'] / $countSelfEvaluator / 30 * 0.50) * 0.05) * 100;
+                $kKptSelf = (($sumCalc['kepemimpinan']['keputusan']['self'] / $countSelfEvaluator / 30 * 0.50) * 0.05) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 50%) * 60%) * 100
+                $kPcnBoss = (($sumCalc['kepemimpinan']['perencanaan']['atasan'] / $countBossEvaluator / 30 * 0.50) * $indctrBossLvlVal) * 100;
+                $kPgnBoss = (($sumCalc['kepemimpinan']['pengawasan']['atasan'] / $countBossEvaluator / 30 * 0.50) * $indctrBossLvlVal) * 100;
+                $kIvsBoss = (($sumCalc['kepemimpinan']['inovasi']['atasan'] / $countBossEvaluator / 30 * 0.50) * $indctrBossLvlVal) * 100;
+                $kKpmBoss = (($sumCalc['kepemimpinan']['kepemimpinan']['atasan'] / $countBossEvaluator / 30 * 0.50) * $indctrBossLvlVal) * 100;
+                $kMbgBoss = (($sumCalc['kepemimpinan']['membimbing']['atasan'] / $countBossEvaluator / 30 * 0.50) * $indctrBossLvlVal) * 100;
+                $kKptBoss = (($sumCalc['kepemimpinan']['keputusan']['atasan'] / $countBossEvaluator / 30 * 0.50) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 50%) * 20%) * 100
+                $kPcnLevel = (($sumCalc['kepemimpinan']['perencanaan']['selevel'] / $countLevelEvaluator / 30 * 0.50) * $indctrLevelLvlVal) * 100;
+                $kPgnLevel = (($sumCalc['kepemimpinan']['pengawasan']['selevel'] / $countLevelEvaluator / 30 * 0.50) * $indctrLevelLvlVal) * 100;
+                $kIvsLevel = (($sumCalc['kepemimpinan']['inovasi']['selevel'] / $countLevelEvaluator / 30 * 0.50) * $indctrLevelLvlVal) * 100;
+                $kKpmLevel = (($sumCalc['kepemimpinan']['kepemimpinan']['selevel'] / $countLevelEvaluator / 30 * 0.50) * $indctrLevelLvlVal) * 100;
+                $kMbgLevel = (($sumCalc['kepemimpinan']['membimbing']['selevel'] / $countLevelEvaluator / 30 * 0.50) * $indctrLevelLvlVal) * 100;
+                $kKptLevel = (($sumCalc['kepemimpinan']['keputusan']['selevel'] / $countLevelEvaluator / 30 * 0.50) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 30 * 50%) * 15%) * 100
+                $kPcnStaff = (($sumCalc['kepemimpinan']['perencanaan']['staff'] / $countStaffEvaluator / 30 * 0.50) * $indctrStaffLvlVal) * 100;
+                $kPgnStaff = (($sumCalc['kepemimpinan']['pengawasan']['staff'] / $countStaffEvaluator / 30 * 0.50) * $indctrStaffLvlVal) * 100;
+                $kIvsStaff = (($sumCalc['kepemimpinan']['inovasi']['staff'] / $countStaffEvaluator / 30 * 0.50) * $indctrStaffLvlVal) * 100;
+                $kKpmStaff = (($sumCalc['kepemimpinan']['kepemimpinan']['staff'] / $countStaffEvaluator / 30 * 0.50) * $indctrStaffLvlVal) * 100;
+                $kMbgStaff = (($sumCalc['kepemimpinan']['membimbing']['staff'] / $countStaffEvaluator / 30 * 0.50) * $indctrStaffLvlVal) * 100;
+                $kKptStaff = (($sumCalc['kepemimpinan']['keputusan']['staff'] / $countStaffEvaluator / 30 * 0.50) * $indctrStaffLvlVal) * 100;
+
+                // nilai2 perusahaan
+                // ((jumlah score penilai / jumlah penilai * 25 * 35%) * 10%) * 100
+                $npKsmSelf = (($sumCalc['nilai_perusahaan']['kerjasama']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+                $npKmkSelf = (($sumCalc['nilai_perusahaan']['komunikasi']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+                $npDpnSelf = (($sumCalc['nilai_perusahaan']['disiplin']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+                $npDdkSelf = (($sumCalc['nilai_perusahaan']['dedikasi']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+                $npEtkSelf = (($sumCalc['nilai_perusahaan']['etika']['self'] / $countSelfEvaluator / 25 * 0.35) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 35%) * 65%) * 100
+                $npKsmBoss = (($sumCalc['nilai_perusahaan']['kerjasama']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+                $npKmkBoss = (($sumCalc['nilai_perusahaan']['komunikasi']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+                $npDpnBoss = (($sumCalc['nilai_perusahaan']['disiplin']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+                $npDdkBoss = (($sumCalc['nilai_perusahaan']['dedikasi']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+                $npEtkBoss = (($sumCalc['nilai_perusahaan']['etika']['atasan'] / $countBossEvaluator / 25 * 0.35) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 35%) * 25%) * 100
+                $npKsmLevel = (($sumCalc['nilai_perusahaan']['kerjasama']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+                $npKmkLevel = (($sumCalc['nilai_perusahaan']['komunikasi']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+                $npDpnLevel = (($sumCalc['nilai_perusahaan']['disiplin']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+                $npDdkLevel = (($sumCalc['nilai_perusahaan']['dedikasi']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+                $npEtkLevel = (($sumCalc['nilai_perusahaan']['etika']['selevel'] / $countLevelEvaluator / 25 * 0.35) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 35%) * 0%) * 100
+                $npKsmStaff = (($sumCalc['nilai_perusahaan']['kerjasama']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+                $npKmkStaff = (($sumCalc['nilai_perusahaan']['komunikasi']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+                $npDpnStaff = (($sumCalc['nilai_perusahaan']['disiplin']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+                $npDdkStaff = (($sumCalc['nilai_perusahaan']['dedikasi']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+                $npEtkStaff = (($sumCalc['nilai_perusahaan']['etika']['staff'] / $countStaffEvaluator / 25 * 0.35) * $indctrStaffLvlVal) * 100;
+
+                // sasaran kinerja
+                // ((jumlah score penilai / jumlah penilai * 25 * 65%) * 10%) * 100
+                $skGolSelf = (($sumCalc['sasaran_kerja']['goal']['self'] / $countSelfEvaluator / 25 * 0.65) * $indctrSelfLvlVal) * 100;
+                $skErrSelf = (($sumCalc['sasaran_kerja']['error']['self'] / $countSelfEvaluator / 25 * 0.65) * $indctrSelfLvlVal) * 100;
+                $skDocSelf = (($sumCalc['sasaran_kerja']['dokumen']['self'] / $countSelfEvaluator / 25 * 0.65) * $indctrSelfLvlVal) * 100;
+                $skIniSelf = (($sumCalc['sasaran_kerja']['inisiatif']['self'] / $countSelfEvaluator / 25 * 0.65) * $indctrSelfLvlVal) * 100;
+                $skPprSelf = (($sumCalc['sasaran_kerja']['pola_pikir']['self'] / $countSelfEvaluator / 25 * 0.65) * $indctrSelfLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 65%) * 60%) * 100
+                $skGolBoss = (($sumCalc['sasaran_kerja']['goal']['atasan'] / $countBossEvaluator / 25 * 0.65) * $indctrBossLvlVal) * 100;
+                $skErrBoss = (($sumCalc['sasaran_kerja']['error']['atasan'] / $countBossEvaluator / 25 * 0.65) * $indctrBossLvlVal) * 100;
+                $skDocBoss = (($sumCalc['sasaran_kerja']['dokumen']['atasan'] / $countBossEvaluator / 25 * 0.65) * $indctrBossLvlVal) * 100;
+                $skIniBoss = (($sumCalc['sasaran_kerja']['inisiatif']['atasan'] / $countBossEvaluator / 25 * 0.65) * $indctrBossLvlVal) * 100;
+                $skPprBoss = (($sumCalc['sasaran_kerja']['pola_pikir']['atasan'] / $countBossEvaluator / 25 * 0.65) * $indctrBossLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 65%) * 20%) * 100
+                $skGolLevel = (($sumCalc['sasaran_kerja']['goal']['selevel'] / $countLevelEvaluator / 25 * 0.65) * $indctrLevelLvlVal) * 100;
+                $skErrLevel = (($sumCalc['sasaran_kerja']['error']['selevel'] / $countLevelEvaluator / 25 * 0.65) * $indctrLevelLvlVal) * 100;
+                $skDocLevel = (($sumCalc['sasaran_kerja']['dokumen']['selevel'] / $countLevelEvaluator / 25 * 0.65) * $indctrLevelLvlVal) * 100;
+                $skIniLevel = (($sumCalc['sasaran_kerja']['inisiatif']['selevel'] / $countLevelEvaluator / 25 * 0.65) * $indctrLevelLvlVal) * 100;
+                $skPprLevel = (($sumCalc['sasaran_kerja']['pola_pikir']['selevel'] / $countLevelEvaluator / 25 * 0.65) * $indctrLevelLvlVal) * 100;
+
+                // ((jumlah score penilai / jumlah penilai * 25 * 65%) * 15%) * 100
+                $skGolStaff = (($sumCalc['sasaran_kerja']['goal']['staff'] / $countStaffEvaluator / 25 * 0.65) * $indctrStaffLvlVal) * 100;
+                $skErrStaff = (($sumCalc['sasaran_kerja']['error']['staff'] / $countStaffEvaluator / 25 * 0.65) * $indctrStaffLvlVal) * 100;
+                $skDocStaff = (($sumCalc['sasaran_kerja']['dokumen']['staff'] / $countStaffEvaluator / 25 * 0.65) * $indctrStaffLvlVal) * 100;
+                $skIniStaff = (($sumCalc['sasaran_kerja']['inisiatif']['staff'] / $countStaffEvaluator / 25 * 0.65) * $indctrStaffLvlVal) * 100;
+                $skPprStaff = (($sumCalc['sasaran_kerja']['pola_pikir']['staff'] / $countStaffEvaluator / 25 * 0.65) * $indctrStaffLvlVal) * 100;
+            }
+        }
+
+
+
+        $calcArr = [
+            'kepemimpinan' => [
+                'perencanaan' => ['self' => $kPcnSelf, 'atasan' =>  $kPcnBoss, 'selevel' => $kPcnLevel, 'staff' => $kPcnStaff],
+
+                'pengawasan' => ['self' => $kPgnSelf, 'atasan' => $kPgnBoss, 'selevel' => $kPgnLevel, 'staff' => $kPgnStaff],
+
+                'inovasi' => ['self' => $kIvsSelf, 'atasan' => $kIvsBoss, 'selevel' => $kIvsLevel, 'staff' => $kIvsStaff],
+
+                'kepemimpinan' => ['self' => $kKpmSelf, 'atasan' => $kKpmBoss, 'selevel' => $kKpmLevel, 'staff' => $kKpmStaff],
+
+                'membimbing' => ['self' => $kMbgSelf, 'atasan' => $kMbgBoss, 'selevel' => $kMbgLevel, 'staff' => $kMbgStaff],
+
+                'keputusan' => ['self' => $kKptSelf, 'atasan' =>  $kKptBoss, 'selevel' =>  $kKptLevel, 'staff' =>  $kKptStaff],
+            ],
+
+            'nilai_perusahaan' => [
+                'kerjasama' => ['self' => $npKsmSelf, 'atasan' => $npKsmBoss, 'selevel' => $npKsmLevel, 'staff' => $npKsmStaff],
+
+                'komunikasi' => ['self' => $npKmkSelf, 'atasan' => $npKmkBoss, 'selevel' => $npKmkLevel, 'staff' => $npKmkStaff],
+
+                'disiplin' => ['self' => $npDpnSelf, 'atasan' => $npDpnBoss, 'selevel' => $npDpnLevel, 'staff' => $npDpnStaff],
+
+                'dedikasi' => ['self' => $npDdkSelf, 'atasan' => $npDdkBoss, 'selevel' => $npDdkLevel, 'staff' => $npDdkStaff],
+
+                'etika' => ['self' => $npEtkSelf, 'atasan' => $npEtkBoss, 'selevel' => $npEtkLevel, 'staff' => $npEtkStaff],
+            ],
+
+            'sasaran_kerja' => [
+                'goal' => ['self' => $skGolSelf, 'atasan' => $skGolBoss, 'selevel' => $skGolLevel, 'staff' => $skGolStaff],
+
+                'error' => ['self' => $skErrSelf, 'atasan' => $skErrBoss, 'selevel' => $skErrLevel, 'staff' => $skErrStaff],
+
+                'dokumen' => ['self' => $skDocSelf, 'atasan' => $skDocBoss, 'selevel' => $skDocLevel, 'staff' => $skDocStaff],
+
+                'inisiatif' => ['self' => $skIniSelf, 'atasan' => $skIniBoss, 'selevel' => $skIniLevel, 'staff' => $skIniStaff],
+
+                'pola_pikir' => ['self' => $skPprSelf, 'atasan' => $skPprBoss, 'selevel' => $skPprLevel, 'staff' => $skPprStaff],
+            ],
+        ];
+
+        $scoreDp3 = collect($calcArr['kepemimpinan'])->sum('self') +
+            collect($calcArr['kepemimpinan'])->sum('atasan') +
+            collect($calcArr['kepemimpinan'])->sum('selevel') +
+            collect($calcArr['kepemimpinan'])->sum('staff') +
+            (collect($calcArr['nilai_perusahaan'])->sum('self') +
+                collect($calcArr['nilai_perusahaan'])->sum('atasan') +
+                collect($calcArr['nilai_perusahaan'])->sum('selevel') +
+                collect($calcArr['nilai_perusahaan'])->sum('staff')) +
+            (collect($calcArr['sasaran_kerja'])->sum('self') +
+                collect($calcArr['sasaran_kerja'])->sum('atasan') +
+                collect($calcArr['sasaran_kerja'])->sum('selevel') +
+                collect($calcArr['sasaran_kerja'])->sum('staff'));
+        // echo $a;
+        // dd($groupByNpp[$npp], $calcArr);
+
+        // foreach ($calcArr['nilai_perusahaan']['kerjasama'] as $ck => $ca) {
+        //     echo '<pre>';
+        //     print_r($ca);
+        //     echo '</pre>';
+        // }
+        // die;
+
+        $criteria = '';
+        $criteriaValue = 0;
+
+        if ($scoreDp3 > 95) {
+            $criteria = 'Sangat Baik';
+            $criteriaValue = 4;
+        } elseif ($scoreDp3 > 85 && $scoreDp3 <= 95) {
+            $criteria = 'Baik';
+            $criteriaValue = 3;
+        } elseif ($scoreDp3 > 65 && $scoreDp3 <= 85) {
+            $criteria = 'Cukup';
+            $criteriaValue = 2;
+        } elseif ($scoreDp3 > 50 && $scoreDp3 <= 65) {
+            $criteria = 'Kurang';
+            $criteriaValue = 1;
+        } else {
+            $criteria = 'Sangat Kurang';
+        }
+
+
+
+        // dd(collect($groupByNpp[$npp]));
         $data = [
             'title' => 'Detail Data Respon', 'page' => 'Detail Respon', 'sheet' => [],
             'response' => collect($groupByNpp[$npp]),
             'employee' => $employee,
-            'npp' => $npp
+            'npp' => $npp,
+            'result' => $calcArr,
+            'scoreDp3' => $scoreDp3,
+            'criteria' => $criteria,
+            'criteriaValue' => $criteriaValue,
         ];
+
+
 
         return view('hc.form_respon.detail', $data);
     }
@@ -343,6 +1085,7 @@ class ResponseController extends Controller
         })->first();
 
         $level = [
+            '0' => 0,
             'I A' => 1,
             'I B' => 1,
             'I C' => 1,
@@ -354,8 +1097,8 @@ class ResponseController extends Controller
             'III NS' => 3,
             'IV A' => 4,
             'I V A' => 4,
-            'IV B' => 4,
-            'I V B' => 4,
+            'IV B' => 5,
+            'I V B' => 5,
             'V' => 5,
         ];
 

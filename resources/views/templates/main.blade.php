@@ -356,6 +356,7 @@
 
     <script>
         $("#dataTables").DataTable({});
+        $("#dataTables2").DataTable({});
     </script>
     <script>
         // Add the following code if you want the name of the file appear on select
