@@ -292,6 +292,7 @@ class ResponseController extends Controller
         $responScore = DB::table('tbl_respon_skor as t1')
             ->select('t1.*')
             ->join(DB::raw('(SELECT npp_penilai,npp_dinilai, MAX(id) id FROM tbl_respon_skor GROUP BY npp_penilai,npp_dinilai) as t2'), 't1.id', '=', 't2.id')
+            ->where('deleted_at', null)
             ->get();
 
         $groupByNpp = $responScore->reduce(function ($group, $currentData) {
@@ -484,7 +485,7 @@ class ResponseController extends Controller
         foreach ($groupByNpp[$npp] as $vEmp2) {
 
             // level 1
-            if ($vEmp2->level_dinilai == 'I A' || $vEmp2->level_dinilai == 'I B' || $vEmp2->level_dinilai == 'I C') {
+            if ($vEmp2->level_dinilai == 'I A' || $vEmp2->level_dinilai == 'I B'  || $vEmp2->level_dinilai == 'I C' || $vEmp2->level_dinilai == 'I A NS' || $vEmp2->level_dinilai == 'IA NS') {
                 // kepemimpinan
                 // ((jumlah score penilai / jumlah penilai * 30 * 40%) * 5%) * 100
                 $kPcnSelf = (($sumCalc['kepemimpinan']['perencanaan']['self'] / $countSelfEvaluator / 30 * 0.4) * $indctrSelfLvlVal) * 100;
@@ -1004,15 +1005,6 @@ class ResponseController extends Controller
                 collect($calcArr['sasaran_kerja'])->sum('atasan') +
                 collect($calcArr['sasaran_kerja'])->sum('selevel') +
                 collect($calcArr['sasaran_kerja'])->sum('staff'));
-        // echo $a;
-        // dd($groupByNpp[$npp], $calcArr);
-
-        // foreach ($calcArr['nilai_perusahaan']['kerjasama'] as $ck => $ca) {
-        //     echo '<pre>';
-        //     print_r($ca);
-        //     echo '</pre>';
-        // }
-        // die;
 
         $criteria = '';
         $criteriaValue = 0;
