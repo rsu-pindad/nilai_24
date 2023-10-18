@@ -29,6 +29,8 @@ Route::middleware(['auth', 'hc'])->group(function () {
     Route::controller(ResponseController::class)->group(function () {
         Route::get('/response', 'index')->name('response');
 
+        Route::post('/response/calculate', 'calculate_dp3')->name('response/calculate');
+
         Route::get('/response/detail/{npp}', 'detail')->name('response/detail');
         Route::post('/response/detail/store', 'store_detail')->name('response/detail/store');
         Route::post('/response/detail/delete/{id}', 'delete_detail')->name('response/detail/delete');
