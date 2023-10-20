@@ -18,52 +18,53 @@ class DP3Import implements ToCollection, WithCalculatedFormulas, WithStartRow
     public function collection(Collection $rows)
     {
         $level = [
+            '0' => 0,
             'I A' => 1,
             'I B' => 1,
             'I C' => 1,
             'I A NS' => 1,
+            'IA NS' => 1,
             'II' => 2,
             'II NS' => 2,
             'III' => 3,
             'III NS' => 3,
             'IV A' => 4,
-            'IV B' => 4,
+            'I V A' => 4,
+            'IV B' => 5,
+            'I V B' => 5,
             'V' => 5,
         ];
+        // dd($rows[5]);
 
         foreach ($rows as $val) {
-            $userLevel = Employee::where('npp', $val[1])->first()->level ?? '';
+            $nppEvaluator = $val[1];
+            $nppAssessed = $val[3];
+            $userEvaluatorLevel = Employee::where('npp', $nppEvaluator)->first()->level ?? false;
+            $userAssessedLevel = Employee::where('npp', $nppAssessed)->first()->level ?? false;
+            $evaluator = '';
+            $assessed = '';
 
-            // userlevel = level sendiri | $val[5] level dinilai
-            $selfLevel = $level[$userLevel] ?? false;
-            $otherLevel = $level[$val[5]] ?? false;
+            // // relasi selevel
+            if ($level[$userEvaluatorLevel] == $level[$userAssessedLevel]) {
+                $evaluator = 'selevel';
+                $assessed = 'selevel';
 
-            if ($selfLevel > $otherLevel) {
-                $assessed = 'atasan';
-            } else if ($selfLevel == $otherLevel) {
-                if ($val[1] == $val[3]) {
+                // relasi self
+                if ($nppEvaluator == $nppAssessed) {
+                    $evaluator = 'self';
                     $assessed = 'self';
-                } else {
-                    $assessed = 'selevel';
                 }
-            } else if ($selfLevel < $otherLevel) {
-                $assessed = 'staff';
-            } else {
-                $assessed = 'tidak diketahui';
             }
 
-            if ($selfLevel < $otherLevel) {
+            // relasi atasan
+            if ($level[$userEvaluatorLevel] < $level[$userAssessedLevel]) {
                 $evaluator = 'atasan';
-            } else if ($selfLevel == $otherLevel) {
-                if ($val[1] == $val[3]) {
-                    $evaluator = 'self';
-                } else {
-                    $evaluator = 'selevel';
-                }
-            } else if ($selfLevel > $otherLevel) {
+                $assessed = 'staff';
+            }
+            // relasi staff
+            if ($level[$userEvaluatorLevel] > $level[$userAssessedLevel]) {
                 $evaluator = 'staff';
-            } else {
-                $evaluator = 'tidak diketahui';
+                $assessed = 'atasan';
             }
 
             // kepemimpinan
@@ -91,16 +92,16 @@ class DP3Import implements ToCollection, WithCalculatedFormulas, WithStartRow
 
 
             ScoreResponse::updateOrCreate(
-                ['npp_penilai' => $val[1], 'npp_dinilai' => $val[3]],
+                ['npp_penilai' => $nppEvaluator, 'npp_dinilai' => $nppAssessed],
                 [
-                    'npp_penilai' => $val[1],
+                    'npp_penilai' => $nppEvaluator,
                     'nama_penilai' => $val[2],
-                    'level_penilai' => $userLevel,
+                    'level_penilai' => $userEvaluatorLevel,
                     'relasi_penilai' => $evaluator,
 
-                    'npp_dinilai' => $val[3],
+                    'npp_dinilai' => $nppAssessed,
                     'nama_dinilai' => $val[4],
-                    'level_dinilai' => $val[5],
+                    'level_dinilai' => $userAssessedLevel,
                     'relasi_dinilai' => $assessed,
 
                     'kpmn_perencanaan' => $scoreKpPlan,

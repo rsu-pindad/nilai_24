@@ -16,11 +16,276 @@ class ResponseController extends Controller
 {
     public function index()
     {
-
         $dp3Calculated = Dp3Calculated::all();
+
+        $responseScore = DB::table('tbl_respon_skor as t1')
+            ->select('t1.*')
+            ->join(DB::raw('(SELECT npp_penilai,npp_dinilai, MAX(id) id FROM tbl_respon_skor GROUP BY npp_penilai,npp_dinilai) as t2'), 't1.id', '=', 't2.id')
+            ->where('deleted_at', null)
+            ->get();
+
+        $groupByNpp = $responseScore->reduce(function ($group, $currentData) {
+            $group[$currentData->npp_dinilai][] = $currentData;
+            return $group;
+        });
+
+        $responseMap = (object)collect($groupByNpp)->map(function ($dtNpp) {
+            $countBossEvaluator = 0;
+            $countStaffEvaluator = 0;
+            $countLevelEvaluator = 0;
+            $countSelfEvaluator = 0;
+
+            $sumResponVal = [
+                'kepemimpinan' => [
+                    'atasan' => ['perencanaan' => 0, 'pengawasan' => 0, 'inovasi' => 0, 'kepemimpinan' => 0, 'membimbing' => 0, 'keputusan' => 0],
+                    'self' => ['perencanaan' => 0, 'pengawasan' => 0, 'inovasi' => 0, 'kepemimpinan' => 0, 'membimbing' => 0, 'keputusan' => 0],
+                    'selevel' => ['perencanaan' => 0, 'pengawasan' => 0, 'inovasi' => 0, 'kepemimpinan' => 0, 'membimbing' => 0, 'keputusan' => 0],
+                    'staff' => ['perencanaan' => 0, 'pengawasan' => 0, 'inovasi' => 0, 'kepemimpinan' => 0, 'membimbing' => 0, 'keputusan' => 0],
+                ],
+                'nilai_perusahaan' => [
+                    'atasan' => ['kerjasama' => 0, 'komunikasi' => 0, 'disiplin' => 0, 'dedikasi' => 0, 'etika' => 0],
+                    'self' => ['kerjasama' => 0, 'komunikasi' => 0, 'disiplin' => 0, 'dedikasi' => 0, 'etika' => 0],
+                    'selevel' => ['kerjasama' => 0, 'komunikasi' => 0, 'disiplin' => 0, 'dedikasi' => 0, 'etika' => 0],
+                    'staff' => ['kerjasama' => 0, 'komunikasi' => 0, 'disiplin' => 0, 'dedikasi' => 0, 'etika' => 0],
+                ],
+                'sasaran_kinerja' => [
+                    'atasan' => ['goal' => 0, 'error' => 0, 'dokumen' => 0, 'inisiatif' => 0, 'pola_pikir' => 0, 'keputusan' => 0],
+                    'self' => ['goal' => 0, 'error' => 0, 'dokumen' => 0, 'inisiatif' => 0, 'pola_pikir' => 0, 'keputusan' => 0],
+                    'selevel' => ['goal' => 0, 'error' => 0, 'dokumen' => 0, 'inisiatif' => 0, 'pola_pikir' => 0, 'keputusan' => 0],
+                    'staff' => ['goal' => 0, 'error' => 0, 'dokumen' => 0, 'inisiatif' => 0, 'pola_pikir' => 0, 'keputusan' => 0],
+                ]
+            ];
+            foreach ($dtNpp as $dk => $dn) {
+                if ($dn->relasi_penilai == 'atasan') {
+                    $countBossEvaluator += 1;
+
+                    $sumResponVal['kepemimpinan']['atasan']['perencanaan'] += $dn->kpmn_perencanaan;
+                    $sumResponVal['kepemimpinan']['atasan']['pengawasan'] += $dn->kpmn_pengawasan;
+                    $sumResponVal['kepemimpinan']['atasan']['inovasi'] += $dn->kpmn_inovasi;
+                    $sumResponVal['kepemimpinan']['atasan']['kepemimpinan'] += $dn->kpmn_kepemimpinan;
+                    $sumResponVal['kepemimpinan']['atasan']['membimbing'] += $dn->kpmn_membimbing;
+                    $sumResponVal['kepemimpinan']['atasan']['keputusan'] += $dn->kpmn_keputusan;
+
+                    $sumResponVal['nilai_perusahaan']['atasan']['kerjasama'] += $dn->nnpp_kerjasama;
+                    $sumResponVal['nilai_perusahaan']['atasan']['komunikasi'] += $dn->nnpp_komunikasi;
+                    $sumResponVal['nilai_perusahaan']['atasan']['disiplin'] += $dn->nnpp_disiplin;
+                    $sumResponVal['nilai_perusahaan']['atasan']['dedikasi'] += $dn->nnpp_dedikasi;
+                    $sumResponVal['nilai_perusahaan']['atasan']['etika'] += $dn->nnpp_etika;
+
+                    $sumResponVal['sasaran_kinerja']['atasan']['goal'] += $dn->skpp_goal;
+                    $sumResponVal['sasaran_kinerja']['atasan']['error'] += $dn->skpp_error;
+                    $sumResponVal['sasaran_kinerja']['atasan']['dokumen'] += $dn->skpp_dokumen;
+                    $sumResponVal['sasaran_kinerja']['atasan']['inisiatif'] += $dn->skpp_inisiatif;
+                    $sumResponVal['sasaran_kinerja']['atasan']['pola_pikir'] += $dn->skpp_pola_pikir;
+                } else if ($dn->relasi_penilai == 'self') {
+                    $countSelfEvaluator += 1;
+
+                    $sumResponVal['kepemimpinan']['self']['perencanaan'] += $dn->kpmn_perencanaan;
+                    $sumResponVal['kepemimpinan']['self']['pengawasan'] += $dn->kpmn_pengawasan;
+                    $sumResponVal['kepemimpinan']['self']['inovasi'] += $dn->kpmn_inovasi;
+                    $sumResponVal['kepemimpinan']['self']['kepemimpinan'] += $dn->kpmn_kepemimpinan;
+                    $sumResponVal['kepemimpinan']['self']['membimbing'] += $dn->kpmn_membimbing;
+                    $sumResponVal['kepemimpinan']['self']['keputusan'] += $dn->kpmn_keputusan;
+
+                    $sumResponVal['nilai_perusahaan']['self']['kerjasama'] += $dn->nnpp_kerjasama;
+                    $sumResponVal['nilai_perusahaan']['self']['komunikasi'] += $dn->nnpp_komunikasi;
+                    $sumResponVal['nilai_perusahaan']['self']['disiplin'] += $dn->nnpp_disiplin;
+                    $sumResponVal['nilai_perusahaan']['self']['dedikasi'] += $dn->nnpp_dedikasi;
+                    $sumResponVal['nilai_perusahaan']['self']['etika'] += $dn->nnpp_etika;
+
+                    $sumResponVal['sasaran_kinerja']['self']['goal'] += $dn->skpp_goal;
+                    $sumResponVal['sasaran_kinerja']['self']['error'] += $dn->skpp_error;
+                    $sumResponVal['sasaran_kinerja']['self']['dokumen'] += $dn->skpp_dokumen;
+                    $sumResponVal['sasaran_kinerja']['self']['inisiatif'] += $dn->skpp_inisiatif;
+                    $sumResponVal['sasaran_kinerja']['self']['pola_pikir'] += $dn->skpp_pola_pikir;
+                } else if ($dn->relasi_penilai == 'selevel') {
+                    $countLevelEvaluator += 1;
+
+                    $sumResponVal['kepemimpinan']['selevel']['perencanaan'] += $dn->kpmn_perencanaan;
+                    $sumResponVal['kepemimpinan']['selevel']['pengawasan'] += $dn->kpmn_pengawasan;
+                    $sumResponVal['kepemimpinan']['selevel']['inovasi'] += $dn->kpmn_inovasi;
+                    $sumResponVal['kepemimpinan']['selevel']['kepemimpinan'] += $dn->kpmn_kepemimpinan;
+                    $sumResponVal['kepemimpinan']['selevel']['membimbing'] += $dn->kpmn_membimbing;
+                    $sumResponVal['kepemimpinan']['selevel']['keputusan'] += $dn->kpmn_keputusan;
+
+                    $sumResponVal['nilai_perusahaan']['selevel']['kerjasama'] += $dn->nnpp_kerjasama;
+                    $sumResponVal['nilai_perusahaan']['selevel']['komunikasi'] += $dn->nnpp_komunikasi;
+                    $sumResponVal['nilai_perusahaan']['selevel']['disiplin'] += $dn->nnpp_disiplin;
+                    $sumResponVal['nilai_perusahaan']['selevel']['dedikasi'] += $dn->nnpp_dedikasi;
+                    $sumResponVal['nilai_perusahaan']['selevel']['etika'] += $dn->nnpp_etika;
+
+                    $sumResponVal['sasaran_kinerja']['selevel']['goal'] += $dn->skpp_goal;
+                    $sumResponVal['sasaran_kinerja']['selevel']['error'] += $dn->skpp_error;
+                    $sumResponVal['sasaran_kinerja']['selevel']['dokumen'] += $dn->skpp_dokumen;
+                    $sumResponVal['sasaran_kinerja']['selevel']['inisiatif'] += $dn->skpp_inisiatif;
+                    $sumResponVal['sasaran_kinerja']['selevel']['pola_pikir'] += $dn->skpp_pola_pikir;
+                } else if ($dn->relasi_penilai == 'staff') {
+                    $countStaffEvaluator += 1;
+
+                    $sumResponVal['kepemimpinan']['staff']['perencanaan'] += $dn->kpmn_perencanaan;
+                    $sumResponVal['kepemimpinan']['staff']['pengawasan'] += $dn->kpmn_pengawasan;
+                    $sumResponVal['kepemimpinan']['staff']['inovasi'] += $dn->kpmn_inovasi;
+                    $sumResponVal['kepemimpinan']['staff']['kepemimpinan'] += $dn->kpmn_kepemimpinan;
+                    $sumResponVal['kepemimpinan']['staff']['membimbing'] += $dn->kpmn_membimbing;
+                    $sumResponVal['kepemimpinan']['staff']['keputusan'] += $dn->kpmn_keputusan;
+
+                    $sumResponVal['nilai_perusahaan']['staff']['kerjasama'] += $dn->nnpp_kerjasama;
+                    $sumResponVal['nilai_perusahaan']['staff']['komunikasi'] += $dn->nnpp_komunikasi;
+                    $sumResponVal['nilai_perusahaan']['staff']['disiplin'] += $dn->nnpp_disiplin;
+                    $sumResponVal['nilai_perusahaan']['staff']['dedikasi'] += $dn->nnpp_dedikasi;
+                    $sumResponVal['nilai_perusahaan']['staff']['etika'] += $dn->nnpp_etika;
+
+                    $sumResponVal['sasaran_kinerja']['staff']['goal'] += $dn->skpp_goal;
+                    $sumResponVal['sasaran_kinerja']['staff']['error'] += $dn->skpp_error;
+                    $sumResponVal['sasaran_kinerja']['staff']['dokumen'] += $dn->skpp_dokumen;
+                    $sumResponVal['sasaran_kinerja']['staff']['inisiatif'] += $dn->skpp_inisiatif;
+                    $sumResponVal['sasaran_kinerja']['staff']['pola_pikir'] += $dn->skpp_pola_pikir;
+                }
+            }
+            // $countStaffEvaluator = $countStaffEvaluator === 0 ? 1 : $countStaffEvaluator;
+            // echo $dn->npp_dinilai . ' - ' . $countStaffEvaluator . '<br>';
+
+
+            $response = collect([
+                // 'npp_penilai' => $dn->npp_penilai,
+                // 'nama_penilai' => $dn->nama_penilai,
+                // 'level_penilai' => $dn->level_penilai,
+                // 'relasi_penilai' => $dn->relasi_penilai,
+
+                'npp_dinilai' => $dn->npp_dinilai,
+                'nama_dinilai' => $dn->nama_dinilai,
+                'level_dinilai' => $dn->level_dinilai,
+                // 'relasi_dinilai' => $dn->relasi_dinilai,
+
+                'jumlah_penilai_atasan' => $countBossEvaluator,
+                'jumlah_penilai_staff' => $countStaffEvaluator,
+                'jumlah_penilai_selevel' => $countLevelEvaluator,
+                'jumlah_penilai_self' => $countSelfEvaluator,
+
+                'kepemimpinan' => [
+                    'perencanaan' => [
+                        'self' => $sumResponVal['kepemimpinan']['self']['perencanaan'],
+                        'atasan' => $sumResponVal['kepemimpinan']['atasan']['perencanaan'],
+                        'selevel' => $sumResponVal['kepemimpinan']['selevel']['perencanaan'],
+                        'staff' => $sumResponVal['kepemimpinan']['staff']['perencanaan'],
+                    ],
+
+                    'pengawasan' => [
+                        'self' => $sumResponVal['kepemimpinan']['self']['pengawasan'],
+                        'atasan' => $sumResponVal['kepemimpinan']['atasan']['pengawasan'],
+                        'selevel' => $sumResponVal['kepemimpinan']['selevel']['pengawasan'],
+                        'staff' => $sumResponVal['kepemimpinan']['staff']['pengawasan'],
+                    ],
+
+                    'inovasi' => [
+                        'self' => $sumResponVal['kepemimpinan']['self']['inovasi'],
+                        'atasan' => $sumResponVal['kepemimpinan']['atasan']['inovasi'],
+                        'selevel' => $sumResponVal['kepemimpinan']['selevel']['inovasi'],
+                        'staff' => $sumResponVal['kepemimpinan']['staff']['inovasi'],
+                    ],
+
+                    'kepemimpinan' => [
+                        'self' => $sumResponVal['kepemimpinan']['self']['kepemimpinan'],
+                        'atasan' => $sumResponVal['kepemimpinan']['atasan']['kepemimpinan'],
+                        'selevel' => $sumResponVal['kepemimpinan']['selevel']['kepemimpinan'],
+                        'staff' => $sumResponVal['kepemimpinan']['staff']['kepemimpinan'],
+                    ],
+
+                    'membimbing' => [
+                        'self' => $sumResponVal['kepemimpinan']['self']['membimbing'],
+                        'atasan' => $sumResponVal['kepemimpinan']['atasan']['membimbing'],
+                        'selevel' => $sumResponVal['kepemimpinan']['selevel']['membimbing'],
+                        'staff' => $sumResponVal['kepemimpinan']['staff']['membimbing'],
+                    ],
+
+                    'keputusan' => [
+                        'self' => $sumResponVal['kepemimpinan']['self']['keputusan'],
+                        'atasan' => $sumResponVal['kepemimpinan']['atasan']['keputusan'],
+                        'selevel' => $sumResponVal['kepemimpinan']['selevel']['keputusan'],
+                        'staff' => $sumResponVal['kepemimpinan']['staff']['keputusan'],
+                    ],
+                ],
+
+                'nilai_perusahaan' => [
+                    'kerjasama' => [
+                        'self' => $sumResponVal['nilai_perusahaan']['self']['kerjasama'],
+                        'atasan' => $sumResponVal['nilai_perusahaan']['atasan']['kerjasama'],
+                        'selevel' => $sumResponVal['nilai_perusahaan']['selevel']['kerjasama'],
+                        'staff' => $sumResponVal['nilai_perusahaan']['staff']['kerjasama'],
+                    ],
+
+                    'komunikasi' => [
+                        'self' => $sumResponVal['nilai_perusahaan']['self']['komunikasi'],
+                        'atasan' => $sumResponVal['nilai_perusahaan']['atasan']['komunikasi'],
+                        'selevel' => $sumResponVal['nilai_perusahaan']['selevel']['komunikasi'],
+                        'staff' => $sumResponVal['nilai_perusahaan']['staff']['komunikasi'],
+                    ],
+
+                    'disiplin' => [
+                        'self' => $sumResponVal['nilai_perusahaan']['self']['disiplin'],
+                        'atasan' => $sumResponVal['nilai_perusahaan']['atasan']['disiplin'],
+                        'selevel' => $sumResponVal['nilai_perusahaan']['selevel']['disiplin'],
+                        'staff' => $sumResponVal['nilai_perusahaan']['staff']['disiplin'],
+                    ],
+
+                    'dedikasi' => [
+                        'self' => $sumResponVal['nilai_perusahaan']['self']['dedikasi'],
+                        'atasan' => $sumResponVal['nilai_perusahaan']['atasan']['dedikasi'],
+                        'selevel' => $sumResponVal['nilai_perusahaan']['selevel']['dedikasi'],
+                        'staff' => $sumResponVal['nilai_perusahaan']['staff']['dedikasi'],
+                    ],
+
+                    'etika' => [
+                        'self' => $sumResponVal['nilai_perusahaan']['self']['etika'],
+                        'atasan' => $sumResponVal['nilai_perusahaan']['atasan']['etika'],
+                        'selevel' => $sumResponVal['nilai_perusahaan']['selevel']['etika'],
+                        'staff' => $sumResponVal['nilai_perusahaan']['staff']['etika'],
+                    ],
+                ],
+
+                'sasaran_kerja' => [
+                    'goal' => [
+                        'self' => $sumResponVal['sasaran_kinerja']['self']['goal'],
+                        'atasan' => $sumResponVal['sasaran_kinerja']['atasan']['goal'],
+                        'selevel' => $sumResponVal['sasaran_kinerja']['selevel']['goal'],
+                        'staff' => $sumResponVal['sasaran_kinerja']['staff']['goal'],
+                    ],
+
+                    'error' => [
+                        'self' => $sumResponVal['sasaran_kinerja']['self']['error'],
+                        'atasan' => $sumResponVal['sasaran_kinerja']['atasan']['error'],
+                        'selevel' => $sumResponVal['sasaran_kinerja']['selevel']['error'],
+                        'staff' => $sumResponVal['sasaran_kinerja']['staff']['error'],
+                    ],
+
+                    'dokumen' => [
+                        'self' => $sumResponVal['sasaran_kinerja']['self']['dokumen'],
+                        'atasan' => $sumResponVal['sasaran_kinerja']['atasan']['dokumen'],
+                        'selevel' => $sumResponVal['sasaran_kinerja']['selevel']['dokumen'],
+                        'staff' => $sumResponVal['sasaran_kinerja']['staff']['dokumen'],
+                    ],
+
+                    'inisiatif' => [
+                        'self' => $sumResponVal['sasaran_kinerja']['self']['inisiatif'],
+                        'atasan' => $sumResponVal['sasaran_kinerja']['atasan']['inisiatif'],
+                        'selevel' => $sumResponVal['sasaran_kinerja']['selevel']['inisiatif'],
+                        'staff' => $sumResponVal['sasaran_kinerja']['staff']['inisiatif'],
+                    ],
+
+                    'pola_pikir' => [
+                        'self' => $sumResponVal['sasaran_kinerja']['self']['pola_pikir'],
+                        'atasan' => $sumResponVal['sasaran_kinerja']['atasan']['pola_pikir'],
+                        'selevel' => $sumResponVal['sasaran_kinerja']['selevel']['pola_pikir'],
+                        'staff' => $sumResponVal['sasaran_kinerja']['staff']['pola_pikir'],
+                    ],
+                ],
+            ]);
+            return $response;
+        });
 
         $data = [
             'title' => 'Data Respon', 'page' => 'Data DP3',
+            'responseMap' => $responseMap,
             'dp3Calculated' => $dp3Calculated
         ];
 
@@ -204,10 +469,10 @@ class ResponseController extends Controller
                     $sumCalc[$vEmp->npp_dinilai]['sasaran_kerja']['pola_pikir']['selevel'] += $vEmp->skpp_pola_pikir;
                 }
 
-                $sumCalc[$vEmp->npp_dinilai]['indikator_nilai_level']['self'] = PercentRelation::where(['status' => 'self', 'level' => $vEmp->level_dinilai])->first()->nilai;
-                $sumCalc[$vEmp->npp_dinilai]['indikator_nilai_level']['atasan'] = PercentRelation::where(['status' => 'atasan', 'level' => $vEmp->level_dinilai])->first()->nilai;
-                $sumCalc[$vEmp->npp_dinilai]['indikator_nilai_level']['selevel'] = PercentRelation::where(['status' => 'rekan kerja', 'level' => $vEmp->level_dinilai])->first()->nilai;
-                $sumCalc[$vEmp->npp_dinilai]['indikator_nilai_level']['staff'] = PercentRelation::where(['status' => 'staff', 'level' => $vEmp->level_dinilai])->first()->nilai;
+                $sumCalc[$vEmp->npp_dinilai]['indikator_nilai_level']['self'] = PercentRelation::where(['status' => 'self', 'level' => $vEmp->level_dinilai])->first()->nilai ?? 0;
+                $sumCalc[$vEmp->npp_dinilai]['indikator_nilai_level']['atasan'] = PercentRelation::where(['status' => 'atasan', 'level' => $vEmp->level_dinilai])->first()->nilai ?? 0;
+                $sumCalc[$vEmp->npp_dinilai]['indikator_nilai_level']['selevel'] = PercentRelation::where(['status' => 'rekan kerja', 'level' => $vEmp->level_dinilai])->first()->nilai ?? 0;
+                $sumCalc[$vEmp->npp_dinilai]['indikator_nilai_level']['staff'] = PercentRelation::where(['status' => 'staff', 'level' => $vEmp->level_dinilai])->first()->nilai ?? 0;
             }
         }
 
@@ -396,12 +661,12 @@ class ResponseController extends Controller
                 $skIniBoss = (($sumCalc[$kCalc]['sasaran_kerja']['inisiatif']['atasan'] / $countBossEvaluator / 25 * 0.40) * $indctrBossLvlVal) * 100;
                 $skPprBoss = (($sumCalc[$kCalc]['sasaran_kerja']['pola_pikir']['atasan'] / $countBossEvaluator / 25 * 0.40) * $indctrBossLvlVal) * 100;
 
-                // ((jumlah score penilai / jumlah penilai * 25 * 40%) * 20%) * 100
-                $skGolLevel = (($sumCalc[$kCalc]['sasaran_kerja']['goal']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
-                $skErrLevel = (($sumCalc[$kCalc]['sasaran_kerja']['error']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
-                $skDocLevel = (($sumCalc[$kCalc]['sasaran_kerja']['dokumen']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
-                $skIniLevel = (($sumCalc[$kCalc]['sasaran_kerja']['inisiatif']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
-                $skPprLevel = (($sumCalc[$kCalc]['sasaran_kerja']['pola_pikir']['selevel'] / $countLevelEvaluator / 25 * 0.40) * $indctrLevelLvlVal) * 100;
+                // ((jumlah score penilai / jumlah penilai * 25 * 25%) * 20%) * 100
+                $skGolLevel = (($sumCalc[$kCalc]['sasaran_kerja']['goal']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $skErrLevel = (($sumCalc[$kCalc]['sasaran_kerja']['error']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $skDocLevel = (($sumCalc[$kCalc]['sasaran_kerja']['dokumen']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $skIniLevel = (($sumCalc[$kCalc]['sasaran_kerja']['inisiatif']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
+                $skPprLevel = (($sumCalc[$kCalc]['sasaran_kerja']['pola_pikir']['selevel'] / $countLevelEvaluator / 25 * 0.25) * $indctrLevelLvlVal) * 100;
 
                 // ((jumlah score penilai / jumlah penilai * 25 * 40%) * 15%) * 100
                 $skGolStaff = (($sumCalc[$kCalc]['sasaran_kerja']['goal']['staff'] / $countStaffEvaluator / 25 * 0.40) * $indctrStaffLvlVal) * 100;
@@ -823,27 +1088,27 @@ class ResponseController extends Controller
                 'kriteria' => $dp3Criteria,
                 'nilai_dp3' => $dp3CriteriaValue,
             ]);
-            $kpmn =
-                $kPcnSelf + $kPcnBoss + $kPcnLevel + $kPcnStaff +
-                $kPgnSelf + $kPgnBoss + $kPgnLevel + $kPgnStaff +
-                $kIvsSelf + $kIvsBoss + $kIvsLevel + $kIvsStaff +
-                $kKpmSelf + $kKpmBoss + $kKpmLevel + $kKpmStaff +
-                $kMbgSelf + $kMbgBoss + $kMbgLevel + $kMbgStaff +
-                $kKptSelf + $kKptBoss + $kKptLevel + $kKptStaff;
+            // $kpmn =
+            //     $kPcnSelf + $kPcnBoss + $kPcnLevel + $kPcnStaff +
+            //     $kPgnSelf + $kPgnBoss + $kPgnLevel + $kPgnStaff +
+            //     $kIvsSelf + $kIvsBoss + $kIvsLevel + $kIvsStaff +
+            //     $kKpmSelf + $kKpmBoss + $kKpmLevel + $kKpmStaff +
+            //     $kMbgSelf + $kMbgBoss + $kMbgLevel + $kMbgStaff +
+            //     $kKptSelf + $kKptBoss + $kKptLevel + $kKptStaff;
 
-            $nnpp =
-                $npKsmSelf + $npKsmBoss + $npKsmLevel + $npKsmStaff +
-                $npKmkSelf + $npKmkBoss + $npKmkLevel + $npKmkStaff +
-                $npDpnSelf + $npDpnBoss + $npDpnLevel + $npDpnStaff +
-                $npDdkSelf + $npDdkBoss + $npDdkLevel + $npDdkStaff +
-                $npEtkSelf + $npEtkBoss + $npEtkLevel + $npEtkStaff;
+            // $nnpp =
+            //     $npKsmSelf + $npKsmBoss + $npKsmLevel + $npKsmStaff +
+            //     $npKmkSelf + $npKmkBoss + $npKmkLevel + $npKmkStaff +
+            //     $npDpnSelf + $npDpnBoss + $npDpnLevel + $npDpnStaff +
+            //     $npDdkSelf + $npDdkBoss + $npDdkLevel + $npDdkStaff +
+            //     $npEtkSelf + $npEtkBoss + $npEtkLevel + $npEtkStaff;
 
-            $skpp =
-                $skGolSelf + $skGolBoss + $skGolLevel + $skGolStaff +
-                $skErrSelf + $skErrBoss + $skErrLevel + $skErrStaff +
-                $skDocSelf + $skDocBoss + $skDocLevel + $skDocStaff +
-                $skIniSelf + $skIniBoss + $skIniLevel + $skIniStaff +
-                $skPprSelf + $skPprBoss + $skPprLevel + $skPprStaff;
+            // $skpp =
+            //     $skGolSelf + $skGolBoss + $skGolLevel + $skGolStaff +
+            //     $skErrSelf + $skErrBoss + $skErrLevel + $skErrStaff +
+            //     $skDocSelf + $skDocBoss + $skDocLevel + $skDocStaff +
+            //     $skIniSelf + $skIniBoss + $skIniLevel + $skIniStaff +
+            //     $skPprSelf + $skPprBoss + $skPprLevel + $skPprStaff;
 
 
 
@@ -896,7 +1161,7 @@ class ResponseController extends Controller
             //     'nilai_dp3' => $dp3CriteriaValue,
             // ];
         }
-        // dd($groupByNpp[11043], $sumCalc[11043], $dp3[11043]);
+        // dd($groupByNpp[11079], $sumCalc[11079], $dp3[11079]);
         return redirect()->back()->with('success', 'berhasil menghitung dp3');
     }
 
@@ -1118,9 +1383,14 @@ class ResponseController extends Controller
         return back()->with('success', 'berhasil menghapus data penilaian');
     }
 
-    public function import()
+    public function import(Request $request)
     {
-        Excel::import(new DP3Import, 'form_respon_DP3.xlsx');
+        $request->validate([
+            'file_respon' => 'required'
+        ]);
+
+        Excel::import(new DP3Import, $request->file('file_respon'));
+
         return redirect()->route('response')->with('success', 'berhasil mengimpor data penilaian');
     }
 }
