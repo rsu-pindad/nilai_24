@@ -1437,10 +1437,10 @@ class ResponseController extends Controller
         $name = $dp3Calculated->employee->nama;
 
         if ($level == 'IV A' || $level == 'IV B' || $level == 'V') {
-            $signatureName = 'Novita Indah Fitriyani';
+            $signatureName = 'NOVITA INDAH FITRIYANI';
             $position = 'KEPALA BIDANG HC';
         } else {
-            $signatureName = 'Zul Kurniawan, dr., MMRS';
+            $signatureName = 'ZUL KURNIAWAN';
             $position = 'DIREKTUR OPERASIONAL';
         }
         $today = Carbon::now()->isoFormat('D MMMM Y');

@@ -233,7 +233,7 @@
             </tr>
             <tr>
                 <td class="font-weight-bold">
-                    <span>{{ $signatureName }}</span><br>
+                    <u>{{ $signatureName }}</u><br>
                     <span>{{ $position }}</span>
                 </td>
             </tr>
