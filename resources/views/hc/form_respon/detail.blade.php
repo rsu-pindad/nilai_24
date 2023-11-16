@@ -135,6 +135,12 @@
                         <div class="card">
                             <div class="card-header">
                                 Hasil Perhitungan
+                                <div class="card-tools">
+                                    <a name="" id="" class="btn btn-primary"
+                                        href="{{ route('response/report', $npp) }}" role="button">
+                                        <i class="fas fa-file-pdf"></i> Ekspor
+                                    </a>
+                                </div>
                             </div>
                             <div class="card-body ">
                                 <div class="table-responsive px-4">
@@ -293,7 +299,8 @@
                                     <table class="table table-bordered">
                                         <tbody>
                                             <tr>
-                                                <td colspan="5" class="text-center text-bold">3. Tugas Sasaran Kinerja &
+                                                <td colspan="5" class="text-center text-bold">3. Tugas Sasaran Kinerja
+                                                    &
                                                     Profesi</td>
                                             </tr>
                                             <tr class="text-bold">

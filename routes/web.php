@@ -36,6 +36,8 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::post('/response/detail/delete/{id}', 'delete_detail')->name('response/detail/delete');
 
         Route::post('/response/import', 'import')->name('response/import');
+
+        Route::get('/response/report/{npp}', 'report')->name('response/report');
     });
 });
 

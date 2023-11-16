@@ -11,6 +11,8 @@ use App\Models\ScoreResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class ResponseController extends Controller
 {
@@ -1392,5 +1394,72 @@ class ResponseController extends Controller
         Excel::import(new DP3Import, $request->file('file_respon'));
 
         return redirect()->route('response')->with('success', 'berhasil mengimpor data penilaian');
+    }
+
+
+    public function report($npp)
+    {
+        $dp3Calculated = Dp3Calculated::with('employee')->where('npp_dinilai', $npp)->first();
+
+
+
+        $calculateFactor = [
+            'kpmn_perencanaan' => $dp3Calculated->kpmn_perencanaan_self + $dp3Calculated->kpmn_perencanaan_atasan + $dp3Calculated->kpmn_perencanaan_selevel + $dp3Calculated->kpmn_perencanaan_staff,
+            'kpmn_pengawasan' => $dp3Calculated->kpmn_pengawasan_self + $dp3Calculated->kpmn_pengawasan_atasan + $dp3Calculated->kpmn_pengawasan_selevel + $dp3Calculated->kpmn_pengawasan_staff,
+            'kpmn_inovasi' => $dp3Calculated->kpmn_inovasi_self + $dp3Calculated->kpmn_inovasi_atasan + $dp3Calculated->kpmn_inovasi_selevel + $dp3Calculated->kpmn_inovasi_staff,
+            'kpmn_kepemimpinan' => $dp3Calculated->kpmn_kepemimpinan_self + $dp3Calculated->kpmn_kepemimpinan_atasan + $dp3Calculated->kpmn_kepemimpinan_selevel + $dp3Calculated->kpmn_kepemimpinan_staff,
+            'kpmn_membimbing' => $dp3Calculated->kpmn_membimbing_self + $dp3Calculated->kpmn_membimbing_atasan + $dp3Calculated->kpmn_membimbing_selevel + $dp3Calculated->kpmn_membimbing_staff,
+            'kpmn_keputusan' => $dp3Calculated->kpmn_keputusan_self + $dp3Calculated->kpmn_keputusan_atasan + $dp3Calculated->kpmn_keputusan_selevel + $dp3Calculated->kpmn_keputusan_staff,
+
+            'nnpp_kerjasama' => $dp3Calculated->nnpp_kerjasama_self + $dp3Calculated->nnpp_kerjasama_atasan + $dp3Calculated->nnpp_kerjasama_selevel + $dp3Calculated->nnpp_kerjasama_staff,
+            'nnpp_komunikasi' => $dp3Calculated->nnpp_komunikasi_self + $dp3Calculated->nnpp_komunikasi_atasan + $dp3Calculated->nnpp_komunikasi_selevel + $dp3Calculated->nnpp_komunikasi_staff,
+            'nnpp_disiplin' => $dp3Calculated->nnpp_disiplin_self + $dp3Calculated->nnpp_disiplin_atasan + $dp3Calculated->nnpp_disiplin_selevel + $dp3Calculated->nnpp_disiplin_staff,
+            'nnpp_dedikasi' => $dp3Calculated->nnpp_dedikasi_self + $dp3Calculated->nnpp_dedikasi_atasan + $dp3Calculated->nnpp_dedikasi_selevel + $dp3Calculated->nnpp_dedikasi_staff,
+            'nnpp_etika' => $dp3Calculated->nnpp_etika_self + $dp3Calculated->nnpp_etika_atasan + $dp3Calculated->nnpp_etika_selevel + $dp3Calculated->nnpp_etika_staff,
+
+            'skpp_goal' => $dp3Calculated->skpp_goal_self + $dp3Calculated->skpp_goal_atasan + $dp3Calculated->skpp_goal_selevel + $dp3Calculated->skpp_goal_staff,
+            'skpp_error' => $dp3Calculated->skpp_error_self + $dp3Calculated->skpp_error_atasan + $dp3Calculated->skpp_error_selevel + $dp3Calculated->skpp_error_staff,
+            'skpp_dokumen' => $dp3Calculated->skpp_dokumen_self + $dp3Calculated->skpp_dokumen_atasan + $dp3Calculated->skpp_dokumen_selevel + $dp3Calculated->skpp_dokumen_staff,
+            'skpp_inisiatif' => $dp3Calculated->skpp_inisiatif_self + $dp3Calculated->skpp_inisiatif_atasan + $dp3Calculated->skpp_inisiatif_selevel + $dp3Calculated->skpp_inisiatif_staff,
+            'skpp_pola_pikir' => $dp3Calculated->skpp_pola_pikir_self + $dp3Calculated->skpp_pola_pikir_atasan + $dp3Calculated->skpp_pola_pikir_selevel + $dp3Calculated->skpp_pola_pikir_staff,
+        ];
+
+        $totalFactor = [
+            'kpmn' => $calculateFactor['kpmn_perencanaan'] + $calculateFactor['kpmn_pengawasan'] + $calculateFactor['kpmn_inovasi'] + $calculateFactor['kpmn_kepemimpinan'] + $calculateFactor['kpmn_membimbing'], +$calculateFactor['kpmn_keputusan'],
+
+            'nnpp' => $calculateFactor['nnpp_kerjasama'] + $calculateFactor['nnpp_komunikasi'] + $calculateFactor['nnpp_disiplin'] + $calculateFactor['nnpp_dedikasi'] + $calculateFactor['nnpp_etika'],
+
+            'skpp' => $calculateFactor['skpp_goal'] + $calculateFactor['skpp_error'] + $calculateFactor['skpp_dokumen'] + $calculateFactor['skpp_inisiatif'] + $calculateFactor['skpp_pola_pikir'],
+
+        ];
+
+        $level = $dp3Calculated->employee->level;
+        $name = $dp3Calculated->employee->nama;
+
+        if ($level == 'IV A' || $level == 'IV B' || $level == 'V') {
+            $signatureName = 'Novita Indah Fitriyani';
+            $position = 'KEPALA BIDANG HC';
+        } else {
+            $signatureName = 'Zul Kurniawan, dr., MMRS';
+            $position = 'DIREKTUR OPERASIONAL';
+        }
+        $today = Carbon::now()->isoFormat('D MMMM Y');
+
+        $data = [
+            'dp3Calculated' => $dp3Calculated,
+            'calculateFactor' => $calculateFactor,
+            'totalFactor' => $totalFactor,
+            'today' => $today,
+            'signatureName' => $signatureName,
+            'position' => $position,
+
+        ];
+        // dd($dp3Calculated);
+        // return view('hc.form_respon.report', $data);
+        $pdf = Pdf::loadView('hc.form_respon.report', $data);
+
+        $pdf->setPaper('A4');
+
+        return $pdf->download("LAPORAN HASIL PENILAIAN KINERJA $name.pdf");
     }
 }
