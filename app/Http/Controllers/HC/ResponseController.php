@@ -994,7 +994,6 @@ class ResponseController extends Controller
                 $dp3Criteria = 'Sangat Kurang';
             }
 
-
             Dp3Calculated::updateOrCreate(['npp_dinilai' => $kCalc], [
                 'npp_dinilai' => $kCalc,
                 'nama_dinilai' => $calcDp3['nama_dinilai'],
@@ -1065,25 +1064,25 @@ class ResponseController extends Controller
                 'skpp_goal_selevel' => $skGolLevel,
                 'skpp_goal_staff' => $skGolStaff,
 
-                'skpp_error_self' => $skGolSelf,
-                'skpp_error_atasan' => $skGolBoss,
-                'skpp_error_selevel' => $skGolLevel,
-                'skpp_error_staff' => $skGolStaff,
+                'skpp_error_self' => $skErrSelf,
+                'skpp_error_atasan' => $skErrBoss,
+                'skpp_error_selevel' => $skErrLevel,
+                'skpp_error_staff' => $skErrStaff,
 
-                'skpp_dokumen_self' => $skGolSelf,
-                'skpp_dokumen_atasan' => $skGolBoss,
-                'skpp_dokumen_selevel' => $skGolLevel,
-                'skpp_dokumen_staff' => $skGolStaff,
+                'skpp_dokumen_self' => $skDocSelf,
+                'skpp_dokumen_atasan' => $skDocBoss,
+                'skpp_dokumen_selevel' => $skDocLevel,
+                'skpp_dokumen_staff' => $skDocStaff,
 
-                'skpp_inisiatif_self' => $skGolSelf,
-                'skpp_inisiatif_atasan' => $skGolBoss,
-                'skpp_inisiatif_selevel' => $skGolLevel,
-                'skpp_inisiatif_staff' => $skGolStaff,
+                'skpp_inisiatif_self' => $skIniSelf,
+                'skpp_inisiatif_atasan' => $skIniBoss,
+                'skpp_inisiatif_selevel' => $skIniLevel,
+                'skpp_inisiatif_staff' => $skIniStaff,
 
-                'skpp_pola_pikir_self' => $skGolSelf,
-                'skpp_pola_pikir_atasan' => $skGolBoss,
-                'skpp_pola_pikir_selevel' => $skGolLevel,
-                'skpp_pola_pikir_staff' => $skGolStaff,
+                'skpp_pola_pikir_self' => $skPprSelf,
+                'skpp_pola_pikir_atasan' => $skPprBoss,
+                'skpp_pola_pikir_selevel' => $skPprLevel,
+                'skpp_pola_pikir_staff' => $skPprStaff,
 
 
                 'total_nilai' => $dp3Score,
