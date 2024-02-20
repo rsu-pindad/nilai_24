@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\HC\AturJadwallController;
 use App\Http\Controllers\HC\ResponseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -38,6 +39,11 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::post('/response/import', 'import')->name('response/import');
 
         Route::get('/response/report/{npp}', 'report')->name('response/report');
+    });
+
+    Route::controller(AturJadwallController::class)->group(function () {
+        Route::get('/aturjadwal', 'index')->name('aturjadwal');
+        Route::post('/aturjadwal/store', 'store')->name('aturjadwal/store');
     });
 });
 

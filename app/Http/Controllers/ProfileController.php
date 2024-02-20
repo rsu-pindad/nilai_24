@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AturJadwal;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,13 +11,20 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
     public function index()
     {
         $data = ['title' => 'Halaman Profil'];
-        return View::make('profile', $data);
+        $jadwal = AturJadwal::get()->last();
+        $nows = Carbon::now();
+        if( $nows <= $jadwal['jadwal'] AND Auth::user()->level != 1){
+            return View::make('error-jadwal');
+        }else{
+            return View::make('profile', $data);
+        }
     }
 
     public function update(Request $request, User $user)
