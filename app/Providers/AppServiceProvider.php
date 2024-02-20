@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
                     $header = $sheet->pull(0);
                     $values = Sheets::collection(header: $header, rows: $sheet);
                     $arr =  $values->toArray();
-                    $new = array_filter($arr, function ($var) {
+                    $sheet = array_filter($arr, function ($var) {
                         return ($var['NPP'] == Auth::user()->npp);
                     });
                     // dd($new);
