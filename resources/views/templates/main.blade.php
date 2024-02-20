@@ -31,7 +31,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed ">
     <div class="wrapper">
-
         {{-- <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__wobble" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60"
@@ -43,11 +42,10 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                    <i class="fas fa-bars"></i></a>
                 </li>
             </ul>
-
 
         </nav>
         <!-- /.navbar -->
@@ -72,8 +70,8 @@
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-header">INTERFACE</li>
-                        <div style="display: none">
-                            <li class="nav-item  {{ $page == 'SELF ASSESSMENT' ? 'menu-open' : '' }}">
+                        <div style="display: none;">
+                            <li class="nav-item {{ $page == 'SELF ASSESSMENT' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link {{ $page == 'SELF ASSESSMENT' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
                                     <p>
@@ -102,8 +100,7 @@
                                     @endforeach
                                 </ul>
                             </li>
-
-                            <li class="nav-item  {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }} ">
+                            <li class="nav-item {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }} ">
                                 <a href="#" class="nav-link {{ $page == 'MENILAI ATASAN' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
                                     <p>
@@ -134,7 +131,6 @@
                                     @endforeach
                                 </ul>
                             </li>
-
                             <li class="nav-item {{ $page == 'MENILAI SELEVEL' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI SELEVEL' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
@@ -222,9 +218,6 @@
                                 data-target="#popup">
                                 <i class="fas fa-info-circle"></i> Help
                             </button>
-
-
-
                         </li>
                     </ul>
                 </nav>
@@ -232,7 +225,6 @@
             </div>
             <!-- /.sidebar -->
         </aside>
-
 
         <!-- Modal -->
         <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
@@ -304,6 +296,8 @@
                 </div>
             </div>
         </div>
+
+        {{-- Konten Di Sini --}}
         @yield('content')
 
         <!-- Control Sidebar -->
@@ -358,7 +352,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
     <!-- (Optional) Latest compiled and minified JavaScript translation files -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-id_ID.min.js"></script>
 
     <script>
         $("#dataTables").DataTable({});
