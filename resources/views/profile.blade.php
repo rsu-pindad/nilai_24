@@ -69,7 +69,7 @@
                         <div class="card card-primary card-outline">
                             <div class="card-body box-profile">
                                 <div class="text-center ">
-                                    <img class="img-circle" src="{{ asset('storage/' . Auth::user()->foto) }}"
+                                    <img class="img-circle" src="{{ asset('foto/' . Auth::user()->foto) }}"
                                         alt="User" height="150" width="150">
                                 </div>
 

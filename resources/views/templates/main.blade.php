@@ -70,7 +70,11 @@
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-header">INTERFACE</li>
-                        <div style="display: none;">
+                        {{-- <div style="display: none;"> --}}
+                        <div>
+                        {{-- {{dd($sheet[0]['NPP'])}} --}}
+                        {{-- {dd($sheet[0])}} --}}
+                        @if(isset($sheet[0]['LINK_SELF-ASSESSMENT']) != '')
                             <li class="nav-item {{ $page == 'SELF ASSESSMENT' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link {{ $page == 'SELF ASSESSMENT' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
@@ -80,12 +84,8 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview small">
-                                    <?php $count = 0; ?>
                                     @foreach ($sheet as $item)
                                         @if ($item['LINK_SELF-ASSESSMENT'] && $item['LINK_SELF-ASSESSMENT'] != '#N/A')
-                                            <?php if ($count == 1) {
-                                                break;
-                                            } ?>
                                             <li class="nav-item ">
                                                 <a href="{{ route('self', ['page' => 'SELF ASSESSMENT', 'link' => $item['LINK_SELF-ASSESSMENT']]) }}"
                                                     class="nav-link {{ $item['LINK_SELF-ASSESSMENT'] == $link ? 'active' : '' }}">
@@ -95,11 +95,12 @@
                                                     </p>
                                                 </a>
                                             </li>
-                                            <?php $count++; ?>
                                         @endif
                                     @endforeach
                                 </ul>
                             </li>
+                        @endif
+                        @if(isset($sheet[0]['LINK_MENILAI_ATASAN']) != '')
                             <li class="nav-item {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }} ">
                                 <a href="#" class="nav-link {{ $page == 'MENILAI ATASAN' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
@@ -131,6 +132,8 @@
                                     @endforeach
                                 </ul>
                             </li>
+                        @endif
+                        @if(isset($sheet[0]['LINK_MENILAI_SELEVEL']) != '')
                             <li class="nav-item {{ $page == 'MENILAI SELEVEL' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI SELEVEL' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
@@ -162,6 +165,8 @@
                                     @endforeach
                                 </ul>
                             </li>
+                        @endif
+                        @if(isset($sheet[0]['LINK_MENILAI_STAFF']) != '')
                             <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
@@ -194,10 +199,10 @@
                                 </ul>
                             </li>
                         </div>
+                        @endif
                         @if (Auth::user()->level == 1)
                             @include('templates.partials.sidebar-hc')
                         @endif
-
                         <li class="nav-header">SETTINGS</li>
                         <li class="nav-item">
                             <a href="{{ route('profile') }}"

@@ -14,7 +14,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class ResultController extends Controller
 {
 
-
     public function respon()
     {
         $responScore = ScoreResponse::all();

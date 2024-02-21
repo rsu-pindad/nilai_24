@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
             $page = '';
             $link = '';
             $sheet = [];
+            $mergeSheet = [];
             if ($user) {
                 if ($user->level != 1) {
                     # code...
@@ -36,15 +37,22 @@ class AppServiceProvider extends ServiceProvider
                     $values = Sheets::collection(header: $header, rows: $sheet);
                     $arr =  $values->toArray();
                     $sheet = array_filter($arr, function ($var) {
-                        return ($var['NPP'] == Auth::user()->npp);
+                        if($var['NPP'] == Auth::user()->npp){
+                            // return ($var['NPP'] == Auth::user()->npp);
+                            return ($var['NPP']);
+                        }else{
+                            unset($arr);
+                        }
                     });
-                    // dd($new);
+                    $mergeSheet = array_merge($sheet);
+                    unset($sheet);
+                    // dd($mergeSheet);
                     $page = request()->input('page');
                     $link = request()->input('link');
                     // $data = ['title' => 'Halaman Self Assesment', 'page' => $page, 'sheet' => $new, 'link' => $link];
                 }
             }
-            $view->with(['page' => $page, 'sheet' => $sheet, 'link' => $link]);
+            $view->with(['page' => $page, 'sheet' => $mergeSheet, 'link' => $link]);
         });
     }
 }

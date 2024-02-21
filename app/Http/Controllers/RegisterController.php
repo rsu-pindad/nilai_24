@@ -87,7 +87,7 @@ https://assessment.pindadmedika.com/
                 'countryCode' => '62', //optional
             ),
             CURLOPT_HTTPHEADER => array(
-                'Authorization: oXPbC39fCnkM3qXXHXWk' //change TOKEN to your actual token
+                'Authorization: 2qB#yoP6MKX2Z3_pDZfj' //change TOKEN to your actual token
             ),
         ));
 
