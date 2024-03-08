@@ -145,13 +145,6 @@
         </li>
     </ul>
 </li>
-{{-- <li class="nav-header">INTERFACE 3</li>
-<li class="nav-item">
-    <a href="{{ route('bobotpenilai') }}" class="nav-link {{ Route::currentRouteName() == 'bobotpenilai' ? 'active' : '' }}">
-        <i class="nav-icon fas fa-square"></i>
-        <p>Bobot Penilai</p>
-    </a>
-</li> --}}
 <li class="nav-header">INTERFACE 3</li>
 <li class="nav-item">
     <a href="{{ route('rekap-personal') }}" class="nav-link {{ Route::currentRouteName() == 'rekap-personal' ? 'active' : '' }}">
