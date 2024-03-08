@@ -44,7 +44,7 @@
 
                                 </div>
                             </div>
-                            <div class="card-body ">
+                            <div class="card-body">
                                 <div class="table-responsive px-4">
                                     <table class="table" id="dataTables">
                                         <thead>
