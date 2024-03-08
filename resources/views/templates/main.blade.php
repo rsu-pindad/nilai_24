@@ -4,49 +4,85 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PT PINDAD MEDIKA UTAMA | {{ $title }}</title>
+    <title>PT PINDAD MEDIKA UTAMA | {{ $title ?? 'RSU PINDAD' }}</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="{{asset('/plugins/fontawesome-free/css/all.min.css')}}">
     <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <link rel="stylesheet" href="{{asset('/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="{{asset('/dist/css/adminlte.min.css')}}">
 
-    <link rel="icon" href="dist/img/logo.png" type="image/x-icon">
-    <link rel="shortcut icon" href="dist/img/logo.png" type="image/x-icon">
+    <link rel="icon" href="{{asset('/dist/img/logo.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{asset('/dist/img/logo.png')}}" type="image/x-icon">
 
-    <!-- DataTables -->
-    <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
-    <!-- Latest compiled and minified CSS -->
+     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{asset('/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{asset('/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{asset('/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+
+    @stack('styles')
+
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="{{asset('/plugins/jquery/jquery.min.js')}}"></script>
+    <!-- Bootstrap -->
+    <script src="{{asset('/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+    <!-- overlayScrollbars -->
+    <script src="{{asset('/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{asset('/dist/js/adminlte.js')}}"></script>
+
+    <!-- PAGE PLUGINS -->
+    <!-- jQuery Mapael -->
+    <script src="{{asset('/plugins/jquery-mousewheel/jquery.mousewheel.js')}}"></script>
+    <script src="{{asset('/plugins/raphael/raphael.min.js')}}"></script>
+    <script src="{{asset('/plugins/jquery-mapael/jquery.mapael.min.js')}}"></script>
+    <script src="{{asset('/plugins/jquery-mapael/maps/usa_states.min.js')}}"></script>
+    <!-- ChartJS -->
+    <script src="{{asset('/plugins/chart.js/Chart.min.js')}}"></script>
+
+    <!-- DataTables  & Plugins -->
+    <script src="{{asset('/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{asset('/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+    <script src="{{asset('/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+    <script src="{{asset('/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+    <script src="{{asset('/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+    <script src="{{asset('/plugins/jszip/jszip.min.js')}}"></script>
+    <script src="{{asset('/plugins/pdfmake/pdfmake.min.js')}}"></script>
+    <script src="{{asset('/plugins/pdfmake/vfs_fonts.js')}}"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <!-- (Optional) Latest compiled and minified JavaScript translation files -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-id_ID.min.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed ">
     <div class="wrapper">
-        {{-- <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__wobble" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60"
-                width="60">
-        </div> --}}
 
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-dark">
             <!-- Left navbar links -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button">
-                    <i class="fas fa-bars"></i></a>
-                </li>
-            </ul>
-
+            @php
+                $rememberState = true;
+            @endphp
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="pushmenu" href="#" role="button" data-enable-remember="{{$rememberState}}"><i class="fas fa-bars"></i></a>
+                    </li>
+                </ul>
         </nav>
         <!-- /.navbar -->
 
@@ -54,8 +90,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{ route('profile') }}" class="brand-link">
-                <img src="../../dist/img/logo.png" alt="Logo" class="brand-image img-circle">
-
+                <img src="{{asset('/dist/img/logo.png')}}" alt="Logo" class="brand-image img-circle">
                 <span class="brand-text font-weight-light">PINDAD
                     MEDIKA</span>
             </a>
@@ -67,11 +102,10 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+                        <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
                         <li class="nav-header">INTERFACE</li>
                         {{-- <div style="display: none;"> --}}
-                        <div>
+                        {{-- <div> --}}
                         {{-- {{dd($sheet[0]['NPP'])}} --}}
                         {{-- {dd($sheet[0])}} --}}
                         @if(isset($sheet[0]['LINK_SELF-ASSESSMENT']) != '')
@@ -198,15 +232,14 @@
                                     @endforeach
                                 </ul>
                             </li>
-                        </div>
+                        {{-- </div> --}}
                         @endif
-                        @if (Auth::user()->level == 1)
+                        @if(Auth::user()->level == 1)
                             @include('templates.partials.sidebar-hc')
                         @endif
                         <li class="nav-header">SETTINGS</li>
                         <li class="nav-item">
-                            <a href="{{ route('profile') }}"
-                                class="nav-link {{ Route::currentRouteName() == 'profile' ? 'active' : '' }}">
+                            <a href="{{ route('profile') }}" class="nav-link {{ Route::currentRouteName() == 'profile' ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>Profile</p>
                             </a>
@@ -282,9 +315,7 @@
                                 level
                                 jabatan.
                             </p>
-
                             <p>
-
                                 Jika ada hal yang kurang jelas maupun permasalahan dalam melakukan penilaian ini,
                                 silakan
                                 klik
@@ -305,59 +336,15 @@
         {{-- Konten Di Sini --}}
         @yield('content')
 
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
-
         <!-- Main Footer -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2023 <a href="https://pindadmedika.com">PT PINDAD MEDIKA UTAMA</a>.</strong>
+            <strong>Copyright &copy; 2024 <a href="https://pindadmedika.com">PT PINDAD MEDIKA UTAMA</a>.</strong>
             All rights reserved.
-
         </footer>
     </div>
     <!-- ./wrapper -->
 
-    <!-- REQUIRED SCRIPTS -->
-    <!-- jQuery -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- overlayScrollbars -->
-    <script src="../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../../dist/js/adminlte.js"></script>
-
-    <!-- PAGE PLUGINS -->
-    <!-- jQuery Mapael -->
-    <script src="../../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-    <script src="../../plugins/raphael/raphael.min.js"></script>
-    <script src="../../plugins/jquery-mapael/jquery.mapael.min.js"></script>
-    <script src="../../plugins/jquery-mapael/maps/usa_states.min.js"></script>
-    <!-- ChartJS -->
-    <script src="../../plugins/chart.js/Chart.min.js"></script>
-
-    <!-- DataTables  & Plugins -->
-    <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="../../plugins/jszip/jszip.min.js"></script>
-    <script src="../../plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="../../plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-
-    <!-- (Optional) Latest compiled and minified JavaScript translation files -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-id_ID.min.js"></script>
+    @stack('modals')
 
     <script>
         $("#dataTables").DataTable({});
@@ -370,7 +357,6 @@
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
     </script>
-
     <script>
         $(document).ready(function() {
             var isshow = localStorage.getItem('isshow');
@@ -384,6 +370,6 @@
     </script>
 
     @include('sweetalert::alert')
+    @stack('scripts')
 </body>
-
 </html>
