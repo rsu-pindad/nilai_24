@@ -1,0 +1,223 @@
+<?php
+
+namespace App\Http\Controllers\HC;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Revolution\Google\Sheets\Facades\Sheets;
+use App\Models\RelasiKaryawan as RK;
+use App\Models\RelasiStaff as RS;
+use App\Models\RelasiSelevel as RL;
+use App\Models\RelasiAtasan as RA;
+
+
+class RelasiKaryawan extends Controller
+{
+
+    public function index()
+    {
+        $rk_cache = Cache::remember('rk_data',now()->addMinutes(5), function () {
+            return RK::select('id','npp_karyawan','level_jabatan','unit_jabatan','nama_karyawan')->with([
+                'karyawan_atasan:id,relasi_karyawan_id,npp_atasan',
+                'karyawan_selevel:id,relasi_karyawan_id,npp_selevel',
+                'karyawan_staff:id,relasi_karyawan_id,npp_staff'
+                ])->get();
+        });
+        return view('hc.gform.relasi.index')->with([
+            'karyawan_data' => $rk_cache,
+        ]);
+    }
+    public function pull()
+    {
+        $values = Sheets::spreadsheet('1CX4q_BqkCgHr1TEe0_tlRHO9ZcSXqKv46Q-v7H1OykM')->sheet('DP3 2023')->range('F$5:I')->all();
+        // unset($values[0]);
+        // dd($values);
+        $message = [];
+        try {
+            $lastNppKaryawan = '';
+            $rkid = '';
+            $findIdRk = '';
+            foreach($values as $key => $val){
+                if($val[0] != '' && $val[0] != '-')
+                {
+                    // $val[0] = $lastNppKaryawan;
+                    $checkTable = RK::where('npp_karyawan',$val[0])->first() ?? '';
+                    if($checkTable == ''){
+                        $storeRk = RK::updateOrCreate(
+                            [
+                            'npp_karyawan' => $val[0],
+                            ]
+                        ); // Insert
+                        $rkid = $storeRk->id;
+                    }else{
+                        $findIdRk = RK::where('npp_karyawan', $val[0])->first(); // dapatkan id rk
+                        $rkid = $findIdRk->id;
+                        // Dapatkan Id
+                    }
+                    $lastNppKaryawan = $val[0];
+                }
+                else
+                {
+                    $val[0] = $lastNppKaryawan;
+                    $checkTable = RK::where('npp_karyawan',$val[0])->first() ?? '';
+                    if($checkTable == ''){
+                        $storeRk = RK::create(
+                            [
+                            'npp_karyawan' => $val[0],
+                            ]
+                        ); // Insert
+                        $rkid = $storeRk->id;
+                    }else{
+                        $findIdRk = RK::where('npp_karyawan', $val[0])->first(); // dapatkan id rk
+                        $rkid = $findIdRk->id;
+                        // Dapatkan Id
+                    }
+                }
+                // Dapatkan Id
+                // Insert ke tabel relasi staff
+                if(!empty($val[3])){
+                    $staff = preg_replace("/[^a-zA-Z 0-9]+/", "", $val[3]);
+                    if($staff != ''){
+                        RS::updateOrCreate([
+                            'relasi_karyawan_id' => $rkid,
+                            'npp_staff' => $staff,
+                            ]
+                        );
+                    }
+                }
+                // Insert ke tabel relasi selevel
+                if(!empty($val[2])){
+                    if($val[2] != ''){
+                        RL::updateOrCreate([
+                            'relasi_karyawan_id' => $rkid,
+                            'npp_selevel' => $val[2],
+                            ]
+                        );
+                    }
+                }
+                // Insert ke tabel atasan
+                if(!empty($val[1])){
+                    if($val[3] != ''){
+                        RA::updateOrCreate([
+                            'relasi_karyawan_id' => $rkid,
+                            'npp_atasan' => $val[1],
+                            ]
+                        );
+                    }
+                }
+            }
+            unset($values);
+            return response()->json(['message' => 'Poll inserted']);
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return response()->json(
+                [
+                    'message' => $exception->getMessage(),
+                ]
+            );
+        }
+    }
+
+    public function pull_level()
+    {
+        $values = Sheets::spreadsheet('1CX4q_BqkCgHr1TEe0_tlRHO9ZcSXqKv46Q-v7H1OykM')->sheet('DP3 2023')->range('C$5:I')->all();
+        // unset($values[0]);
+        // dd($values);
+
+        $message = [];
+        try {
+            $lastNppKaryawan = '';
+            $rkid = '';
+            $findIdRk = '';
+            foreach($values as $key => $val){
+                // dd($values);
+                if($val[3] != '' && $val[3] != '-')
+                {
+                    // $val[3] = $lastNppKaryawan;
+                    // dd($val[3]);
+                    $checkTable = RK::where('npp_karyawan',$val[3])->first() ?? '';
+                    if($checkTable == ''){
+                        // dd($val[2],$val[0],$val[1]);
+                        $storeRk = RK::updateOrCreate(
+                            [
+                            'npp_karyawan' => $val[3],
+                            'level_jabatan' => $val[1],
+                            'unit_jabatan' => $val[2],
+                            'nama_karyawan' => $val[0],
+                            ]
+                        ); 
+                        // Insert
+                        $rkid = $storeRk->id;
+                    }else{
+                        $findIdRk = RK::where('npp_karyawan', $val[3])->first(); // dapatkan id rk
+                        $rkid = $findIdRk->id;
+                        // Dapatkan Id
+                    }
+                    $lastNppKaryawan = $val[3];
+                }
+                else
+                {
+                    $val[3] = $lastNppKaryawan;
+                    // dd($values);
+                    $checkTable = RK::where('npp_karyawan',$val[3])->first() ?? '';
+                    if($checkTable == ''){
+                        $storeRk = RK::create(
+                            [
+                            'npp_karyawan' => $val[3],
+                            'level_jabatan' => $val[1],
+                            'unit_jabatan' => $val[2],
+                            'nama_karyawan' => $val[0],
+                            ]
+                        ); // Insert
+                        $rkid = $storeRk->id;
+                        dd($storeRk);
+                    }else{
+                        $findIdRk = RK::where('npp_karyawan', $val[3])->first(); // dapatkan id rk
+                        $rkid = $findIdRk->id;
+                        // Dapatkan Id
+                    }
+                }
+                // Dapatkan Id
+                // Insert ke tabel relasi staff
+                if(!empty($val[6])){
+                    $staff = preg_replace("/[^a-zA-Z 0-9]+/", "", $val[6]);
+                    if($staff != ''){
+                        RS::updateOrCreate([
+                            'relasi_karyawan_id' => $rkid,
+                            'npp_staff' => $staff,
+                            ]
+                        );
+                    }
+                }
+                // Insert ke tabel relasi selevel
+                if(!empty($val[5])){
+                    if($val[5] != ''){
+                        RL::updateOrCreate([
+                            'relasi_karyawan_id' => $rkid,
+                            'npp_selevel' => $val[5],
+                            ]
+                        );
+                    }
+                }
+                // Insert ke tabel atasan
+                if(!empty($val[4])){
+                    if($val[4] != ''){
+                        RA::updateOrCreate([
+                            'relasi_karyawan_id' => $rkid,
+                            'npp_atasan' => $val[4],
+                            ]
+                        );
+                    }
+                }
+            }
+            unset($values);
+            return response()->json(['message' => 'Poll inserted']);
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return response()->json(
+                [
+                    'message' => $exception->getMessage(),
+                ]
+            );
+        }
+    }
+}
