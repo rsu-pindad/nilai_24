@@ -28,17 +28,16 @@ class AppServiceProvider extends ServiceProvider
             $page = '';
             $link = '';
             $sheet = [];
+            $sheet_id = env('GOOGLE_SHEET_ID', '');
             $mergeSheet = [];
             if ($user) {
                 if ($user->level != 1) {
-                    # code...
-                    $sheet = Sheets::spreadsheet('1banzT8ab9tWTv2eqxU84tIGmnmkBxRTNwhN4o5OpQO8')->sheet('link')->get() ?? [];
+                    $sheet = Sheets::spreadsheet($sheet_id)->sheet('link')->get() ?? [];
                     $header = $sheet->pull(0);
                     $values = Sheets::collection(header: $header, rows: $sheet);
                     $arr =  $values->toArray();
                     $sheet = array_filter($arr, function ($var) {
                         if($var['NPP'] == Auth::user()->npp){
-                            // return ($var['NPP'] == Auth::user()->npp);
                             return ($var['NPP']);
                         }else{
                             unset($arr);
@@ -46,10 +45,8 @@ class AppServiceProvider extends ServiceProvider
                     });
                     $mergeSheet = array_merge($sheet);
                     unset($sheet);
-                    // dd($mergeSheet);
                     $page = request()->input('page');
                     $link = request()->input('link');
-                    // $data = ['title' => 'Halaman Self Assesment', 'page' => $page, 'sheet' => $new, 'link' => $link];
                 }
             }
             $view->with(['page' => $page, 'sheet' => $mergeSheet, 'link' => $link]);
