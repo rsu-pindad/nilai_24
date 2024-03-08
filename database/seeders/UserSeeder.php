@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'level' => '1',
             'no_hp' => '1',
             'email' => 'sdm@pindadmedika.com',
-            'password' => Hash::make('$PMU@2023'),
+            'password' => Hash::make('12345'),
         ]);
     }
 }
