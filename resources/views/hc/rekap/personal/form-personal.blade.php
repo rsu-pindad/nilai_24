@@ -237,6 +237,7 @@ use Carbon\Carbon;
                         <td id="keterangan"></td>
                         <td colspan="5"></td>
                     </tr>
+                    <!-- 
                     <tr>
                         <td>Pegawai yang dinilai</td>
                         <td colspan="3">Pejabat Penilai</td>
@@ -246,7 +247,8 @@ use Carbon\Carbon;
                         <td id="ttd_dinilai"></td>
                         <td id="ttd_atasan_dinilai" colspan="3"></td>
                         <td id="ttd_atasan_penilai" colspan="2"></td>
-                    </tr>
+                    </tr> 
+                    -->
                     <tr>
                         <td>{{Carbon::now()->format('Y/m/d')}}</td>
                         <td colspan="3">{{Carbon::now()->format('Y/m/d')}}</td>
