@@ -138,6 +138,11 @@ $(document).ready(function()
 
         $('#penilai_selevel').children().remove();
 
+        if($('.penilai_selevel_atasan').length > 0 )
+        {
+            $('.penilai_selevel_atasan').remove();
+        }
+
         if($('.penilai_staff').length > 0 )
         {
             $('.penilai_staff').remove();
@@ -150,6 +155,7 @@ $(document).ready(function()
             {
                 let html;
 
+                // Atasan Pejabat Dinilai
                 $.when(showDetailPenilai(sd.karyawan_atasan[0].npp_atasan))
                     .then(function(sdp)
                         {
@@ -245,6 +251,7 @@ $(document).ready(function()
                         }
                     );
 
+                // Selevel Pejabat Dinilai
                 $.when(showDetailPenilai(sd.karyawan_selevel[0].npp_selevel))
                     .then(function(sdp)
                         {
@@ -329,7 +336,106 @@ $(document).ready(function()
                             console.log(err);
                         }
                     );
+                
+                // Tambahan Pejabat Selevel dengan Pejabat Dinilai Berdasarkan Atasan Pejabat Dinilai
+                $.when(showDetailSelevelAtasan(sd.identitas_dinilai.id, sd.karyawan_atasan[0].npp_atasan))
+                .then(function(sdsa)
+                    {
+                        $(sdsa).each(function(i, items)
+                        {
+                            console.log(items);
+                            const url = '/rekap/hasil-personal/status?dinilai='+sd.identitas_dinilai.npp_karyawan+'&penilai='+items.parent_atasan.id;
+                            const urlFollowUp = '/rekap/hasil-personal/follow-up?dinilai='+sd.identitas_dinilai.npp_karyawan+'&penilai='+items.parent_atasan.npp_karyawan;
+                            
+                            $.getJSON(url, function(i, items2)
+                            {
+                                // console.log(i);
+                                html =`
+                                    <tr class="penilai_selevel_atasan">
+                                        <td colspan="2">${items.parent_atasan.nama_karyawan}</td>
+                                        <td colspan="2">${items.parent_atasan.npp_karyawan}</td>
+                                        <td>${i.status}</td>
+                                        ${(i.status != 'Sudah Menilai') ?
+                                            `<td data-id="${items.parent_atasan.npp_karyawan}">
+                                            <button 
+                                                class="btnFollowUp btn btn-info" 
+                                                data-url="${urlFollowUp}" 
+                                                data-npp-penilai="${items.parent_atasan.npp_karyawan}" 
+                                                data-npp-dinilai="${sd.identitas_dinilai.npp_karyawan}">
+                                            <i class="fab fa-whatsapp"></i>
+                                            </button>
+                                        </td>` : 
+                                        `<td>
+                                        </td>`
+                                        }
+                                    }
+                                    <tr>
+                                `;
+                                
+                                $(html).insertAfter('#penilai_atasan').ready(function(e)
+                                {
+                                    $('.btnFollowUp').on('click', function(e)
+                                    {
+                                        e.preventDefault();
+                                        var url = $(this).attr('data-url');
+                                        var npp_penilai = $(this).attr('data-npp-penilai');
+                                        var npp_dinilai = $(this).attr('data-npp-dinilai');
 
+                                        console.log(url);
+                                        console.log(npp_penilai);
+                                        console.log(npp_dinilai);
+
+                                        Swal.fire
+                                        ({
+                                            title: 'Follow Up',
+                                            text: 'Anda yakin melakukan follow up',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonColor: "#3085d6",
+                                            cancelButtonColor: "#d33",
+                                            confirmButtonText: "follow up",
+                                            cancelButtonText: "batal"
+                                        }).then((result) => 
+                                        {
+                                            if (result.isConfirmed) 
+                                            {
+                                                $.ajax(
+                                                {
+                                                    url : url,
+                                                    type : 'get',
+                                                    dataType: 'json',
+                                                    success : function (response){
+                                                        console.log(response);
+                                                        if(response.status === true){
+                                                            Swal.fire({
+                                                                title: "success",
+                                                                text: response.detail,
+                                                                icon: "success"
+                                                            });
+                                                        }else{
+                                                            Swal.fire({
+                                                                title: "gagal",
+                                                                text: response.detail,
+                                                                icon: "error"
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    });
+                                });
+                            });
+
+                        });
+                    },
+                    function(err)
+                    {
+                        console.log(err);
+                    }
+                );
+
+                // Staff / Bawahan Pejabat Dinilai
                 $(sd.karyawan_staff).each(function(i, items)
                 {
                     $.when(showDetailPenilai(items.npp_staff))
@@ -435,7 +541,7 @@ $(document).ready(function()
     });
 
     async function showForm(response)
-    {   
+    {  
         var aspek_1 = 0;
         var aspek_2 = 0;
         var aspek_3 = 0;
@@ -648,9 +754,21 @@ $(document).ready(function()
         {
             kriteria = 'Sangat Baik';
         }
+        else if(total_pm <= 94 && total_pm > 80)
+        {
+            kriteria = 'Baik';
+        }
+        else if(total_pm <= 80 && total_pm > 65)
+        {
+            kriteria = 'Cukup';
+        }
+        else if(total_pm <= 65 && total_pm > 50)
+        {
+            kriteria = 'Kurang';
+        }
         else
         {
-            kriteria = 'Tidak masuk kriteria';
+            kriteria = 'Sangat Kurang';
         }
 
         $('#totalSumNilai').html(total_pm);
@@ -673,6 +791,17 @@ $(document).ready(function()
         return $.ajax(
             {
                 url : '/rekap/hasil-personal/penilai?detail='+id,
+                type : 'get',
+                dataType: 'json',
+            }
+        );
+    }
+
+    async function showDetailSelevelAtasan(id_dinilai, npp_atasan_dinilai)
+    {
+        return $.ajax(
+            {
+                url : '/rekap/hasil-personal/selevel?dinilai='+id_dinilai+'&atasan='+npp_atasan_dinilai,
                 type : 'get',
                 dataType: 'json',
             }

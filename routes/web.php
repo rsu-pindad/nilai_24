@@ -110,6 +110,7 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::get('/rekap/hasil-personal{detail?}', 'getDetailAjax')->name('rekap-ajax-personal-detail');
         Route::get('/rekap/hasil-personal/penilai{detail?}', 'getPenilaiDetailAjax')->name('rekap-ajax-personal-penilai-detail');
         Route::get('/rekap/hasil-personal/status{dinilai?}{penilai?}', 'checkStatus')->name('rekap-ajax-personal-dinilai-penilai');
+        Route::get('/rekap/hasil-personal/selevel{dinilai?}{atasan?}', 'getSelevelAtasan')->name('rekap-ajak-personal-selevel-atasan');
         Route::get('/rekap/hasil-personal/follow-up{dinilai?}{penilai?}', 'followUp')->name('rekap-ajax-follow-up');
     });
 

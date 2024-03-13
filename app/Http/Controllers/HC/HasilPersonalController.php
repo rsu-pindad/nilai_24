@@ -534,4 +534,20 @@ Terimakasih";
         echo $response;
     }
 
+    public function getSelevelAtasan(Request $request)
+    {
+        $id = $request->dinilai;
+        $atasan = $request->atasan;
+
+        $findAtasan = RelasiAtasan::with('parent_atasan')
+                ->where('npp_atasan', $atasan)
+                ->whereNot('relasi_karyawan_id', $id)
+                ->get();
+        
+        if($findAtasan == true){
+            return response()->json($findAtasan);
+        }
+        return response()->json($findAtasan);
+    }
+
 }
