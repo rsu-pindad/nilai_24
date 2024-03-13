@@ -27,7 +27,9 @@ class GResponseController extends Controller
     {
         // $user = Auth::user();
         // all() returns array
-        $values = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('Form Responses 3')->get();
+        $sheetId = env('GOOGLE_SHEET_ID', '');
+        // $values = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('Form Responses 3')->get();
+        $values = Sheets::spreadsheet($sheetId)->sheet('Form Responses 1')->get();
         // $values = Cache::remember('form_response', now()->addMinutes(2), function(){
         //     return Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('Form Responses 3')->get();
         // });
