@@ -395,8 +395,6 @@ class HasilPersonalController extends Controller
             ->where('hasil_personal.id', $params)
             ->first() ?? [];
 
-            // dd($result);
-
         if($result != ''){
             return response()->json($result);
         }

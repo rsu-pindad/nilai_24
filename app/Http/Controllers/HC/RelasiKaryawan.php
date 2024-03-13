@@ -124,7 +124,6 @@ class RelasiKaryawan extends Controller
         // unset($values[0]);
         // dd($values);
 
-        $message = [];
         try {
             $lastNppKaryawan = '';
             $rkid = '';
@@ -170,7 +169,7 @@ class RelasiKaryawan extends Controller
                             ]
                         ); // Insert
                         $rkid = $storeRk->id;
-                        dd($storeRk);
+                        // dd($storeRk);
                     }else{
                         $findIdRk = RK::where('npp_karyawan', $val[3])->first(); // dapatkan id rk
                         $rkid = $findIdRk->id;

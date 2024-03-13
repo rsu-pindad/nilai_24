@@ -20,9 +20,4 @@ class RelasiSelevel extends Model
     public function relasi_karyawan(){
         return $this->belongsTo(RelasiKaryawan::class, 'relasi_karyawan_id');
     }
-
-    public function parent_selevel()
-    {
-        return $this->hasOne(RelasiKaryawan::class, 'id', 'relasi_karyawan_id');
-    }
 }
