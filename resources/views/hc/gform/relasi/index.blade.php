@@ -37,7 +37,7 @@
                                         <th>Staff</th>
                                     </thead>
                                     <tbody>
-                                        @forelse($karyawan_data as $karyawan)
+                                        @foreach($karyawan_data as $karyawan)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
                                                 <td>{{$karyawan->npp_karyawan}}</td>
@@ -65,11 +65,19 @@
                                                     @endforelse
                                                 </td>
                                             </tr>
+                                        @endforeach
+                                        {{-- @forelse()
                                         @empty
                                             <tr>
-                                            tidak ada data
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
                                             </tr>
-                                        @endforelse
+                                        @endforelse --}}
                                     <tbody>
                                 </table>
                             </div><!-- /.card-body -->
@@ -109,7 +117,7 @@ $(document).ready(function(e){
     {
         let clears = true;
         $.ajax({
-            url : '/relasi-karyawan/pull',
+            url : '/relasi-karyawan/pull-level',
             type : 'get',
             dataType: 'json',
             success : function (response){
