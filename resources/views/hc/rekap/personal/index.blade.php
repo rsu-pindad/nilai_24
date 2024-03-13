@@ -46,9 +46,11 @@
                                             <td>
                                                 <button 
                                                     class="btn btn-info btn-sm btn-personal" 
+                                                    data-toggle="modal" data-target="#staticBackdrop" 
                                                     data-id="{{$rp->id}}">
-                                                    detil
+                                                    <i class="far fa-eye"></i>
                                                 </button>
+                                                
                                             </td>
                                         </tr>
                                     @endforeach
@@ -59,7 +61,7 @@
                         <!-- /.card -->
                     </div>
                 </div>
-                @include('hc.rekap.personal.form-personal')
+                
                 <!-- /.row -->
             </div><!-- /.container-fluid -->
         </section>
@@ -67,6 +69,25 @@
     </div>
     <!-- /.content-wrapper -->
 @endsection
+
+@push('modals')
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Hasil Personal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        @include('hc.rekap.personal.form-personal')
+      </div>
+    </div>
+  </div>
+</div>
+@endpush
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -108,6 +129,8 @@ $(document).ready(function()
     {
         e.preventDefault();
 
+        // $(this).prop('disabled', true | false);
+
         let id = $(this).attr('data-id');
 
         //showDetail(id);
@@ -136,8 +159,8 @@ $(document).ready(function()
                             {
 
                                 html =`
-                                    <td colspan="2">${sdp.nama_karyawan}</td>
-                                    <td colspan="2">${sdp.npp_karyawan}</td>
+                                    <td colspan="2">${sdp.nama_karyawan ?? 'data karyawan tidak di temukan'}</td>
+                                    <td colspan="2">${sdp.npp_karyawan  ?? 'data karyawan tidak di temukan'}</td>
                                     <td>${i.status}</td>
                                     ${(i.status != 'Sudah Menilai') ?
                                             `<td data-id="${sdp.npp_karyawan}">
@@ -207,9 +230,12 @@ $(document).ready(function()
                                         });
                                     });
                                 });
-                                $('#ttd_dinilai').html(sd.identitas_dinilai.nama_karyawan);
-                                $('#ttd_atasan_dinilai').html(sd.identitas_penilai.nama_karyawan);
-                                $('#ttd_atasan_penilai').html(sdp.nama_karyawan);
+                                /**
+                                 *  $('#ttd_dinilai').html(sd.identitas_dinilai.nama_karyawan);
+                                 *  $('#ttd_atasan_dinilai').html(sd.identitas_penilai.nama_karyawan);
+                                 *  $('#ttd_atasan_penilai').html(sdp.nama_karyawan);
+                                 */
+                               
                             });
 
                         },
@@ -228,8 +254,8 @@ $(document).ready(function()
                             $.getJSON(url, function(i, items)
                             {
                                 html =`
-                                    <td colspan="2">${sdp.nama_karyawan}</td>
-                                    <td colspan="2">${sdp.npp_karyawan}</td>
+                                    <td colspan="2">${sdp.nama_karyawan ?? 'data karyawan tidak di temukan'}</td>
+                                    <td colspan="2">${sdp.npp_karyawan ?? 'data karyawan tidak di temukan'}</td>
                                     <td>${i.status}</td>
                                     ${(i.status != 'Sudah Menilai') ?
                                             `<td data-id="${sdp.npp_karyawan}">
@@ -254,10 +280,6 @@ $(document).ready(function()
                                         var url = $(this).attr('data-url');
                                         var npp_penilai = $(this).attr('data-npp-penilai');
                                         var npp_dinilai = $(this).attr('data-npp-dinilai');
-
-                                        console.log(url);
-                                        console.log(npp_penilai);
-                                        console.log(npp_dinilai);
 
                                         Swal.fire
                                         ({
@@ -676,10 +698,8 @@ $(document).ready(function(e)
 {
     async function swalAjax()
     {
-        // let clears = true;
         $.ajax({
-            // url : '/skor-pool-staff?refresh='+clears,
-            url : 'rekap/personal-calculate',
+            url : '/rekap/personal-calculate',
             type : 'get',
             dataType: 'json',
             success : function (response){
