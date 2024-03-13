@@ -36,15 +36,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'hc'])->group(function () {
     Route::controller(ResponseController::class)->group(function () {
         Route::get('/response', 'index')->name('response');
-
         Route::post('/response/calculate', 'calculate_dp3')->name('response/calculate');
-
         Route::get('/response/detail/{npp}', 'detail')->name('response/detail');
         Route::post('/response/detail/store', 'store_detail')->name('response/detail/store');
         Route::post('/response/detail/delete/{id}', 'delete_detail')->name('response/detail/delete');
-
         Route::post('/response/import', 'import')->name('response/import');
-
         Route::get('/response/report/{npp}', 'report')->name('response/report');
     });
 
@@ -84,7 +80,7 @@ Route::middleware(['auth', 'hc'])->group(function () {
 
     Route::controller(RelasiKaryawan::class)->group(function() {
         Route::get('/relasi-karyawan', 'index')->name('relasi-karyawan');
-        Route::get('/relasi-karyawan/pull', 'pull')->name('relasi-karyawan-pull');
+        // Route::get('/relasi-karyawan/pull', 'pull')->name('relasi-karyawan-pull');
         Route::get('/relasi-karyawan/pull-level', 'pull_level')->name('relasi-karyawan-pull-level');
     });
 
@@ -107,11 +103,6 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::get('/rekap/get-bobot-perilaku{refresh?}', 'rb_perilaku')->name('rekap-get-bobot-perilaku');
         Route::get('/rekap/get-bobot-sasaran{refresh?}', 'rb_sasaran')->name('rekap-get-bobot-sasaran');
     });
-
-    // Route::controller(BobotPenilaiController::class)->group(function(){
-    //     Route::get('/bobotpenilai', 'index')->name('bobotpenilai');
-    //     Route::post('/bobotpenilai/store-ajax-bobot', 'storeAjaxBobot')->name('skor-store-ajax-bobot');
-    // });
 
     Route::controller(HasilPersonalController::class)->group(function(){
         Route::get('/rekap/personal', 'index')->name('rekap-personal');
@@ -141,15 +132,12 @@ Route::middleware('guest')->group(function () {
 
     Route::controller(RegisterController::class)->group(function () {
         Route::get('register', 'index')->name('register');
-
         Route::post('register/create', 'create')->name('register/create');
-
         Route::post('register/check', 'check')->name('register/check');
     });
 
     Route::controller(ForgotPasswordController::class)->group(function () {
         Route::get('forgot', 'index')->name('forgot');
-
         Route::post('forgot/send', 'send')->name('forgot/send');
     });
 });
@@ -166,11 +154,8 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(ProfileController::class)->group(function () {
         Route::get('profile', 'index')->name('profile');
-
         Route::patch('profile/update/{user}', 'update')->name('profile/update');
-
         Route::patch('profile/update_photo/{user}', 'update_photo')->name('profile/update_photo');
-
         Route::patch('profile/update_password/{user}', 'update_password')->name('profile/update_password');
     });
 });
