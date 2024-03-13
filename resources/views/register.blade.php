@@ -115,13 +115,18 @@
                                 </div>
                             </div>
                             <button type="button" class="btn btn-primary btn-block" id="daftar">Daftar</button>
-                            <p class="mb-0">Sudah punya akun? <a href="{{ route('login') }}"
+                            <!-- <p class="mb-0">Sudah punya akun? <a href="{{ route('login') }}"
                                     class="text-center">Masuk</a>
-                            </p>
+                            </p> -->
                         </div>
                     </form>
                 @endif
-
+                <p class="mb-0">Sudah punya akun?
+                    <a 
+                        href="{{ route('login') }}"
+                        class="text-center">Masuk
+                    </a>
+                </p>
             </div>
         </div>
         <!-- /.form-box -->

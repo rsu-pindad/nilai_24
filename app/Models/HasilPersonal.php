@@ -105,6 +105,12 @@ class HasilPersonal extends Model
             'id'
         );
     }
+
+    // public function karyawan_selevel($npp_atasan)
+    // {
+    //     return RelasiAtasan::where('npp_atasan', $npp_atasan)->get();
+    // }
+
     public function karyawan_staff()
     {
         return $this->hasManyThrough(

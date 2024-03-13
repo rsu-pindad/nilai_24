@@ -478,9 +478,11 @@ class HasilPersonalController extends Controller
 
         if($findDinilai != null && $findPenilai != null){
             return $this->sendWhatsapp($findDinilai, $findPenilai);
-        }else{
+        }
+        else
+        {
             return response()->json([
-                'detail' => 'error',
+                'detail' => 'terjadi kesalahan',
                 'status' => false,
             ]);
         }
@@ -497,7 +499,7 @@ class HasilPersonalController extends Controller
         $nama_dinilai = $npp_dinilai['nama'];
         $pesan = 
         "Yth $nama_penilai
-mohon untuk melakukan penilaian untuk
+mohon untuk melakukan penilaian sdr 
 $nama_dinilai
 Terimakasih";
         // dd($npp_dinilai,$npp_penilai);
@@ -506,7 +508,7 @@ Terimakasih";
         curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://api.fonnte.com/send',
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
+        CURLOPT_ENCODING => 'UTF-8',
         CURLOPT_MAXREDIRS => 10,
         CURLOPT_TIMEOUT => 10,
         CURLOPT_FOLLOWLOCATION => true,

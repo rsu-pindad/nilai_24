@@ -73,10 +73,15 @@
 @push('modals')
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Hasil Personal</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">
+        <a href="#" class="brand-link text-muted">
+            <img src="{{asset('/dist/img/logo.png')}}" alt="Logo" class="brand-image img-circle">
+            Hasil Personal
+        </a>
+        </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -279,56 +284,56 @@ $(document).ready(function()
                                         }
                                     }`;
 
-                                $('#penilai_selevel').append(html).ready(function(e)
-                                {
-                                    $('.btnFollowUp').on('click', function(e)
-                                    {
-                                        e.preventDefault();
-                                        var url = $(this).attr('data-url');
-                                        var npp_penilai = $(this).attr('data-npp-penilai');
-                                        var npp_dinilai = $(this).attr('data-npp-dinilai');
+                                // $('#penilai_selevel').append(html).ready(function(e)
+                                // {
+                                //     $('.btnFollowUp').on('click', function(e)
+                                //     {
+                                //         e.preventDefault();
+                                //         var url = $(this).attr('data-url');
+                                //         var npp_penilai = $(this).attr('data-npp-penilai');
+                                //         var npp_dinilai = $(this).attr('data-npp-dinilai');
 
-                                        Swal.fire
-                                        ({
-                                            title: 'Follow Up',
-                                            text: 'Anda yakin melakukan follow up',
-                                            icon: 'question',
-                                            showCancelButton: true,
-                                            confirmButtonColor: "#3085d6",
-                                            cancelButtonColor: "#d33",
-                                            confirmButtonText: "follow up",
-                                            cancelButtonText: "batal"
-                                        }).then((result) => 
-                                        {
-                                            if (result.isConfirmed) 
-                                            {
-                                                $.ajax(
-                                                {
-                                                    url : url,
-                                                    type : 'get',
-                                                    dataType: 'json',
-                                                    success : function (response){
-                                                        console.log(response);
-                                                        if(response.status === true){
-                                                            Swal.fire({
-                                                                title: "success",
-                                                                text: response.detail,
-                                                                icon: "success"
-                                                            });
-                                                        }else{
-                                                            Swal.fire({
-                                                                title: "gagal",
-                                                                text: response.detail,
-                                                                icon: "danger"
-                                                            });
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    });
-                                });
-                                console.log(sdp);
+                                //         Swal.fire
+                                //         ({
+                                //             title: 'Follow Up',
+                                //             text: 'Anda yakin melakukan follow up',
+                                //             icon: 'question',
+                                //             showCancelButton: true,
+                                //             confirmButtonColor: "#3085d6",
+                                //             cancelButtonColor: "#d33",
+                                //             confirmButtonText: "follow up",
+                                //             cancelButtonText: "batal"
+                                //         }).then((result) => 
+                                //         {
+                                //             if (result.isConfirmed) 
+                                //             {
+                                //                 $.ajax(
+                                //                 {
+                                //                     url : url,
+                                //                     type : 'get',
+                                //                     dataType: 'json',
+                                //                     success : function (response){
+                                //                         console.log(response);
+                                //                         if(response.status === true){
+                                //                             Swal.fire({
+                                //                                 title: "success",
+                                //                                 text: response.detail,
+                                //                                 icon: "success"
+                                //                             });
+                                //                         }else{
+                                //                             Swal.fire({
+                                //                                 title: "gagal",
+                                //                                 text: response.detail,
+                                //                                 icon: "error"
+                                //                             });
+                                //                         }
+                                //                     }
+                                //                 });
+                                //             }
+                                //         });
+                                //     });
+                                // });
+                                // console.log(sdp);
                             });
                         },
                         function(err)

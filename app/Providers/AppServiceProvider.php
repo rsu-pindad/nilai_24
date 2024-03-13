@@ -43,8 +43,10 @@ class AppServiceProvider extends ServiceProvider
                             unset($arr);
                         }
                     });
+                    // dd($sheet_id);
                     $mergeSheet = array_merge($sheet);
                     unset($sheet);
+                    // dd($mergeSheet);
                     $page = request()->input('page');
                     $link = request()->input('link');
                 }
