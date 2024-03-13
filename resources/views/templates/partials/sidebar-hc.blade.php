@@ -13,7 +13,7 @@
 <li class="nav-header">INTERFACE 2</li>
 <li class="nav-item menu-is-opening menu-open">
     <ul class="nav nav-treeview" style="display: block;">
-        <li class="nav-item {{ Route::currentRouteName() == 'skor*' ? 'menu-is-opening menu-open' : ''}}">
+        <li class="nav-item {{ Route::is('skor') ? 'block;' : '' }}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
                 <p>
@@ -21,58 +21,24 @@
                 <i class="right fas fa-angle-left"></i>
                 </p>
             </a>
-            <ul class="nav nav-treeview" style="display: {{ Route::currentRouteName() == 'skor*' ? 'block;' : 'none;' }}">
-                <li class="nav-item">
-                    <a href="{{Route('skor')}}" class="nav-link {{ Route::currentRouteName() == 'skor' ? 'active' : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Tabel Skor</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>
-                        Pool
-                        <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ Route('skor-index-pool-self') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-self' ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Self</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ Route('skor-index-pool-atasan') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-atasan' ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Atasan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ Route('skor-index-pool-rekanan') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-rekanan' ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Rekan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ Route('skor-index-pool-staff') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-staff' ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Staff</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+            <ul class="nav nav-treeview" style="display: {{ Route::is('skor') ? 'block;' : 'none;' }}">
+            <li class="nav-item">
+                <a href="{{Route('skor')}}" class="nav-link {{ Route::currentRouteName() == 'skor' ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Tabel Skor</p>
+                </a>
+            </li>
             </ul>
         </li>
     </ul>
     <ul class="nav nav-treeview" style="display: block;">
-        <li class="nav-item">
+        <li class="nav-item {{ Route::is('gform') ? 'block;' : '' }}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
-                <p> GForm<i class="right fas fa-angle-left"></i></p>
+                <p>GForm<i class="right fas fa-angle-left"></i>
+                </p>
             </a>
-            <ul class="nav nav-treeview" style="display: none;">
+            <ul class="nav nav-treeview" style="display: {{ Route::is('gform') ? 'block;' : 'none;' }}">
             <li class="nav-item">
                 <a href="{{Route('gform')}}" class="nav-link {{ Route::currentRouteName() == 'gform' ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
@@ -89,12 +55,49 @@
         </li>
     </ul>
     <ul class="nav nav-treeview" style="display: block;">
-        <li class="nav-item {{ Route::currentRouteName() == 'rekap*' ? 'menu-is-opening menu-open' : ''}}">
+        <li class="nav-item {{ request()->is('skor/pool/*') ? 'menu-is-opening menu-open' : ''}}">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-circle"></i>
+                <p>
+                Pool
+                <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview" style="display: {{Route::is('pool.*') ? 'block;' : ''}}">
+                <li class="nav-item">
+                    <a href="{{ Route('skor-index-pool-self') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-self' ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Self</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ Route('skor-index-pool-atasan') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-atasan' ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Atasan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ Route('skor-index-pool-rekanan') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-rekanan' ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Rekan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ Route('skor-index-pool-staff') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-staff' ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Staff</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview" style="display: block;">
+        <li class="nav-item {{ request()->is('rekap/*') ? 'menu-is-opening menu-open' : ''}}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
                 <p> Rekap Non Bobot<i class="right fas fa-angle-left"></i></p>
             </a>
-            <ul class="nav nav-treeview" style="display: none;">
+            <ul class="nav nav-treeview" style="display: {{ request()->is('rekap/*') ? 'block;' : 'none;' }}">
             <li class="nav-item">
                 <a href="{{Route('rekap-non-bobot-kepemimpinan')}}" class="nav-link {{ Route::currentRouteName() == 'rekap-non-bobot-kepemimpinan' ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
@@ -117,12 +120,12 @@
         </li>
     </ul>
     <ul class="nav nav-treeview" style="display: block;">
-        <li class="nav-item {{ Route::currentRouteName() == 'rekapbobot*' ? 'menu-is-opening menu-open' : ''}}">
+        <li class="nav-item {{ request()->is('rekap/bobot/*') ? 'menu-is-opening menu-open' : ''}}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
                 <p> Rekap Bobot<i class="right fas fa-angle-left"></i></p>
             </a>
-            <ul class="nav nav-treeview" style="display: none;">
+            <ul class="nav nav-treeview" style="display: {{ request()->is('rekap/bobot/*') ? 'block;' : 'none;' }}">
             <li class="nav-item">
                 <a href="{{Route('rekap-bobot-kepemimpinan')}}" class="nav-link {{ Route::currentRouteName() == 'rekap-bobot-kepemimpinan' ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
