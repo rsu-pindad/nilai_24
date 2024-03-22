@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
             $user = Auth::user();
             $page = '';
             $link = '';
+            $chunk = [];
             $sheet = [];
             $sheet_id = env('GOOGLE_SHEET_ID', '');
             if ($user) {
@@ -67,9 +68,12 @@ class AppServiceProvider extends ServiceProvider
                     }
                     $page = request()->input('page');
                     $link = request()->input('link');
+                    // dd($sheet);
+                    $chunk = Arr::first($sheet);
+                    // dd($chunk);
                 }
             }
-            $view->with(['page' => $page, 'sheet' => $sheet, 'link' => $link, 'staff' => $daftarStaff ?? false]);
+            $view->with(['page' => $page, 'sheet' => $chunk, 'link' => $link, 'staff' => $daftarStaff ?? false]);
         });
     }
 }

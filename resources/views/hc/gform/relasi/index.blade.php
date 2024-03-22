@@ -149,12 +149,12 @@ $(document).ready(function(e){
         cancelButtonText: "batal"
         }).then((result) => {
         if (result.isConfirmed) {
-            const results = swalAjax();
-            console.log(results);
-            if(results.status == true)
-            {
+            swalAjax();
+            // console.log(results);
+            // if(results.status == true)
+            // {
                 swalOk();
-            }
+            // }
         }
         }).catch((result) => {
             swalOk();
