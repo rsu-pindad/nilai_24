@@ -26,6 +26,7 @@
                                 </button>
                             </div>
                             <div class="card-body">
+                                <div class="container">
                                 <table class="table table-striped table-hover table-bordered" id="dataTablesHasilPersonal">
                                     <thead>
                                         <tr>
@@ -37,6 +38,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    
                                     @foreach($rekap_personal_data as $rp)
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
@@ -45,17 +47,22 @@
                                             <td>{{$rp->sum_rekap}}</td>
                                             <td>
                                                 <button 
+                                                    type="button" 
                                                     class="btn btn-info btn-sm btn-personal" 
                                                     data-toggle="modal" data-target="#staticBackdrop" 
                                                     data-id="{{$rp->id}}">
                                                     <i class="far fa-eye"></i>
                                                 </button>
-                                                
+                                                <a href="/rekap/detail-personal?detail={{$rp->id}}" target="_blank" class="btn btn-sm btn-warning">
+                                                    <i class="far fa-eye"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
+                                    
                                     </tbody>
                                 </table>
+                                </div>
                             </div><!-- /.card-body -->
                         </div>
                         <!-- /.card -->
@@ -100,39 +107,60 @@
 
 @push('scripts')
 <script>
-$("#dataTablesHasilPersonal").DataTable({
-    /**
-    fixedColumns: {
-        left: 1,
-        right: 1
-    },
-    fixedHeader: {
-        header: true,
-        footer: true
-    },
-    **/
-    /** 
-    scrollX: true
-    autoWidth : false,
-    paging: false,
-    scrollCollapse: true,
-    lengthChange : false,
-    searching : false,
-    **/
-    responsive: true,
-    scrollY: '50vh',
-    ordering: false,
-});
-</script>
-@endpush
-
-@push('scripts')
-<script>
 $(document).ready(function()
 {
+    const urls = '/rekap/hasil-personal/datatable';
+    let table = new $("#dataTablesHasilPersonal").DataTable({
+    // dom: "Bfrtip",
+    // paging: true,
+    // pageLength: 10,
+    // ajax: function ( data, callback, settings ){
+    //     $.ajax({
+    //         url: urls,
+    //         dataType: 'json',
+    //         type: 'POST',
+    //         contentType: 'application/x-www-form-urlencoded',
+    //         data: { 
+    //             _token: "{{csrf_token()}}",
+    //             RecordsStart: data.start,
+    //             PageSize: data.length,
+    //             Draw: data.draw,
+    //             Search: data.search,
+    //         },
+    //         success: function( data, textStatus, jQxhr ){
+    //             callback({
+    //                 // draw: data.draw,
+    //                 data: data.data,
+    //                 recordsTotal:  data.recordsTotal,
+    //                 recordsFiltered:  data.recordsFiltered
+    //             });
+    //         },
+    //         error: function( jqXhr, textStatus, errorThrown ){
+    //         }
+    //     });
+    // },
+    // columns: [
+    //     { data: 'number' },
+    //     { data: 'npp_dinilai_id' },
+    //     { data: 'npp_penilai_id' },
+    //     { data: 'sum_rekap' },
+    //     { data: 'id' },
+    // ],
+    // processing: true,
+    // serverSide: true,
+    responsive: false,
+    scrollY: '50vh',
+    ordering: true,
+    lengthMenu: [
+        [10, 25, 50, -1],
+        [10, 25, 50, 'All']
+    ]
+    });
+
     $('#dataTablesHasilPersonal .btn-personal').on('click', function(e)
     {
         e.preventDefault();
+        alert('okokokoko');
 
         // $(this).prop('disabled', true | false);
 

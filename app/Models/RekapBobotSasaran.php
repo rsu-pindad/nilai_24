@@ -20,31 +20,31 @@ class RekapBobotSasaran extends Model
         'sb_1_atasan',
         'sb_1_rekan',
         'sb_1_staff',
-        'sum_sb_1',
         
         'sb_2_self',
         'sb_2_atasan',
         'sb_2_rekan',
         'sb_2_staff',
-        'sum_sb_2',
 
         'sb_3_self',
         'sb_3_atasan',
         'sb_3_rekan',
         'sb_3_staff',
-        'sum_sb_3',
 
         'sb_4_self',
         'sb_4_atasan',
         'sb_4_rekan',
         'sb_4_staff',
-        'sum_sb_4',
 
         'sb_5_self',
         'sb_5_atasan',
         'sb_5_rekan',
         'sb_5_staff',
-        'sum_sb_5',
+
+        'sum_sb_1_staff',
+        'sum_sb_1_atasan',
+        'sum_sb_1_rekan',
+        'sum_sb_1_self',
 
     ];
 

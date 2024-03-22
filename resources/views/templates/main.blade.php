@@ -103,17 +103,18 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-                        <li class="nav-header">INTERFACE</li>
                         {{-- <div style="display: none;"> --}}
-                        {{-- <div> --}}
-                        {{-- {{dd($sheet[0]['NPP'])}} --}}
-                        {{-- {dd($sheet[0])}} --}}
-                        @if(isset($sheet[0]['LINK_SELF-ASSESSMENT']) != '')
+                            {{-- <div> --}}
+                                {{-- {{dd($sheet[0]['NPP'])}} --}}
+                                {{-- {dd($sheet[0])}} --}}
+                        @if(Auth::user()->level != 1)
+                        <li class="nav-header">PENILAIAN</li>
+                        @if(isset($sheet[0]['LINK_SELF-ASSESSMENT']) != '' || isset($sheet[0]['LINK_SELF-ASSESSMENT']) != '#N/A')
                             <li class="nav-item {{ $page == 'SELF ASSESSMENT' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link {{ $page == 'SELF ASSESSMENT' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
                                     <p>
-                                        LINK SELF ASSESSMENT
+                                        MENILAI SENDIRI
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -134,12 +135,12 @@
                                 </ul>
                             </li>
                         @endif
-                        @if(isset($sheet[0]['LINK_MENILAI_ATASAN']) != '')
+                        @if(isset($sheet[0]['LINK_MENILAI_ATASAN']) != '' || isset($sheet[0]['LINK_MENILAI_ATASAN']) != '#N/A')
                             <li class="nav-item {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }} ">
                                 <a href="#" class="nav-link {{ $page == 'MENILAI ATASAN' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
                                     <p>
-                                        LINK MENILAI ATASAN
+                                        MENILAI ATASAN
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -167,12 +168,12 @@
                                 </ul>
                             </li>
                         @endif
-                        @if(isset($sheet[0]['LINK_MENILAI_SELEVEL']) != '')
+                        @if(isset($sheet[0]['LINK_MENILAI_SELEVEL']) != '' || isset($sheet[0]['LINK_MENILAI_SELEVEL']) != '#N/A')
                             <li class="nav-item {{ $page == 'MENILAI SELEVEL' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI SELEVEL' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
                                     <p>
-                                        LINK MENILAI SELEVEL
+                                        MENILAI SELEVEL
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -200,17 +201,17 @@
                                 </ul>
                             </li>
                         @endif
-                        @if(isset($sheet[0]['LINK_MENILAI_STAFF']) != '')
+                        @if(count($staff) != 0)
                             <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
                                     <p>
-                                        LINK MENILAI STAFF
+                                        MENILAI STAFF
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview small">
-                                    @foreach ($sheet as $item)
+                                    @foreach ($staff as $item)
                                         @if ($item['LINK_MENILAI_STAFF'] && $item['LINK_MENILAI_STAFF'] != '#N/A')
                                             <li class="nav-item">
                                                 <a href="{{ route('staff', ['page' => 'MENILAI STAFF', 'link' => $item['LINK_MENILAI_STAFF']]) }}"
@@ -232,10 +233,22 @@
                                     @endforeach
                                 </ul>
                             </li>
+                        @else
                         {{-- </div> --}}
                         @endif
+                        @endif
                         @if(Auth::user()->level == 1)
+                            <li class="nav-header">INTERFACE</li>
                             @include('templates.partials.sidebar-hc')
+                        @endif
+                        @if(Auth::user()->level != 1)
+                        <li class="nav-header">NILAI</li>
+                        <li class="nav-item">
+                            <a href="{{ url('/nilai-rekap/'.Auth::user()->npp) }}" class="nav-link {{ Route::currentRouteName() == 'penilai-rekap-rekapitulasi' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Rekapitulasi</p>
+                            </a>
+                        </li>
                         @endif
                         <li class="nav-header">SETTINGS</li>
                         <li class="nav-item">

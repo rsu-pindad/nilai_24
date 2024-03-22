@@ -18,9 +18,12 @@ class RekapNonBobotController extends Controller
 
     public function index()
     {
-        $rekap_non_bobot_data = Cache::remember('rekap_non_bobot_kepemimpinan_data', now()->addMinutes(5), function(){
-            return RNB::with('relasi_karyawan')->get(); 
-        });
+        // $rekap_non_bobot_data = Cache::remember('rekap_non_bobot_kepemimpinan_data', now()->addMinutes(5), function(){
+        //     return RNB::with('relasi_karyawan')->get(); 
+        // });
+
+        $rekap_non_bobot_data = RNB::with('relasi_karyawan')->get(); 
+
         // dd($rekap_non_bobot_data);
         return view('hc.rekap.bobot-non')->with([
             'non_bobot_data' => $rekap_non_bobot_data,
@@ -28,9 +31,11 @@ class RekapNonBobotController extends Controller
     }
     public function index_perilaku()
     {
-        $rekap_non_bobot_perilaku_data = Cache::remember('rekap_non_bobot_perilaku_data', now()->addMinutes(5), function(){
-            return RNBP::with('relasi_karyawan')->get(); 
-        });
+        $rekap_non_bobot_perilaku_data = RNBP::with('relasi_karyawan')->get(); 
+
+        // $rekap_non_bobot_perilaku_data = Cache::remember('rekap_non_bobot_perilaku_data', now()->addMinutes(5), function(){
+        //     return RNBP::with('relasi_karyawan')->get(); 
+        // });
         // dd($rekap_non_bobot_data);
         return view('hc.rekap.bobot-non-perilaku')->with([
             'non_bobot_perilaku_data' => $rekap_non_bobot_perilaku_data,
@@ -39,9 +44,11 @@ class RekapNonBobotController extends Controller
 
     public function index_sasaran()
     {
-        $rekap_non_bobot_sasaran_data = Cache::remember('rekap_non_bobot_sasaran_data', now()->addMinutes(5), function(){
-            return RNBS::with('relasi_karyawan')->get(); 
-        });
+        $rekap_non_bobot_sasaran_data = RNBS::with('relasi_karyawan')->get(); 
+
+        // $rekap_non_bobot_sasaran_data = Cache::remember('rekap_non_bobot_sasaran_data', now()->addMinutes(5), function(){
+        //     return RNBS::with('relasi_karyawan')->get(); 
+        // });
         // dd($rekap_non_bobot_data);
         return view('hc.rekap.bobot-non-sasaran')->with([
             'non_bobot_sasaran_data' => $rekap_non_bobot_sasaran_data,
@@ -96,21 +103,26 @@ class RekapNonBobotController extends Controller
                 $summarySelf['k_5_self'] = collect($rekapKepemimpinanSelf[$key])->avg('membimbing_membangun');
                 $summarySelf['k_6_self'] = collect($rekapKepemimpinanSelf[$key])->avg('pengambilan_keputusan');
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
                         // dd($findIdKaryawan);
-                        $store = RNB::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            'k_1_self' => $summarySelf['k_1_self'] ?? 0,
-                            'k_2_self' => $summarySelf['k_2_self'] ?? 0,
-                            'k_3_self' => $summarySelf['k_3_self'] ?? 0,
-                            'k_4_self' => $summarySelf['k_4_self'] ?? 0,
-                            'k_5_self' => $summarySelf['k_5_self'] ?? 0,
-                            'k_6_self' => $summarySelf['k_6_self'] ?? 0,
-                        ]
-                        );
+                            if($findIdKaryawan)
+                            {
+                                $findIdKaryawan->toArray();
+                                $store = RNB::updateOrCreate([
+                                    'npp_karyawan_id' => $findIdKaryawan['id'],
+                                    ],[
+                                        'pool_respon_id' => $val['id'],
+                                        'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                        'k_1_self' => $summarySelf['k_1_self'] ?? 0,
+                                        'k_2_self' => $summarySelf['k_2_self'] ?? 0,
+                                        'k_3_self' => $summarySelf['k_3_self'] ?? 0,
+                                        'k_4_self' => $summarySelf['k_4_self'] ?? 0,
+                                        'k_5_self' => $summarySelf['k_5_self'] ?? 0,
+                                        'k_6_self' => $summarySelf['k_6_self'] ?? 0,
+                                    ]
+                                );
+                            }
+                            
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
@@ -142,21 +154,26 @@ class RekapNonBobotController extends Controller
                     $summaryAtasan['k_6_atasan'] = collect($rekapKepemimpinanAtasan[$key])->avg('pengambilan_keputusan');
                     // dd($summaryRekan);
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            $store = RNB::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                                ],[
+                                    'pool_respon_id' => $val['id'],
+                                    'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                    'k_1_atasan' => $summaryAtasan['k_1_atasan'] ?? 0,
+                                    'k_2_atasan' => $summaryAtasan['k_2_atasan'] ?? 0,
+                                    'k_3_atasan' => $summaryAtasan['k_3_atasan'] ?? 0,
+                                    'k_4_atasan' => $summaryAtasan['k_4_atasan'] ?? 0,
+                                    'k_5_atasan' => $summaryAtasan['k_5_atasan'] ?? 0,
+                                    'k_6_atasan' => $summaryAtasan['k_6_atasan'] ?? 0,
+                                ]
+                            );
+                        }
                         // dd($findIdKaryawan);
-                        $store = RNB::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            'k_1_atasan' => $summaryAtasan['k_1_atasan'] ?? 0,
-                            'k_2_atasan' => $summaryAtasan['k_2_atasan'] ?? 0,
-                            'k_3_atasan' => $summaryAtasan['k_3_atasan'] ?? 0,
-                            'k_4_atasan' => $summaryAtasan['k_4_atasan'] ?? 0,
-                            'k_5_atasan' => $summaryAtasan['k_5_atasan'] ?? 0,
-                            'k_6_atasan' => $summaryAtasan['k_6_atasan'] ?? 0,
-                        ]
-                        );
+                        
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
@@ -189,21 +206,26 @@ class RekapNonBobotController extends Controller
                     $summaryRekan['k_6_rekan'] = collect($rekapKepemimpinanSelevel[$key])->avg('pengambilan_keputusan');
                     // dd($summaryRekan);
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            $store = RNB::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                                ],[
+                                    'pool_respon_id' => $val['id'],
+                                    'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                    'k_1_rekan' => $summaryRekan['k_1_rekan'] ?? 0,
+                                    'k_2_rekan' => $summaryRekan['k_2_rekan'] ?? 0,
+                                    'k_3_rekan' => $summaryRekan['k_3_rekan'] ?? 0,
+                                    'k_4_rekan' => $summaryRekan['k_4_rekan'] ?? 0,
+                                    'k_5_rekan' => $summaryRekan['k_5_rekan'] ?? 0,
+                                    'k_6_rekan' => $summaryRekan['k_6_rekan'] ?? 0,
+                                ]
+                            );
+                        }
                         // dd($findIdKaryawan);
-                        $store = RNB::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            'k_1_rekan' => $summaryRekan['k_1_rekan'] ?? 0,
-                            'k_2_rekan' => $summaryRekan['k_2_rekan'] ?? 0,
-                            'k_3_rekan' => $summaryRekan['k_3_rekan'] ?? 0,
-                            'k_4_rekan' => $summaryRekan['k_4_rekan'] ?? 0,
-                            'k_5_rekan' => $summaryRekan['k_5_rekan'] ?? 0,
-                            'k_6_rekan' => $summaryRekan['k_6_rekan'] ?? 0,
-                        ]
-                        );
+                        
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
@@ -234,21 +256,26 @@ class RekapNonBobotController extends Controller
                     $summaryStaff['k_6_staff'] = collect($rekapKepemimpinanStaff[$key])->avg('pengambilan_keputusan');
                     // dd($summaryRekan);
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
-                        // dd($findIdKaryawan);
-                        $store = RNB::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            'k_1_staff' => $summaryStaff['k_1_staff'] ?? 0,
-                            'k_2_staff' => $summaryStaff['k_2_staff'] ?? 0,
-                            'k_3_staff' => $summaryStaff['k_3_staff'] ?? 0,
-                            'k_4_staff' => $summaryStaff['k_4_staff'] ?? 0,
-                            'k_5_staff' => $summaryStaff['k_5_staff'] ?? 0,
-                            'k_6_staff' => $summaryStaff['k_6_staff'] ?? 0,
-                        ]
-                        );
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            // dd($findIdKaryawan);
+                            $store = RNB::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                            ],[
+                                'pool_respon_id' => $val['id'],
+                                'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                'k_1_staff' => $summaryStaff['k_1_staff'] ?? 0,
+                                'k_2_staff' => $summaryStaff['k_2_staff'] ?? 0,
+                                'k_3_staff' => $summaryStaff['k_3_staff'] ?? 0,
+                                'k_4_staff' => $summaryStaff['k_4_staff'] ?? 0,
+                                'k_5_staff' => $summaryStaff['k_5_staff'] ?? 0,
+                                'k_6_staff' => $summaryStaff['k_6_staff'] ?? 0,
+                            ]
+                            );
+                        }
+                        
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
@@ -329,10 +356,10 @@ class RekapNonBobotController extends Controller
     {
         $params = $request->boolean('refresh');
         // dd($params);
-        if($params == true)
-        {
-            Cache::forget('rekap_non_bobot_perilaku_data');
-        }
+        // if($params == true)
+        // {
+        //     Cache::forget('rekap_non_bobot_perilaku_data');
+        // }
         $getPool = [];
         $getPool = PoolRespon::select(
             'id',
@@ -363,19 +390,24 @@ class RekapNonBobotController extends Controller
                 $summarySelf['p_4_self'] = collect($rekapPerilakuSelf[$key])->avg('integritas');
                 $summarySelf['p_5_self'] = collect($rekapPerilakuSelf[$key])->avg('etika');
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
-                        $store = RNBP::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            'p_1_self' => $summarySelf['p_1_self'] ?? 0,
-                            'p_2_self' => $summarySelf['p_2_self'] ?? 0,
-                            'p_3_self' => $summarySelf['p_3_self'] ?? 0,
-                            'p_4_self' => $summarySelf['p_4_self'] ?? 0,
-                            'p_5_self' => $summarySelf['p_5_self'] ?? 0,
-                        ]
-                        );
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            $store = RNBP::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                            ],[
+                                'pool_respon_id' => $val['id'],
+                                'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                'p_1_self' => $summarySelf['p_1_self'] ?? 0,
+                                'p_2_self' => $summarySelf['p_2_self'] ?? 0,
+                                'p_3_self' => $summarySelf['p_3_self'] ?? 0,
+                                'p_4_self' => $summarySelf['p_4_self'] ?? 0,
+                                'p_5_self' => $summarySelf['p_5_self'] ?? 0,
+                            ]
+                            );
+                        }
+                        
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
@@ -400,20 +432,25 @@ class RekapNonBobotController extends Controller
                     $summaryAtasan['p_4_atasan'] = collect($rekapPerilakuAtasan[$key])->avg('integritas');
                     $summaryAtasan['p_5_atasan'] = collect($rekapPerilakuAtasan[$key])->avg('etika');
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
-                        // dd($findIdKaryawan);
-                        $store = RNBP::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            'p_1_atasan' => $summaryAtasan['p_1_atasan'] ?? 0,
-                            'p_2_atasan' => $summaryAtasan['p_2_atasan'] ?? 0,
-                            'p_3_atasan' => $summaryAtasan['p_3_atasan'] ?? 0,
-                            'p_4_atasan' => $summaryAtasan['p_4_atasan'] ?? 0,
-                            'p_5_atasan' => $summaryAtasan['p_5_atasan'] ?? 0,
-                        ]
-                        );
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            // dd($findIdKaryawan);
+                            $store = RNBP::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                            ],[
+                                'pool_respon_id' => $val['id'],
+                                'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                'p_1_atasan' => $summaryAtasan['p_1_atasan'] ?? 0,
+                                'p_2_atasan' => $summaryAtasan['p_2_atasan'] ?? 0,
+                                'p_3_atasan' => $summaryAtasan['p_3_atasan'] ?? 0,
+                                'p_4_atasan' => $summaryAtasan['p_4_atasan'] ?? 0,
+                                'p_5_atasan' => $summaryAtasan['p_5_atasan'] ?? 0,
+                            ]
+                            );
+                        }
+                        
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
@@ -441,27 +478,34 @@ class RekapNonBobotController extends Controller
                     $summaryRekan['p_5_rekan'] = collect($rekapPerilakuSelevel[$key])->avg('etika');
                     // dd($summaryRekan);
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
-                        // dd($findIdKaryawan);
-                        $store = RNBP::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            'p_1_rekan' => $summaryRekan['p_1_rekan'] ?? 0,
-                            'p_2_rekan' => $summaryRekan['p_2_rekan'] ?? 0,
-                            'p_3_rekan' => $summaryRekan['p_3_rekan'] ?? 0,
-                            'p_4_rekan' => $summaryRekan['p_4_rekan'] ?? 0,
-                            'p_5_rekan' => $summaryRekan['p_5_rekan'] ?? 0,
-                        ]
-                        );
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            // dd($findIdKaryawan);
+                            $store = RNBP::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                            ],[
+                                'pool_respon_id' => $val['id'],
+                                'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                'p_1_rekan' => $summaryRekan['p_1_rekan'] ?? 0,
+                                'p_2_rekan' => $summaryRekan['p_2_rekan'] ?? 0,
+                                'p_3_rekan' => $summaryRekan['p_3_rekan'] ?? 0,
+                                'p_4_rekan' => $summaryRekan['p_4_rekan'] ?? 0,
+                                'p_5_rekan' => $summaryRekan['p_5_rekan'] ?? 0,
+                            ]
+                            );
+                        }
+                        
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
                     } 
                 // }
             }
-    
+            
+            // dd($val['npp_dinilai']);
+
             $rekapPerilakuStaff[$key] = PoolRespon::select(
                 'kerjasama',
                 'komunikasi',
@@ -472,6 +516,8 @@ class RekapNonBobotController extends Controller
             ->where('npp_dinilai', $val['npp_dinilai'])
             ->where('relasi', 'staff')->orderBy('npp_dinilai')->get()->toArray();
             // Staff
+
+            // dd($rekapPerilakuStaff);
             $summaryStaff = [];
             if($rekapPerilakuStaff != null){
                     $summaryStaff['p_1_staff'] = collect($rekapPerilakuStaff[$key])->avg('kerjasama');
@@ -480,19 +526,24 @@ class RekapNonBobotController extends Controller
                     $summaryStaff['p_4_staff'] = collect($rekapPerilakuStaff[$key])->avg('integritas');
                     $summaryStaff['p_5_staff'] = collect($rekapPerilakuStaff[$key])->avg('etika');
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
-                        $store = RNBP::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            'p_1_staff' => $summaryStaff['p_1_staff'] ?? 0,
-                            'p_2_staff' => $summaryStaff['p_2_staff'] ?? 0,
-                            'p_3_staff' => $summaryStaff['p_3_staff'] ?? 0,
-                            'p_4_staff' => $summaryStaff['p_4_staff'] ?? 0,
-                            'p_5_staff' => $summaryStaff['p_5_staff'] ?? 0,
-                        ]
-                        );
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            $store = RNBP::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                            ],[
+                                'pool_respon_id' => $val['id'],
+                                'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                'p_1_staff' => $summaryStaff['p_1_staff'] ?? 0,
+                                'p_2_staff' => $summaryStaff['p_2_staff'] ?? 0,
+                                'p_3_staff' => $summaryStaff['p_3_staff'] ?? 0,
+                                'p_4_staff' => $summaryStaff['p_4_staff'] ?? 0,
+                                'p_5_staff' => $summaryStaff['p_5_staff'] ?? 0,
+                            ]
+                            );
+                        }
+                        
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
@@ -539,19 +590,24 @@ class RekapNonBobotController extends Controller
                 $summarySelf['s_4_self'] = collect($rekapSasaranStaff[$key])->avg('proses_inisiatif');
                 $summarySelf['s_5_self'] = collect($rekapSasaranStaff[$key])->avg('proses_polapikir');
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
-                        $store = RNBS::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            's_1_self' => $summarySelf['s_1_self'] ?? 0,
-                            's_2_self' => $summarySelf['s_2_self'] ?? 0,
-                            's_3_self' => $summarySelf['s_3_self'] ?? 0,
-                            's_4_self' => $summarySelf['s_4_self'] ?? 0,
-                            's_5_self' => $summarySelf['s_5_self'] ?? 0,
-                        ]
-                        );
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            $store = RNBS::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                            ],[
+                                'pool_respon_id' => $val['id'],
+                                'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                's_1_self' => $summarySelf['s_1_self'] ?? 0,
+                                's_2_self' => $summarySelf['s_2_self'] ?? 0,
+                                's_3_self' => $summarySelf['s_3_self'] ?? 0,
+                                's_4_self' => $summarySelf['s_4_self'] ?? 0,
+                                's_5_self' => $summarySelf['s_5_self'] ?? 0,
+                            ]
+                            );
+                        }
+                        
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
@@ -576,8 +632,11 @@ class RekapNonBobotController extends Controller
                     $summaryAtasan['s_4_atasan'] = collect($rekapSasaranAtasan[$key])->avg('proses_inisiatif');
                     $summaryAtasan['s_5_atasan'] = collect($rekapSasaranAtasan[$key])->avg('proses_polapikir');
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
-                        // dd($findIdKaryawan);
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            // dd($findIdKaryawan);
                         $store = RNBS::updateOrCreate([
                             'npp_karyawan_id' => $findIdKaryawan['id'],
                         ],[
@@ -590,7 +649,8 @@ class RekapNonBobotController extends Controller
                             's_5_atasan' => $summaryAtasan['s_5_atasan'] ?? 0,
                         ]
                         );
-                        // dd($store);
+                        }
+                        
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
                     } 
@@ -617,20 +677,25 @@ class RekapNonBobotController extends Controller
                     $summaryRekan['s_5_rekan'] = collect($rekapSasaranSelevel[$key])->avg('proses_polapikir');
                     // dd($summaryRekan);
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
-                        // dd($findIdKaryawan);
-                        $store = RNBS::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            's_1_rekan' => $summaryRekan['s_1_rekan'] ?? 0,
-                            's_2_rekan' => $summaryRekan['s_2_rekan'] ?? 0,
-                            's_3_rekan' => $summaryRekan['s_3_rekan'] ?? 0,
-                            's_4_rekan' => $summaryRekan['s_4_rekan'] ?? 0,
-                            's_5_rekan' => $summaryRekan['s_5_rekan'] ?? 0,
-                        ]
-                        );
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            // dd($findIdKaryawan);
+                            $store = RNBS::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                            ],[
+                                'pool_respon_id' => $val['id'],
+                                'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                's_1_rekan' => $summaryRekan['s_1_rekan'] ?? 0,
+                                's_2_rekan' => $summaryRekan['s_2_rekan'] ?? 0,
+                                's_3_rekan' => $summaryRekan['s_3_rekan'] ?? 0,
+                                's_4_rekan' => $summaryRekan['s_4_rekan'] ?? 0,
+                                's_5_rekan' => $summaryRekan['s_5_rekan'] ?? 0,
+                            ]
+                            );
+                        }
+                        
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());
@@ -656,19 +721,23 @@ class RekapNonBobotController extends Controller
                     $summaryStaff['s_4_staff'] = collect($rekapSasaranStaff[$key])->avg('proses_inisiatif');
                     $summaryStaff['s_5_staff'] = collect($rekapSasaranStaff[$key])->avg('proses_polapikir');
                     try {
-                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first()->toArray();
-                        $store = RNBS::updateOrCreate([
-                            'npp_karyawan_id' => $findIdKaryawan['id'],
-                        ],[
-                            'pool_respon_id' => $val['id'],
-                            'jabatan_dinilai' => $val['jabatan_dinilai'],
-                            's_1_staff' => $summaryStaff['s_1_staff'] ?? 0,
-                            's_2_staff' => $summaryStaff['s_2_staff'] ?? 0,
-                            's_3_staff' => $summaryStaff['s_3_staff'] ?? 0,
-                            's_4_staff' => $summaryStaff['s_4_staff'] ?? 0,
-                            's_5_staff' => $summaryStaff['s_5_staff'] ?? 0,
-                        ]
-                        );
+                        $findIdKaryawan = RK::where('npp_karyawan', $val['npp_dinilai'])->first();
+                        if($findIdKaryawan)
+                        {
+                            $findIdKaryawan->toArray();
+                            $store = RNBS::updateOrCreate([
+                                'npp_karyawan_id' => $findIdKaryawan['id'],
+                            ],[
+                                'pool_respon_id' => $val['id'],
+                                'jabatan_dinilai' => $val['jabatan_dinilai'],
+                                's_1_staff' => $summaryStaff['s_1_staff'] ?? 0,
+                                's_2_staff' => $summaryStaff['s_2_staff'] ?? 0,
+                                's_3_staff' => $summaryStaff['s_3_staff'] ?? 0,
+                                's_4_staff' => $summaryStaff['s_4_staff'] ?? 0,
+                                's_5_staff' => $summaryStaff['s_5_staff'] ?? 0,
+                            ]
+                            );
+                        }
                         // dd($store);
                     } catch (\Illuminate\Database\QueryException $exception) {
                         return response()->json($exception->getMessage());

@@ -113,14 +113,15 @@ $('#tabelKaryawan').DataTable({
 @push('scripts')
 <script>
 $(document).ready(function(e){
+
     async function swalAjax()
     {
-        let clears = true;
-        $.ajax({
+        return await $.ajax({
             url : '/relasi-karyawan/pull-level',
             type : 'get',
             dataType: 'json',
-            success : function (response){
+            success : function (response)
+            {
                 console.log(response)
             }
         });
@@ -148,9 +149,15 @@ $(document).ready(function(e){
         cancelButtonText: "batal"
         }).then((result) => {
         if (result.isConfirmed) {
-            swalAjax();
-            swalOk();
+            const results = swalAjax();
+            console.log(results);
+            if(results.status == true)
+            {
+                swalOk();
+            }
         }
+        }).catch((result) => {
+            swalOk();
         });
     }
 

@@ -19,12 +19,15 @@ class SkorController extends Controller
 
     public function index()
     {
-        $skor_data = Cache::remember('skor_data', now()->addMinutes(5), function(){
-            return Skor::with('aspek','indikator')->get(); 
-        });
-        $aspek_data = Cache::remember('aspek_data', now()->addMinutes(5), function(){
-            return Aspek::get(); 
-        });
+        $skor_data = Skor::with('aspek','indikator')->get(); 
+        $aspek_data = Aspek::get(); 
+
+        // $skor_data = Cache::remember('skor_data', now()->addMinutes(5), function(){
+        //     return Skor::with('aspek','indikator')->get(); 
+        // });
+        // $aspek_data = Cache::remember('aspek_data', now()->addMinutes(5), function(){
+        //     return Aspek::get(); 
+        // });
 
         return view('hc.skor.index')->with([
             'data_skor' => $skor_data,
@@ -65,9 +68,10 @@ class SkorController extends Controller
 
     public function index_pool_self()
     {
-        $skor_pool_data = Cache::remember('skor_pool_data_self', now()->addMinutes(5), function(){
-            return PoolRespon::with('karyawan')->where('relasi','self')->get(); 
-        });
+        $skor_pool_data = PoolRespon::with('karyawan')->where('relasi','self')->get(); 
+        // $skor_pool_data = Cache::remember('skor_pool_data_self', now()->addMinutes(5), function(){
+        //     return PoolRespon::with('karyawan')->where('relasi','self')->get(); 
+        // });
 
         return view('hc.skor.pool.self')->with([
             'data_pool_skor' => $skor_pool_data,
@@ -76,9 +80,11 @@ class SkorController extends Controller
 
     public function index_pool_atasan()
     {
-        $skor_pool_data = Cache::remember('skor_pool_data_atasan', now()->addMinutes(5), function(){
-            return PoolRespon::with('karyawan')->where('relasi','atasan')->get(); 
-        });
+        $skor_pool_data = PoolRespon::with('karyawan')->where('relasi','atasan')->get(); 
+
+        // $skor_pool_data = Cache::remember('skor_pool_data_atasan', now()->addMinutes(5), function(){
+        //     return PoolRespon::with('karyawan')->where('relasi','atasan')->get(); 
+        // });
 
         return view('hc.skor.pool.atasan')->with([
             'data_pool_skor' => $skor_pool_data,
@@ -87,9 +93,11 @@ class SkorController extends Controller
 
     public function index_pool_rekanan()
     {
-        $skor_pool_data = Cache::remember('skor_pool_data_rekanan', now()->addMinutes(5), function(){
-            return PoolRespon::with('karyawan')->where('relasi','rekanan')->get(); 
-        });
+        $skor_pool_data = PoolRespon::with('karyawan')->where('relasi','rekanan')->get(); 
+
+        // $skor_pool_data = Cache::remember('skor_pool_data_rekanan', now()->addMinutes(5), function(){
+        //     return PoolRespon::with('karyawan')->where('relasi','rekanan')->get(); 
+        // });
 
         return view('hc.skor.pool.rekanan')->with([
             'data_pool_skor' => $skor_pool_data,
@@ -98,9 +106,11 @@ class SkorController extends Controller
 
     public function index_pool_staff()
     {
-        $skor_pool_data = Cache::remember('skor_pool_data_staff', now()->addMinutes(5), function(){
-            return PoolRespon::with('karyawan')->where('relasi','staff')->get();
-        });
+        $skor_pool_data = PoolRespon::with('karyawan')->where('relasi','staff')->get();
+
+        // $skor_pool_data = Cache::remember('skor_pool_data_staff', now()->addMinutes(5), function(){
+        //     return PoolRespon::with('karyawan')->where('relasi','staff')->get();
+        // });
 
         return view('hc.skor.pool.staff')->with([
             'data_pool_skor' => $skor_pool_data,
@@ -121,48 +131,51 @@ class SkorController extends Controller
     {
         if($relasi == 'atasan')
         {
-            $find_relasi = Cache::remember('relasi_karyawan_atasan', now()->addMinutes(5), function() use($npp_karyawan){
+            // $find_relasi = Cache::remember('relasi_karyawan_atasan', now()->addMinutes(5), function() use($npp_karyawan){
                 return RelasiAtasan::where('relasi_karyawan_id', $npp_karyawan)->first();
-            });
-            return $find_relasi;
+            // });
+            // return $find_relasi;
         }
         elseif($relasi == 'rekanan')
         {
-            $find_relasi = Cache::remember('relasi_karyawan_rekanan', now()->addMinutes(5), function() use($npp_karyawan){
+            // $find_relasi = Cache::remember('relasi_karyawan_rekanan', now()->addMinutes(5), function() use($npp_karyawan){
                 return RelasiSelevel::where('relasi_karyawan_id', $npp_karyawan)->first();
-            });
-            return $find_relasi;
+            // });
+            // return $find_relasi;
         }
         elseif($relasi == 'staff')
         {
-            $find_relasi = Cache::remember('relasi_karyawan_staff', now()->addMinutes(5), function() use($npp_karyawan){
+            // $find_relasi = Cache::remember('relasi_karyawan_staff', now()->addMinutes(5), function() use($npp_karyawan){
                 return RelasiStaff::where('relasi_karyawan_id', $npp_karyawan)->get();
-            });
-            return $find_relasi;
+            // });
+            // return $find_relasi;
         }
     }
 
     public function pool_self(Request $request)
     {   
-        $params = $request->boolean('refresh');
+        // $params = $request->boolean('refresh');
         // dd($params);
-        if($params == true)
-        {
-            Cache::forget('skor_jawaban_data');
-            Cache::forget('google_form_respon');
-            Cache::forget('npp_karyawan');
-            Cache::forget('skor_pool_data_self');
-            Cache::forget('relasi_karyawan_self');
-        }
-        $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
-            return Skor::get()->groupBy('aspek_id')->toArray();
-        });
+        // if($params == true)
+        // {
+        //     Cache::forget('skor_jawaban_data');
+        //     Cache::forget('google_form_respon');
+        //     Cache::forget('npp_karyawan');
+        //     Cache::forget('skor_pool_data_self');
+        //     Cache::forget('relasi_karyawan_self');
+        // }
+        // $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
+            // return Skor::get()->groupBy('aspek_id')->toArray();
+        // });
+        $skor_jawaban_data = Skor::get()->groupBy('aspek_id')->toArray();
 
         // $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
         //     return GResponse::get()->toArray();
         // });
 
         $google_form = GResponse::get()->toArray();
+
+        // dd($google_form);
 
         $temp = [];
         $self = [];
@@ -184,6 +197,8 @@ class SkorController extends Controller
         $tempData = [];
         // $debug1 = [];
 
+        // dd($self);
+        $store = false;
         foreach($self as $key => $value)
         {
             $nilai_skor_1 = 0;$nilai_skor_2 = 0;$nilai_skor_3 = 0;$nilai_skor_4 = 0;
@@ -248,57 +263,57 @@ class SkorController extends Controller
             $temp_nilai = $nilai_skor_1 + $nilai_skor_2 + $nilai_skor_3 + $nilai_skor_4 + $nilai_skor_5 + $nilai_skor_6 + $nilai_skor_7 + $nilai_skor_8 + $nilai_skor_9 + $nilai_skor_10 + $nilai_skor_11 + $nilai_skor_12 + $nilai_skor_13 + $nilai_skor_14 + $nilai_skor_15 + $nilai_skor_16;
             // unset($karyawan);
             $karyawan = [];
-            $karyawan = $this->find_karyawan($self[$key]['npp_penilai'])->toArray();
-            // dd($karyawan);
+            // $karyawan = $this->find_karyawan($self[$key]['npp_penilai'])->toArray();
+            $karyawan = RelasiKaryawan::where('npp_karyawan', $self[$key]['npp_penilai'])->first() ?? '';
+            // dd($temp_nilai);
             // $id_npp_sementara = '';
             // $id_npp_sementara = $karyawan[$key]['id'];
             // dd($id_npp_sementara);
-            $tempData = [
-                'npp_penilai' => $karyawan[0]['id'],
-                'npp_dinilai' => $self[$key]['npp_dinilai'],
-                'jabatan_dinilai' => $self[$key]['jabatan_dinilai'],
-                'strategi_perencanaan' => $nilai_skor_1,
-                'strategi_pengawasan' => $nilai_skor_2,
-                'strategi_inovasi' => $nilai_skor_3,
-                'kepemimpinan' => $nilai_skor_4,
-                'membimbing_membangun' => $nilai_skor_5,
-                'pengambilan_keputusan' => $nilai_skor_6,
-                'kerjasama' => $nilai_skor_7,
-                'komunikasi' => $nilai_skor_8,
-                'absensi' => $nilai_skor_9,
-                'integritas' => $nilai_skor_10,
-                'etika' => $nilai_skor_11,
-                'goal_kinerja' => $nilai_skor_12,
-                'error_kinerja' => $nilai_skor_13,
-                'proses_dokumen' => $nilai_skor_14,
-                'proses_inisiatif' => $nilai_skor_15,
-                'proses_polapikir' => $nilai_skor_16,
-                'sum_nilai' => $temp_nilai,
-                'relasi' => $slugs_relasi
-            ];
-            $store = PoolRespon::updateOrCreate($tempData);
-            $tempData = [];
             
-        // echo '<pre>';
-        // print_r($tempData);
-        // echo '</pre>';
+            if($karyawan != ''){
+                $karyawan->toArray();
+                $tempData = [
+                    'npp_penilai' => $karyawan['id'],
+                    'npp_dinilai' => $self[$key]['npp_dinilai'],
+                    'jabatan_dinilai' => $self[$key]['jabatan_dinilai'],
+                    'strategi_perencanaan' => $nilai_skor_1,
+                    'strategi_pengawasan' => $nilai_skor_2,
+                    'strategi_inovasi' => $nilai_skor_3,
+                    'kepemimpinan' => $nilai_skor_4,
+                    'membimbing_membangun' => $nilai_skor_5,
+                    'pengambilan_keputusan' => $nilai_skor_6,
+                    'kerjasama' => $nilai_skor_7,
+                    'komunikasi' => $nilai_skor_8,
+                    'absensi' => $nilai_skor_9,
+                    'integritas' => $nilai_skor_10,
+                    'etika' => $nilai_skor_11,
+                    'goal_kinerja' => $nilai_skor_12,
+                    'error_kinerja' => $nilai_skor_13,
+                    'proses_dokumen' => $nilai_skor_14,
+                    'proses_inisiatif' => $nilai_skor_15,
+                    'proses_polapikir' => $nilai_skor_16,
+                    'sum_nilai' => $temp_nilai,
+                    'relasi' => $slugs_relasi
+                ];
+                $store = PoolRespon::updateOrCreate($tempData);
+                
+            }
+            $tempData = [];
         }
-        if($store != true)
-        {
-            // abort(404);
-            // exit;
-            return response()->json([ 
-                'title' => 'error!',
-                'html' => 'gagal pool data dari database',
-                'icons' => 'danger',
-            ]);
-        }
-        else
+        if($store == true)
         {
             return response()->json([
                 'title' => 'success!',
                 'html' => 'berhasil pool data dari database',
                 'icons' => 'success',
+            ]);
+        }
+        else
+        {
+            return response()->json([ 
+                'title' => 'error!',
+                'html' => 'gagal pool data dari database',
+                'icons' => 'warning',
             ]);
         }
     }
@@ -316,13 +331,16 @@ class SkorController extends Controller
             Cache::forget('skor_pool_data_atasan');
             Cache::forget('relasi_karyawan_atasan');
         }
-        $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
-            return Skor::get()->groupBy('aspek_id')->toArray();
-        });
+        // $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
+        //     return Skor::get()->groupBy('aspek_id')->toArray();
+        // });
 
-        $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
-            return GResponse::get()->toArray();
-        });
+        // $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
+        //     return GResponse::get()->toArray();
+        // });
+
+        $skor_jawaban_data = Skor::get()->groupBy('aspek_id')->toArray();
+        $google_form = GResponse::get()->toArray();
 
         $temp = [];
         $atasan = [];
@@ -333,23 +351,27 @@ class SkorController extends Controller
         {
             if($google_form[$key]['npp_penilai'] != $google_form[$key]['npp_dinilai'])
             {
-                $idRelasiKaryawan = RelasiKaryawan::where('npp_karyawan', $google_form[$key]['npp_penilai'])->first()->toArray();
-                // dd($idRelasiKaryawan['id']);
-                // $findrelasi = RelasiAtasan::where('relasi_karyawan_id',$idRelasiKaryawan['id'])->first()->toArray();
-                $findrelasi = $this->find_karyawan_relasi('atasan', $idRelasiKaryawan['id'])->toArray();
-                // dd($findrelasi);
-                
-                if($findrelasi['npp_atasan'] != $google_form[$key]['npp_dinilai']){
-                    continue;
-                }elseif($findrelasi['npp_atasan'] == $google_form[$key]['npp_dinilai']){
-                    $npp_karyawan[] = $idRelasiKaryawan['id'];
-                    $temp = $google_form[$key];
-                    array_push($atasan,$temp);
+                $idRelasiKaryawan = RelasiKaryawan::where('npp_karyawan', $google_form[$key]['npp_penilai'])->first();
+                if($idRelasiKaryawan){
+                    $idRelasiKaryawan->toArray();
+                    // dd($idRelasiKaryawan['id']);
+                    // $findrelasi = RelasiAtasan::where('relasi_karyawan_id',$idRelasiKaryawan['id'])->first()->toArray();
+                    $findrelasi = $this->find_karyawan_relasi('atasan', $idRelasiKaryawan['id'])->toArray();
+                    // dd($findrelasi);
+                    
+                    if($findrelasi['npp_atasan'] != $google_form[$key]['npp_dinilai']){
+                        continue;
+                    }elseif($findrelasi['npp_atasan'] == $google_form[$key]['npp_dinilai']){
+                        $npp_karyawan[] = $idRelasiKaryawan['id'];
+                        $temp = $google_form[$key];
+                        array_push($atasan,$temp);
+                    }
+                    // dd($temp);
                 }
-                // dd($temp);
+                
             }
         }
-        // dd($temp);
+        // dd($atasan);
         // Pembagian Segment
         $kepemimpinan = $skor_jawaban_data[1];
         $perilaku = $skor_jawaban_data[2];
@@ -474,13 +496,18 @@ class SkorController extends Controller
             Cache::forget('skor_pool_data_rekanan');
             Cache::forget('relasi_karyawan_rekanan');
         }
-        $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
-            return Skor::get()->groupBy('aspek_id')->toArray();
-        });
+        // $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
+        //     return Skor::get()->groupBy('aspek_id')->toArray();
+        // });
 
-        $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
-            return GResponse::get()->toArray();
-        });
+        // $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
+        //     return GResponse::get()->toArray();
+        // });
+
+        $skor_jawaban_data = Skor::get()->groupBy('aspek_id')->toArray();
+        $google_form = GResponse::get()->toArray();
+
+        // dd($google_form);
 
         $temp = [];
         $rekanan = [];
@@ -494,21 +521,31 @@ class SkorController extends Controller
             {
                 $findrelasi = [];
                 $idRelasiKaryawan = [];
-                $idRelasiKaryawan = RelasiKaryawan::where('npp_karyawan', $google_form[$key]['npp_penilai'])->first()->toArray();
-                // $findrelasi = RelasiSelevel::where('relasi_karyawan_id',$idRelasiKaryawan['id'])->first()->toArray();
-                $findrelasi = $this->find_karyawan_relasi('rekanan', $idRelasiKaryawan['id'])->toArray();
-                // dd($findrelasi['npp_selevel']);
-                // dd($findrelasi['npp_selevel'], $google_form[$key]['npp_dinilai']);
-                if($findrelasi['npp_selevel'] != $google_form[$key]['npp_dinilai']){
-                    continue;
-                }elseif($findrelasi['npp_selevel'] == $google_form[$key]['npp_dinilai']){
-                    $npp_karyawan[] = $idRelasiKaryawan['id'];
-                    $temp = $google_form[$key];
-                    array_push($rekanan,$temp);
+                $idRelasiKaryawan = RelasiKaryawan::where('npp_karyawan', $google_form[$key]['npp_penilai'])->first();
+
+                if($idRelasiKaryawan){
+                    $idRelasiKaryawan->toArray();
+                    // $findrelasi = RelasiSelevel::where('relasi_karyawan_id',$idRelasiKaryawan['id'])->first()->toArray();
+                    $findrelasi = $this->find_karyawan_relasi('rekanan', $idRelasiKaryawan['id']);
+                    if($findrelasi != ''){
+                        $findrelasi->toArray();
+                        if($findrelasi['npp_selevel'] != $google_form[$key]['npp_dinilai']){
+                            continue;
+                        }elseif($findrelasi['npp_selevel'] == $google_form[$key]['npp_dinilai']){
+                            $npp_karyawan[] = $idRelasiKaryawan['id'];
+                            $temp = $google_form[$key];
+                            array_push($rekanan,$temp);
+                        }
+                    }
+                    // dd($findrelasi['npp_selevel']);
+                    // dd($findrelasi['npp_selevel'], $google_form[$key]['npp_dinilai']);
+                    
                 }
+                
             // dd($temp);
             }
         }
+        // dd($rekanan);
         // Pembagian Segment
         $kepemimpinan = $skor_jawaban_data[1];
         $perilaku = $skor_jawaban_data[2];
@@ -603,6 +640,7 @@ class SkorController extends Controller
             $tempData = [];
             
         }
+        // dd($tempData);
         if($store != true)
         {
             // abort(404);
@@ -636,18 +674,22 @@ class SkorController extends Controller
             Cache::forget('skor_pool_data_staff');
             Cache::forget('relasi_karyawan_staff');
         }
-        $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
-            return Skor::get()->groupBy('aspek_id')->toArray();
-        });
+        // $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
+        //     return Skor::get()->groupBy('aspek_id')->toArray();
+        // });
 
-        $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
-            return GResponse::get()->toArray();
-        });
+        // $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
+        //     return GResponse::get()->toArray();
+        // });
+
+        $skor_jawaban_data = Skor::get()->groupBy('aspek_id')->toArray();
+        $google_form = GResponse::get()->toArray();
 
         $temp = [];
         $staff = [];
         $npp_karyawan = [];
         $slugs_relasi = 'staff';
+        // dd($google_form);
         
             foreach($google_form as $key => $value)
             {
@@ -656,24 +698,28 @@ class SkorController extends Controller
                 {
                     $findrelasi = [];
                     $idRelasiKaryawan = [];
-                    $idRelasiKaryawan = RelasiKaryawan::where('npp_karyawan', $google_form[$key]['npp_penilai'])->first()->toArray();
-                    $findrelasi = RelasiStaff::where('relasi_karyawan_id',$idRelasiKaryawan['id'])
-                    ->where('npp_staff',$google_form[$key]['npp_dinilai'])
-                    ->first();
-                    if(!empty($findrelasi)){
-                        $findrelasi=$findrelasi->toArray();
-                        // dd($findrelasi);
-                        if($findrelasi['npp_staff'] != $google_form[$key]['npp_dinilai']){
-                            continue;
-                        }elseif($findrelasi['npp_staff'] == $google_form[$key]['npp_dinilai']){
-                            // echo '<pre>';
-                            // print_r($findrelasi);
-                            // echo '</pre>';
-                            $npp_karyawan[] = $idRelasiKaryawan['id'];
-                            $temp = $google_form[$key];
-                            array_push($staff,$temp);
+                    $idRelasiKaryawan = RelasiKaryawan::where('npp_karyawan', $google_form[$key]['npp_penilai'])->first();
+                    if ($idRelasiKaryawan) {
+                        $idRelasiKaryawan = $idRelasiKaryawan->toArray();
+                        $findrelasi = RelasiStaff::where('relasi_karyawan_id',$idRelasiKaryawan['id'])
+                        ->where('npp_staff',$google_form[$key]['npp_dinilai'])
+                        ->first() ?? '';
+                        if(!empty($findrelasi)){
+                            $findrelasi->toArray();
+                            // dd($findrelasi);
+                            if($findrelasi['npp_staff'] != $google_form[$key]['npp_dinilai']){
+                                continue;
+                            }elseif($findrelasi['npp_staff'] == $google_form[$key]['npp_dinilai']){
+                                // echo '<pre>';
+                                // print_r($findrelasi);
+                                // echo '</pre>';
+                                $npp_karyawan[] = $idRelasiKaryawan['id'];
+                                $temp = $google_form[$key];
+                                array_push($staff,$temp);
+                            }
                         }
                     }
+                    
                     // $findrelasi = $this->find_karyawan_relasi('staff', $idRelasiKaryawan['id'])->toArray();
                     // dd($findrelasi['npp_staff'],$google_form[$key]['npp_dinilai']);
                 }
@@ -746,6 +792,7 @@ class SkorController extends Controller
             }
             $temp_nilai = $nilai_skor_1 + $nilai_skor_2 + $nilai_skor_3 + $nilai_skor_4 + $nilai_skor_5 + $nilai_skor_6 + $nilai_skor_7 + $nilai_skor_8 + $nilai_skor_9 + $nilai_skor_10 + $nilai_skor_11 + $nilai_skor_12 + $nilai_skor_13 + $nilai_skor_14 + $nilai_skor_15 + $nilai_skor_16;
             // dd($npp_karyawan);
+            // dd($npp_karyawan[$key]);
             $tempData = [
                 'npp_penilai' => $npp_karyawan[$key],
                 'npp_dinilai' => $staff[$key]['npp_dinilai'],
@@ -773,7 +820,7 @@ class SkorController extends Controller
             $tempData = [];
             
         }
-        if($store != true)
+        if($store)
         {
             return response()->json([ 
                 'title' => 'error!',

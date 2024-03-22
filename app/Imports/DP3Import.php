@@ -89,8 +89,6 @@ class DP3Import implements ToCollection, WithCalculatedFormulas, WithStartRow
             $scoreSkppInit = $this->score('Sasaran Kinerja dan Proses Pencapaian', 'Proses - Pencapaian Kinerja ( Inisiatif )', $val[20]);
             $scoreSkppMind = $this->score('Sasaran Kinerja dan Proses Pencapaian', 'Proses - Pencapaian Kinerja ( Pola Pikir )', $val[21]);
 
-
-
             ScoreResponse::updateOrCreate(
                 ['npp_penilai' => $nppEvaluator, 'npp_dinilai' => $nppAssessed],
                 [

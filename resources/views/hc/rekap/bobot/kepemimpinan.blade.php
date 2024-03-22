@@ -32,19 +32,21 @@
                             </ul>
                         </div>
                         <div class="card-body">
+                            <div class="container">
                             <table class="table table-striped table-hover table-bordered" id="dataTablesRekap1">
                                 <thead>
                                     <tr>
                                         <th colspan='2' rowspan='2'>Identitas</th>
-                                        <th colspan='32'>Kepemimpinan ([1|50%] [2|45%] [3|40%] [4A|10%] [4B/5|0%])</th>
+                                        <th colspan='30'>Kepemimpinan ([1|50%] [2|45%] [3|40%] [4A|10%] [4B/5|0%])</th>
                                     </tr>
                                     <tr>
-                                        <th colspan='5'>Perencanaan</th>
-                                        <th colspan='5'>Pengawasan</th>
-                                        <th colspan='5'>Inovasi</th>
-                                        <th colspan='5'>Kepemimpinan</th>
-                                        <th colspan='5'>Membangun</th>
-                                        <th colspan='5'>Keputusan</th>
+                                        <th colspan='4'>Perencanaan</th>
+                                        <th colspan='4'>Pengawasan</th>
+                                        <th colspan='4'>Inovasi</th>
+                                        <th colspan='4'>Kepemimpinan</th>
+                                        <th colspan='4'>Membangun</th>
+                                        <th colspan='4'>Keputusan</th>
+                                        <th colspan='4'>Summary</th>
                                     </tr>
                                     <tr>
                                         <th>No</th>
@@ -53,32 +55,30 @@
                                         <th>AT</th>
                                         <th>RE</th>
                                         <th>ST</th>
-                                        <th>K1</th>
                                         <th>SE</th>
                                         <th>AT</th>
                                         <th>RE</th>
                                         <th>ST</th>
-                                        <th>K2</th>
                                         <th>SE</th>
                                         <th>AT</th>
                                         <th>RE</th>
                                         <th>ST</th>
-                                        <th>K3</th>
                                         <th>SE</th>
                                         <th>AT</th>
                                         <th>RE</th>
                                         <th>ST</th>
-                                        <th>K4</th>
                                         <th>SE</th>
                                         <th>AT</th>
                                         <th>RE</th>
                                         <th>ST</th>
-                                        <th>K5</th>
                                         <th>SE</th>
                                         <th>AT</th>
                                         <th>RE</th>
                                         <th>ST</th>
-                                        <th>K6</th>
+                                        <th>&sum;SE</th>
+                                        <th>&sum;AT</th>
+                                        <th>&sum;RE</th>
+                                        <th>&sum;ST</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -86,40 +86,39 @@
                                     <tr>
                                         <td>{{$loop->iteration }}</td>
                                         <td>{{$bk->relasi_karyawan->npp_karyawan}}</td>
-                                        <td>{{$bk->kb_1_self}}</td>
-                                        <td>{{$bk->kb_1_atasan}}</td>
-                                        <td>{{$bk->kb_1_rekan}}</td>
-                                        <td>{{$bk->kb_1_staff}}</td>
-                                        <td>{{$bk->sum_kb_1}}</td>
-                                        <td>{{$bk->kb_2_self}}</td>
-                                        <td>{{$bk->kb_2_atasan}}</td>
-                                        <td>{{$bk->kb_2_rekan}}</td>
-                                        <td>{{$bk->kb_2_staff}}</td>
-                                        <td>{{$bk->sum_kb_2}}</td>
-                                        <td>{{$bk->kb_3_self}}</td>
-                                        <td>{{$bk->kb_3_atasan}}</td>
-                                        <td>{{$bk->kb_3_rekan}}</td>
-                                        <td>{{$bk->kb_3_staff}}</td>
-                                        <td>{{$bk->sum_kb_3}}</td>
-                                        <td>{{$bk->kb_4_self}}</td>
-                                        <td>{{$bk->kb_4_atasan}}</td>
-                                        <td>{{$bk->kb_4_rekan}}</td>
-                                        <td>{{$bk->kb_4_staff}}</td>
-                                        <td>{{$bk->sum_kb_4}}</td>
-                                        <td>{{$bk->kb_5_self}}</td>
-                                        <td>{{$bk->kb_5_atasan}}</td>
-                                        <td>{{$bk->kb_5_rekan}}</td>
-                                        <td>{{$bk->kb_5_staff}}</td>
-                                        <td>{{$bk->sum_kb_5}}</td>
-                                        <td>{{$bk->kb_6_self}}</td>
-                                        <td>{{$bk->kb_6_atasan}}</td>
-                                        <td>{{$bk->kb_6_rekan}}</td>
-                                        <td>{{$bk->kb_6_staff}}</td>
-                                        <td>{{$bk->sum_kb_6}}</td>
+                                        <td>{{round($bk->kb_1_self,2)}}</td>
+                                        <td>{{round($bk->kb_1_atasan,2)}}</td>
+                                        <td>{{round($bk->kb_1_rekan,2)}}</td>
+                                        <td>{{round($bk->kb_1_staff,2)}}</td>
+                                        <td>{{round($bk->kb_2_self,2)}}</td>
+                                        <td>{{round($bk->kb_2_atasan,2)}}</td>
+                                        <td>{{round($bk->kb_2_rekan,2)}}</td>
+                                        <td>{{round($bk->kb_2_staff,2)}}</td>
+                                        <td>{{round($bk->kb_3_self,2)}}</td>
+                                        <td>{{round($bk->kb_3_atasan,2)}}</td>
+                                        <td>{{round($bk->kb_3_rekan,2)}}</td>
+                                        <td>{{round($bk->kb_3_staff,2)}}</td>
+                                        <td>{{round($bk->kb_4_self,2)}}</td>
+                                        <td>{{round($bk->kb_4_atasan,2)}}</td>
+                                        <td>{{round($bk->kb_4_rekan,2)}}</td>
+                                        <td>{{round($bk->kb_4_staff,2)}}</td>
+                                        <td>{{round($bk->kb_5_self,2)}}</td>
+                                        <td>{{round($bk->kb_5_atasan,2)}}</td>
+                                        <td>{{round($bk->kb_5_rekan,2)}}</td>
+                                        <td>{{round($bk->kb_5_staff,2)}}</td>
+                                        <td>{{round($bk->kb_6_self,2)}}</td>
+                                        <td>{{round($bk->kb_6_atasan,2)}}</td>
+                                        <td>{{round($bk->kb_6_rekan,2)}}</td>
+                                        <td>{{round($bk->kb_6_staff,2)}}</td>
+                                        <td>{{round($bk->sum_kb_1_self,2)}}</td>
+                                        <td>{{round($bk->sum_kb_1_atasan,2)}}</td>
+                                        <td>{{round($bk->sum_kb_1_rekan,2)}}</td>
+                                        <td>{{round($bk->sum_kb_1_staff,2)}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
+                            </div>
                         </div><!-- /.card-body -->
                     </div>
                     <!-- /.card -->
@@ -141,28 +140,10 @@
 @push('scripts')
 <script>
 $("#dataTablesRekap1").DataTable({
-    /**
-    fixedColumns: {
-        left: 1,
-        right: 1
-    },
-    fixedHeader: {
-        header: true,
-        footer: true
-    },
-    **/
-    /** 
-    scrollY: '50vh',
-    responsive: true,
-    **/
-    autoWidth : false,
     ordering: false,
-    paging: false,
     scrollCollapse: true,
-    lengthChange : false,
-    searching : false,
-    scrollX: true
-    
+    searching : true,
+    scrollX: true,
 });
 </script>
 @endpush

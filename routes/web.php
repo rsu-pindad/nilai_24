@@ -16,6 +16,7 @@ use App\Http\Controllers\HC\ScoreJawabanController;
 use App\Http\Controllers\HC\ScoresController;
 use App\Http\Controllers\HC\SkorController;
 use App\Http\Controllers\HC\AspekController;
+use App\Http\Controllers\HC\RekapPenilaiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
@@ -40,6 +41,7 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::get('/response/detail/{npp}', 'detail')->name('response/detail');
         Route::post('/response/detail/store', 'store_detail')->name('response/detail/store');
         Route::post('/response/detail/delete/{id}', 'delete_detail')->name('response/detail/delete');
+        
         Route::post('/response/import', 'import')->name('response/import');
         Route::get('/response/report/{npp}', 'report')->name('response/report');
     });
@@ -75,6 +77,7 @@ Route::middleware(['auth', 'hc'])->group(function () {
     Route::controller(GResponseController::class)->group(function() {
         Route::get('/gform', 'index')->name('gform');
         Route::get('/gform/pull', 'pull')->name('gform-pull'); // Button btnPullResponse
+        Route::get('/gform/pull2', 'pull_excel')->name('gform-pull2');
         // Route::get('gform/populate', 'populate')->name('gform-populate');
     });
 
@@ -95,23 +98,41 @@ Route::middleware(['auth', 'hc'])->group(function () {
     });
 
     Route::controller(RekapBobotController::class)->group(function(){
-        Route::get('/rekap/bobot/kepemimpinan', 'index_kepemimpinan')->name('rekap-bobot-kepemimpinan');
-        Route::get('/rekap/bobot/perilaku', 'index_perilaku')->name('rekap-bobot-perilaku');
-        Route::get('/rekap/bobot/sasaran', 'index_sasaran')->name('rekap-bobot-sasaran');
+        Route::get('/bobot-rekap/kepemimpinan', 'index_kepemimpinan')->name('rekap-bobot-kepemimpinan');
+        Route::get('/bobot-rekap/perilaku', 'index_perilaku')->name('rekap-bobot-perilaku');
+        Route::get('/bobot-rekap/bobot/sasaran', 'index_sasaran')->name('rekap-bobot-sasaran');
 
         Route::get('/rekap/get-bobot-kepemimpinan{refresh?}', 'rb_kepemimpinan')->name('rekap-get-bobot-kepemimpinan');
         Route::get('/rekap/get-bobot-perilaku{refresh?}', 'rb_perilaku')->name('rekap-get-bobot-perilaku');
         Route::get('/rekap/get-bobot-sasaran{refresh?}', 'rb_sasaran')->name('rekap-get-bobot-sasaran');
     });
 
+    Route::controller(RekapPenilaiController::class)->group(function(){
+        Route::get('/penilai-rekap/self', 'index_self')->name('penilai-rekap-self');
+        Route::get('/penilai-rekap/atasan', 'index_atasan')->name('penilai-rekap-atasan');
+        Route::get('/penilai-rekap/rekan', 'index_rekanan')->name('penilai-rekap-rekanan');
+        Route::get('/penilai-rekap/staff', 'index_staff')->name('penilai-rekap-staff');
+
+        Route::get('/penilai-rekap/personal', 'index_personal')->name('penilai-rekap-personal');
+        Route::get('/penilai-rekap/report{id?}{npp?}', 'report')->name('penilai-rekap-report');
+        
+        Route::get('/penilai-rekap/penilai{id?}', 'show')->name('penilai-rekap-detail');
+        
+        Route::get('/penilai-rekap/calculate', 'calculate')->name('penilai-rekap-calculate');
+        Route::get('/penilai-rekap/calculate-dp3', 'final_calculate')->name('penilai-rekap-calculate-dp3');
+    });
+
     Route::controller(HasilPersonalController::class)->group(function(){
         Route::get('/rekap/personal', 'index')->name('rekap-personal');
-        Route::get('/rekap/personal-calculate', 'calculate')->name('rekap-personal-calculate');
+        Route::get('/rekap/personal-calculate', 'calculate_dp3')->name('rekap-personal-calculate');
+        Route::get('/rekap/detail-personal{detail?}', 'detailPersonal')->name('rekap-detail-personal');
+
         Route::get('/rekap/hasil-personal{detail?}', 'getDetailAjax')->name('rekap-ajax-personal-detail');
         Route::get('/rekap/hasil-personal/penilai{detail?}', 'getPenilaiDetailAjax')->name('rekap-ajax-personal-penilai-detail');
         Route::get('/rekap/hasil-personal/status{dinilai?}{penilai?}', 'checkStatus')->name('rekap-ajax-personal-dinilai-penilai');
         Route::get('/rekap/hasil-personal/selevel{dinilai?}{atasan?}', 'getSelevelAtasan')->name('rekap-ajak-personal-selevel-atasan');
         Route::get('/rekap/hasil-personal/follow-up{dinilai?}{penilai?}', 'followUp')->name('rekap-ajax-follow-up');
+        Route::post('/rekap/hasil-personal/datatable', 'ajaxDatatable')->name('rekap-ajax-datatable');
     });
 
     // Route::controller(ScoreJawabanController::class)->group(function() {
@@ -159,4 +180,9 @@ Route::middleware('auth')->group(function () {
         Route::patch('profile/update_photo/{user}', 'update_photo')->name('profile/update_photo');
         Route::patch('profile/update_password/{user}', 'update_password')->name('profile/update_password');
     });
+
+    Route::controller(RekapPenilaiController::class)->group(function(){
+        Route::get('/nilai-rekap/{npp}', 'rekapitulasi')->name('penilai-rekap-rekapitulasi');
+    });
+    
 });

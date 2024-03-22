@@ -56,7 +56,11 @@ class HasilPersonal extends Model
         'mutator_s_avg_4',
         'mutator_s_avg_5',
 
-        'sum_rekap',
+        'sum_rekap_self',
+        'sum_rekap_atasan',
+        'sum_rekap_rekan',
+        'sum_rekap_staff',
+        
         'keterangan_nilai',
     ];
     

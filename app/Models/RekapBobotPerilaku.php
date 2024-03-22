@@ -19,31 +19,31 @@ class RekapBobotPerilaku extends Model
         'pb_1_atasan',
         'pb_1_rekan',
         'pb_1_staff',
-        'sum_pb_1',
         
         'pb_2_self',
         'pb_2_atasan',
         'pb_2_rekan',
         'pb_2_staff',
-        'sum_pb_2',
 
         'pb_3_self',
         'pb_3_atasan',
         'pb_3_rekan',
         'pb_3_staff',
-        'sum_pb_3',
 
         'pb_4_self',
         'pb_4_atasan',
         'pb_4_rekan',
         'pb_4_staff',
-        'sum_pb_4',
 
         'pb_5_self',
         'pb_5_atasan',
         'pb_5_rekan',
         'pb_5_staff',
-        'sum_pb_5',
+
+        'sum_pb_1_staff',
+        'sum_pb_1_atasan',
+        'sum_pb_1_rekan',
+        'sum_pb_1_self',
 
     ];
 

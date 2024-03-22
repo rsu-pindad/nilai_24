@@ -138,11 +138,11 @@
             **/
             autoWidth : false,
             ordering: false,
-            paging: false,
+            paging: true,
             scrollCollapse: true,
             lengthChange : false,
-            searching : false,
-            scrollX: true
+            searching : true,
+            // scrollX: true
         });
     </script>
 @endpush

@@ -1395,12 +1395,9 @@ class ResponseController extends Controller
         return redirect()->route('response')->with('success', 'berhasil mengimpor data penilaian');
     }
 
-
     public function report($npp)
     {
         $dp3Calculated = Dp3Calculated::with('employee')->where('npp_dinilai', $npp)->first();
-
-
 
         $calculateFactor = [
             'kpmn_perencanaan' => $dp3Calculated->kpmn_perencanaan_self + $dp3Calculated->kpmn_perencanaan_atasan + $dp3Calculated->kpmn_perencanaan_selevel + $dp3Calculated->kpmn_perencanaan_staff,
@@ -1451,7 +1448,6 @@ class ResponseController extends Controller
             'today' => $today,
             'signatureName' => $signatureName,
             'position' => $position,
-
         ];
         // dd($dp3Calculated);
         // return view('hc.form_respon.report', $data);

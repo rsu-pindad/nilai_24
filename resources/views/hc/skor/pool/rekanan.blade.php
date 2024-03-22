@@ -132,8 +132,8 @@ $("#dataTablesPoolSkor").DataTable({
     responsive:true,
     ordering: false,
     scrollX: false,
-    scrollY: '25vh',
-    searching : false,
+    // scrollY: '25vh',
+    searching : true,
 });
 </script>
 @endpush

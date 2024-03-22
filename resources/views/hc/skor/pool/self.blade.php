@@ -115,16 +115,11 @@
 @push('scripts')
 <script>
 $("#dataTablesPoolSkor").DataTable({
-    /**
-    paging: false,
-    lengthChange : false,
-    autoWidth : true,
-    **/
-    responsive:true,
     ordering: false,
-    scrollX: false  ,
-    scrollY: '25vh',
-    searching : false,
+    scrollCollapse: true,
+    responsive: true,
+    searching : true,
+    scrollX: false,
 });
 </script>
 @endpush

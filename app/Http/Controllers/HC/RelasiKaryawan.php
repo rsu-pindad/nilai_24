@@ -17,13 +17,14 @@ class RelasiKaryawan extends Controller
 
     public function index()
     {
-        $rk_cache = Cache::remember('rk_data',now()->addMinutes(5), function () {
-            return RK::select('id','npp_karyawan','level_jabatan','unit_jabatan','nama_karyawan')->with([
+        // $rk_cache = Cache::remember('rk_data',now()->addMinutes(5), function () {
+            // return RK::select('id','npp_karyawan','level_jabatan','unit_jabatan','nama_karyawan')->with([
+            $rk_cache = RK::select('id','npp_karyawan','level_jabatan','unit_jabatan','nama_karyawan')->with([
                 'karyawan_atasan:id,relasi_karyawan_id,npp_atasan',
                 'karyawan_selevel:id,relasi_karyawan_id,npp_selevel',
                 'karyawan_staff:id,relasi_karyawan_id,npp_staff'
                 ])->get();
-        });
+        // });
         return view('hc.gform.relasi.index')->with([
             'karyawan_data' => $rk_cache,
         ]);
@@ -120,7 +121,10 @@ class RelasiKaryawan extends Controller
 
     public function pull_level()
     {
-        $values = Sheets::spreadsheet('1CX4q_BqkCgHr1TEe0_tlRHO9ZcSXqKv46Q-v7H1OykM')->sheet('DP3 2023')->range('C$5:I')->all();
+        // $values = Sheets::spreadsheet('1CX4q_BqkCgHr1TEe0_tlRHO9ZcSXqKv46Q-v7H1OykM')->sheet('DP3 2023')->range('C$5:I')->all();
+        // $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2022')->range('A$2:G')->get();
+        $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2023')->range('C$5:I')->get();
+        $values = $rows->filter();
         // unset($values[0]);
         // dd($values);
 
@@ -130,6 +134,7 @@ class RelasiKaryawan extends Controller
             $findIdRk = '';
             foreach($values as $key => $val){
                 // dd($values);
+                // dd($val);
                 if($val[3] != '' && $val[3] != '-')
                 {
                     // $val[3] = $lastNppKaryawan;
@@ -140,8 +145,8 @@ class RelasiKaryawan extends Controller
                         $storeRk = RK::updateOrCreate(
                             [
                             'npp_karyawan' => $val[3],
-                            'level_jabatan' => $val[1],
-                            'unit_jabatan' => $val[2],
+                            'level_jabatan' => $val[1] ?? 'kosong',
+                            'unit_jabatan' => $val[2] ?? 'kosong',
                             'nama_karyawan' => $val[0],
                             ]
                         ); 
@@ -163,8 +168,8 @@ class RelasiKaryawan extends Controller
                         $storeRk = RK::create(
                             [
                             'npp_karyawan' => $val[3],
-                            'level_jabatan' => $val[1],
-                            'unit_jabatan' => $val[2],
+                            'level_jabatan' => $val[1] ?? 'kosong',
+                            'unit_jabatan' => $val[2] ?? 'kosong',
                             'nama_karyawan' => $val[0],
                             ]
                         ); // Insert
@@ -210,10 +215,14 @@ class RelasiKaryawan extends Controller
                 }
             }
             unset($values);
-            return response()->json(['message' => 'Poll inserted']);
+            return response()->json([
+                'status' => true,
+                'message' => 'Poll inserted'
+            ]);
         } catch (\Illuminate\Database\QueryException $exception) {
             return response()->json(
                 [
+                    'status' => false,
                     'message' => $exception->getMessage(),
                 ]
             );

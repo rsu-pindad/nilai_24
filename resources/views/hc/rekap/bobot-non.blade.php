@@ -144,10 +144,10 @@
             **/
             autoWidth : false,
             ordering: false,
-            paging: false,
-            scrollCollapse: true,
-            lengthChange : false,
-            searching : false,
+            paging: true,
+            // scrollCollapse: true,
+            // lengthChange : false,
+            searching : true,
             scrollX: true
             
         });

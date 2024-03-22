@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RelasiKaryawan;
 use App\Models\User;
 use App\Models\Employee;
 use Illuminate\Support\Str;
@@ -23,8 +24,8 @@ class RegisterController extends Controller
     {
         $npp = $request->session()->get('npp');
         $nama = $request->session()->get('nama');
-        $employee = Employee::where('npp', $npp)->first();
-
+        // $employee = Employee::where('npp', $npp)->first();
+        $employee = RelasiKaryawan::where('npp_karyawan', $npp)->first();
 
         if (!$employee) {
             $request->session()->flush();
@@ -99,15 +100,17 @@ https://assessment.pindadmedika.com/
 
     public function check(Request $request)
     {
-        $employee = Employee::where('npp', $request->npp)->first();
+        // $employee = Employee::where('npp', $request->npp)->first();
+        $employee = RelasiKaryawan::where('npp_karyawan', $request->npp)->first();
 
         if (!$employee) {
             $request->session()->flush();
             return redirect()->back()->with('toast_error', 'NPP tidak ditemukan');
         }
 
-        session()->put(['npp' => $employee->npp, 'nama' => $employee->nama]);
-
+        // session()->put(['npp' => $employee->npp, 'nama' => $employee->nama]);
+        session()->put(['npp' => $employee->npp_karyawan, 'nama' => $employee->nama_karyawan]);
+        
         return redirect()->route('register');
     }
 }

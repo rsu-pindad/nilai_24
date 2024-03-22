@@ -18,13 +18,13 @@ class ProfileController extends Controller
     public function index()
     {
         $data = ['title' => 'Halaman Profil'];
-        $jadwal = AturJadwal::get()->last();
-        $nows = Carbon::now();
-        if( $nows <= $jadwal['jadwal'] AND Auth::user()->level != 1){
-            return View::make('error-jadwal');
-        }else{
+        // $jadwal = AturJadwal::get()->last();
+        // $nows = Carbon::now();
+        // if( $nows <= $jadwal['jadwal'] AND Auth::user()->level != 1){
+        //     return View::make('error-jadwal');
+        // }else{
             return View::make('profile', $data);
-        }
+        // }
     }
 
     public function update(Request $request, User $user)
