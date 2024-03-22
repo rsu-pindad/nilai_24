@@ -40,7 +40,7 @@ class ForgotPasswordController extends Controller
                         'target' => $request->no_hp,
                         'message' => "Password baru : $password
 
-https://assessment.pindadmedika.com/",
+https://1st.kecoa.my.id//",
                         'countryCode' => '62', //optional
                     ),
                     CURLOPT_HTTPHEADER => array(

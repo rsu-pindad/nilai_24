@@ -61,7 +61,7 @@ class RegisterController extends Controller
 NPP : $npp
 Password : $password
 
-https://assessment.pindadmedika.com/
+https://1st.kecoa.my.id/
 ";
 
         $this->sendMessage($request->no_hp, $text);
