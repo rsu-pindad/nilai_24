@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('aspek_id');
             $table->foreignId('indikator_id');
-            $table->string('jawaban');
+            $table->longText('jawaban');
             $table->integer('skor');
             $table->foreign('aspek_id')->references('id')->on('aspek');
             $table->foreign('indikator_id')->references('id')->on('indikator');
