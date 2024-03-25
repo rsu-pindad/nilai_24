@@ -41,13 +41,10 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$p->relasi_karyawan->npp_karyawan}}</td>
                                         <td>{{$p->relasi_karyawan->level_jabatan}}</td>
-                                        <td>{{$p->total}}</td>
+                                        <td>{{round($p->total)}}</td>
                                         <td class="p-2">
-                                            <a href="/penilai-rekap/penilai?id={{$p->relasi_karyawan->id}}" target="_blank" class="btn btn-sm btn-warning">
-                                                <i class="far fa-eye"></i>
-                                            </a>
-                                            <a href="/penilai-rekap/report?id={{$p->relasi_karyawan->id}}&npp={{$p->relasi_karyawan->npp_karyawan}}" target="_blank" class="btn btn-sm btn-info">
-                                                <i class="far fa-eye"></i>
+                                            <a href="/penilai-rekap/report?id={{$p->relasi_karyawan->id}}&npp={{$p->relasi_karyawan->npp_karyawan}}" target="_blank" class="btn btn-sm btn-danger">
+                                                <i class="far fa-file-pdf"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -75,10 +72,10 @@
 @push('scripts')
     <script>
         $("#dataTablesRekap2").DataTable({
-            ordering: true,
+            ordering: false,
             scrollCollapse: true,
             searching : true,
-            scrollX: true,
+            scrollX: false,
         });
     </script>
 @endpush

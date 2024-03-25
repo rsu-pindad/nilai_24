@@ -161,31 +161,31 @@
         <tr>
             <td>1</td>
             <td colspan="2">Kerjasama</td>
-            <td>{{round($p1 * 100,2)}}</td>
+            <td>{{round($p1 * 100)}}</td>
         </tr>
         <tr>
             <td>2</td>
             <td colspan="2">Komunikasi</td>
-            <td>{{round($p2 * 100,2)}}</td>
+            <td>{{round($p2 * 100)}}</td>
         </tr>
         <tr>
             <td>3</td>
             <td colspan="2">Kedisiplinan</td>
-            <td>{{round($p3 * 100,2)}}</td>
+            <td>{{round($p3 * 100)}}</td>
         </tr>
         <tr>
             <td>4</td>
             <td colspan="2">Dedikasi dan Integritas</td>
-            <td>{{round($p4 * 100,2)}}</td>
+            <td>{{round($p4 * 100)}}</td>
         </tr>
         <tr>
             <td>5</td>
             <td colspan="2">Etika</td>
-            <td>{{round($p5 * 100,2)}}</td>
+            <td>{{round($p5 * 100)}}</td>
         </tr>
         <tr class="semiBoldText">
             <td colspan="3" class="text-right">Jumlah A</td>
-            <td>{{round($raspek_p * 100,2)}}</td>
+            <td>{{round($raspek_p * 100)}}</td>
         </tr>
         <tr class="boldText">
             <td class="text-right">B</td>
@@ -194,31 +194,31 @@
         <tr>
             <td>1</td>
             <td colspan="2">Goal</td>
-            <td>{{round($s1 * 100,2)}}</td>
+            <td>{{round($s1 * 100)}}</td>
         </tr>
         <tr>
             <td>2</td>
             <td colspan="2">Error</td>
-            <td>{{round($s2 * 100,2)}}</td>
+            <td>{{round($s2 * 100)}}</td>
         </tr>
         <tr>
             <td>3</td>
             <td colspan="2">Dokumentasi</td>
-            <td>{{round($s3 * 100,2)}}</td>
+            <td>{{round($s3 * 100)}}</td>
         </tr>
         <tr>
             <td>4</td>
             <td colspan="2">Inisiatif</td>
-            <td>{{round($s4 * 100,2)}}</td>
+            <td>{{round($s4 * 100)}}</td>
         </tr>
         <tr>
             <td>5</td>
             <td colspan="2">Pola Pikir</td>
-            <td>{{round($s5 * 100,2)}}</td>
+            <td>{{round($s5 * 100)}}</td>
         </tr>
         <tr class="semiBoldText">
             <td colspan="3" class="text-right">Jumlah B</td>
-            <td>{{round($raspek_s * 100,2)}}</td>
+            <td>{{round($raspek_s * 100)}}</td>
         </tr>
         <tr class="boldText">
             <td class="text-right">B</td>
@@ -227,40 +227,40 @@
         <tr>
             <td>1</td>
             <td colspan="2">Strategi - Perencanaan</td>
-            <td>{{round($k1 * 100,2)}}</td>
+            <td>{{round($k1 * 100)}}</td>
         </tr>
         <tr>
             <td>2</td>
             <td colspan="2">Strategi – Pengawasan</td>
-            <td>{{round($k2 * 100,2)}}</td>
+            <td>{{round($k2 * 100)}}</td>
         </tr>
         <tr>
             <td>3</td>
             <td colspan="2">Strategi - Inovasi</td>
-            <td>{{round($k3 * 100,2)}}</td>
+            <td>{{round($k3 * 100)}}</td>
         </tr>
         <tr>
             <td>4</td>
             <td colspan="2">Kepemimpinan</td>
-            <td>{{round($k4 * 100,2)}}</td>
+            <td>{{round($k4 * 100)}}</td>
         </tr>
         <tr>
             <td>5</td>
             <td colspan="2">Membimbingan dan Membangun</td>
-            <td>{{round($k5 * 100,2)}}</td>
+            <td>{{round($k5 * 100)}}</td>
         </tr>
         <tr>
             <td>6</td>
             <td colspan="2">Pengambilan keputusan</td>
-            <td>{{round($k6 * 100,2)}}</td>
+            <td>{{round($k6 * 100)}}</td>
         </tr>
         <tr class="semiBoldText">
             <td colspan="3" class="text-right">Jumlah C</td>
-            <td>{{round($raspek_k * 100,2)}}</td>
+            <td>{{round($raspek_k * 100)}}</td>
         </tr>
         <tr class="boldText">
             <td colspan="3" class="text-right">Skor Akhir DP3</td>
-            <td>{{round(($raspek_k + $raspek_s + $raspek_p) * 100,2)}}</td>
+            <td>{{round(($raspek_k + $raspek_s + $raspek_p) * 100)}}</td>
         </tr>
         <tr style="font-size: 0.9em;">
             <td colspan="2">
@@ -291,7 +291,7 @@
                     <table>
                     <tr>
                         <td>Nilai Kinerja</td>
-                        <td>{{round(($raspek_k + $raspek_s + $raspek_p) * 100,2)}}</td>
+                        <td>{{round(($raspek_k + $raspek_s + $raspek_p) * 100)}}</td>
                     </tr>
                     <tr>
                         <td>Kriteria</td>

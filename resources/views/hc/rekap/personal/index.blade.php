@@ -38,28 +38,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    
                                     @foreach($rekap_personal_data as $rp)
-                                        <tr>
-                                            <td>{{$loop->iteration}}</td>
-                                            <td>{{$rp->identitas_dinilai->npp_karyawan}}</td>
-                                            <td>{{$rp->identitas_penilai->npp_karyawan}}</td>
-                                            <td>{{$rp->sum_rekap}}</td>
-                                            <td>
-                                                <button 
-                                                    type="button" 
-                                                    class="btn btn-info btn-sm btn-personal" 
-                                                    data-toggle="modal" data-target="#staticBackdrop" 
-                                                    data-id="{{$rp->id}}">
-                                                    <i class="far fa-eye"></i>
-                                                </button>
-                                                <a href="/rekap/detail-personal?detail={{$rp->id}}" target="_blank" class="btn btn-sm btn-warning">
-                                                    <i class="far fa-eye"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td>{{$rp->identitas_dinilai->npp_karyawan}}</td>
+                                        <td>{{$rp->identitas_penilai->npp_karyawan}}</td>
+                                        <td>{{$rp->sum_rekap}}</td>
+                                        <td>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-info btn-sm btn-personal" 
+                                                data-toggle="modal" data-target="#staticBackdrop" 
+                                                data-id="{{$rp->id}}">
+                                                <i class="far fa-eye"></i>
+                                            </button>
+                                            <a href="/rekap/detail-personal?detail={{$rp->id}}" target="_blank" class="btn btn-sm btn-warning">
+                                                <i class="far fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                     @endforeach
-                                    
                                     </tbody>
                                 </table>
                                 </div>
