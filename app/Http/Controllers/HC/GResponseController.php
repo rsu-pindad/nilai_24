@@ -72,6 +72,7 @@ class GResponseController extends Controller
                 'new_pulled' => $newData,
                 'failure' => '',
         ];
+        // dd($values);
         try {
             $store = false;
             foreach($values as $key => $val){
