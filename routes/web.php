@@ -8,6 +8,7 @@ use App\Http\Controllers\HC\BobotPenilaiController;
 use App\Http\Controllers\HC\GResponseController;
 use App\Http\Controllers\HC\HasilPersonalController;
 use App\Http\Controllers\HC\IndikatorController;
+use App\Http\Controllers\HC\LinkNilaiController;
 use App\Http\Controllers\HC\RekapBobotController;
 use App\Http\Controllers\HC\RekapNonBobotController;
 use App\Http\Controllers\HC\RelasiKaryawan;
@@ -133,6 +134,11 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::get('/rekap/hasil-personal/selevel{dinilai?}{atasan?}', 'getSelevelAtasan')->name('rekap-ajak-personal-selevel-atasan');
         Route::get('/rekap/hasil-personal/follow-up{dinilai?}{penilai?}', 'followUp')->name('rekap-ajax-follow-up');
         Route::post('/rekap/hasil-personal/datatable', 'ajaxDatatable')->name('rekap-ajax-datatable');
+    });
+
+    Route::controller(LinkNilaiController::class)->group(function(){
+        Route::get('/link-nilai', 'index')->name('link-nilai');
+        Route::post('/link-nilai/store-ajax', 'storeAjax')->name('link-nilai-ajax-store');
     });
 
     // Route::controller(ScoreJawabanController::class)->group(function() {
