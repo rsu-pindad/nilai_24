@@ -172,7 +172,7 @@ class RekapPenilaiController extends Controller
         setlocale(LC_TIME, 'id_ID');
         $nows = Carbon::setLocale('id');
         $nows = Carbon::now()->formatLocalized("%A, %d %B %Y");
-        
+
         $pdf = Pdf::loadView('hc.rekap.penilai.pdf-personal', [
             'nama' => $nama,
             'unit' => $unit,
@@ -208,8 +208,8 @@ class RekapPenilaiController extends Controller
 
         $pdf->setPaper('A4');
 
-        return $pdf->stream();
-        // return $pdf->download("LAPORAN HASIL PENILAIAN KINERJA".$nama_karyawan.".pdf");
+        // return $pdf->stream();
+        return $pdf->download("LAPORAN HASIL PENILAIAN KINERJA".$npp."-".$nama."-".$nows.".pdf");
     }
 
     public function rekapitulasi(Request $request)
@@ -485,19 +485,21 @@ class RekapPenilaiController extends Controller
 
     public function final_calculate()
     {   
-        $personal = RekapPenilai::select('relasi','npp_dinilai')
+        $personal = RekapPenilai::select('id','relasi','npp_dinilai')
         ->selectRaw('AVG(sum_nilai_dp3) as avg_dp3')
         ->groupBy('npp_dinilai','relasi','jabatan_dinilai')
         ->get();
 
         $personals = $personal->toArray();
-
+        // if($personal > 0){
+        //     FinalDp3::truncate();
+        // }
         foreach($personals as $key => $items)
         {
             $idKaryawan = RelasiKaryawan::where('npp_karyawan', $items['npp_dinilai'])->first();
             if($idKaryawan){
                 $idKaryawan->toArray();
-                FinalDp3::truncate();
+                // FinalDp3::truncate();
                 try {
                     $store = FinalDp3::updateOrCreate([
                             'npp_dinilai_id' => $idKaryawan['id'],
