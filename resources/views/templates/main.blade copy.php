@@ -102,6 +102,11 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                        {{-- <div style="display: none;"> --}}
+                            {{-- <div> --}}
+                                {{-- {{dd($sheet[0]['NPP'])}} --}}
+                                {{-- {dd($sheet[0])}} --}}
                         @if(Auth::user()->level != 1)
                         <li class="nav-header">PENILAIAN</li>
                         @if(isset($sheet['LINK_SELF-ASSESSMENT']) != '' || isset($sheet['LINK_SELF-ASSESSMENT']) != '#N/A')
@@ -184,7 +189,7 @@
                                 </ul>
                             </li>
                         @endif
-                        @if(count($staff_data) != 0)
+                        @if(count($staff) != 0)
                             <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
@@ -194,7 +199,7 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview small">
-                                    @foreach ($staff_data as $item)
+                                    @foreach ($staff as $item)
                                         @if ($item['LINK_MENILAI_STAFF'] && $item['LINK_MENILAI_STAFF'] != '#N/A')
                                             <li class="nav-item">
                                                 <a href="{{ route('staff', ['page' => 'MENILAI STAFF', 'link' => $item['LINK_MENILAI_STAFF']]) }}"

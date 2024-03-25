@@ -10,6 +10,12 @@
         <p>Atur Jadwal</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="{{ route('link-nilai') }}" class="nav-link {{ Route::currentRouteName() == 'link-nilai' ? 'active' : '' }}">
+        <i class="nav-icon fas fa-square"></i>
+        <p>Atur Link</p>
+    </a>
+</li>
 <li class="nav-header">INTERFACE 2</li>
 <li class="nav-item menu-is-opening menu-open">
     <ul class="nav nav-treeview" style="display: block;">
