@@ -92,7 +92,7 @@ class AppServiceProvider extends ServiceProvider
                     if($form_link){
                         $form_data = $form_link->toArray();
                     }else{
-                        abort(404);
+                        return back()->with('toast_error', 'maaf data belum disiapkan sdm');
                     }
 
                     $self = $relasi_karyawan->toArray();
