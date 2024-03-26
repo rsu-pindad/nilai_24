@@ -54,10 +54,12 @@ Route::middleware(['auth', 'hc'])->group(function () {
 
     Route::controller(SkorController::class)->group(function () {
         Route::get('/skor', 'index')->name('skor');
+        Route::get('/skor/pool/all', 'index_pool_all')->name('skor-index-pool-all');
         Route::get('/skor/pool/self', 'index_pool_self')->name('skor-index-pool-self');
         Route::get('/skor/pool/atasan', 'index_pool_atasan')->name('skor-index-pool-atasan');
         Route::get('/skor/pool/rekanan', 'index_pool_rekanan')->name('skor-index-pool-rekanan');
         Route::get('/skor/pool/staff', 'index_pool_staff')->name('skor-index-pool-staff');
+        Route::get('/skor-pool-all{refresh?}', 'pool_all')->name('skor-pool-all');
         Route::get('/skor-pool-self{refresh?}', 'pool_self')->name('skor-pool-self');
         Route::get('/skor-pool-atasan{refresh?}', 'pool_atasan')->name('skor-pool-atasan');
         Route::get('/skor-pool-rekanan{refresh?}', 'pool_rekanan')->name('skor-pool-rekanan');

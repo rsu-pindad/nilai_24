@@ -7,7 +7,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">{{ $title ?? 'GForm Relasi Karyawan' }}</h1>
+                        <h1 class="m-0">{{ $title ?? 'Google Form Relasi Karyawan' }}</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -22,7 +22,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <button type="button" class="btn btn-secondary" id="btnPullRelasiKaryawan">
-                                    <i class="far fa-plus-square"></i> Pull Relasi Karyawan
+                                <i class="fas fa-arrow-down px-2"></i>Tarik Relasi Karyawan
                                 </button>
                             </div>
                             <div class="card-body">
@@ -150,11 +150,7 @@ $(document).ready(function(e){
         }).then((result) => {
         if (result.isConfirmed) {
             swalAjax();
-            // console.log(results);
-            // if(results.status == true)
-            // {
-                swalOk();
-            // }
+            swalOk();
         }
         }).catch((result) => {
             swalOk();

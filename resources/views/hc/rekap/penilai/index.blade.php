@@ -9,7 +9,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">{{ $title ?? 'Rekap Penilai' }}</h1>
+                        <h1 class="m-0">{{ $title ?? 'Rekap DP3' }}</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -23,8 +23,8 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button type="button" class="btn btn-secondary mb-4" id="btnRekapPenilaiModal">
-                                    <i class="far fa-plus-square"></i> Rekap Semua Penilai
+                                <button type="button" class="btn btn-info mb-4" id="btnRekapPenilaiModal">
+                                <i class="fas fa-calculator px-2"></i>Rekap Nilai DP3
                                 </button>
                                 <ul class="list-inline">
                                     <li class="list-inline-item">B-A (Bobot Aspek)</li>

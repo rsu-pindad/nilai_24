@@ -1,23 +1,34 @@
+<li class="nav-header">PENILAIAN 2023</li>
 <li class="nav-item">
     <a href="{{ route('response') }}" class="nav-link {{ Route::currentRouteName() == 'response' ? 'active' : '' }}">
         <i class="nav-icon fas fa-square"></i>
         <p>Respon</p>
     </a>
 </li>
+<li class="nav-header">INTERFACE 2024</li>
 <li class="nav-item">
     <a href="{{ route('aturjadwal') }}" class="nav-link {{ Route::currentRouteName() == 'aturjadwal' ? 'active' : '' }}">
         <i class="nav-icon fas fa-square"></i>
-        <p>Atur Jadwal</p>
+        <p>Jadwal</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="{{Route('skor')}}" class="nav-link {{ Route::currentRouteName() == 'skor' ? 'active' : '' }}">
+        <i class="nav-icon fas fa-square"></i>
+        <p>Tabel Skor</p>
+    </a>
+</li>
+<!--
 <li class="nav-item">
     <a href="{{ route('link-nilai') }}" class="nav-link {{ Route::currentRouteName() == 'link-nilai' ? 'active' : '' }}">
         <i class="nav-icon fas fa-square"></i>
         <p>Atur Link</p>
     </a>
 </li>
+-->
 <li class="nav-header">INTERFACE 2</li>
 <li class="nav-item menu-is-opening menu-open">
+<!--
     <ul class="nav nav-treeview" style="display: block;">
         <li class="nav-item {{ Route::is('skor') ? 'block;' : '' }}">
             <a href="#" class="nav-link">
@@ -37,24 +48,25 @@
             </ul>
         </li>
     </ul>
+-->
     <ul class="nav nav-treeview" style="display: block;">
         <li class="nav-item {{ Route::is('gform') ? 'block;' : '' }}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
-                <p>GForm<i class="right fas fa-angle-left"></i>
+                <p>Google Form<i class="right fas fa-angle-left"></i>
                 </p>
             </a>
             <ul class="nav nav-treeview" style="display: {{ Route::is('gform') ? 'block;' : 'none;' }}">
             <li class="nav-item">
-                <a href="{{Route('gform')}}" class="nav-link {{ Route::currentRouteName() == 'gform' ? 'active' : '' }}">
+                <a href="{{Route('relasi-karyawan')}}" class="nav-link {{ Route::currentRouteName() == 'relasi-karyawan' ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Pull Response</p>
+                    <p>Relasi Karyawan</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{Route('relasi-karyawan')}}" class="nav-link {{ Route::currentRouteName() == 'relasi-karyawan' ? 'active' : '' }}">
+                <a href="{{Route('gform')}}" class="nav-link {{ Route::currentRouteName() == 'gform' ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Pull Relasi Karyawan</p>
+                    <p>Response Form</p>
                 </a>
             </li>
             </ul>
@@ -65,11 +77,18 @@
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
                 <p>
-                Pool
+                Hitung
                 <i class="right fas fa-angle-left"></i>
                 </p>
             </a>
             <ul class="nav nav-treeview" style="display: {{Route::is('pool.*') ? 'block;' : ''}}">
+                <li class="nav-item">
+                    <a href="{{ Route('skor-index-pool-all') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-all' ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Semua Relasi</p>
+                    </a>
+                </li>
+                <!--
                 <li class="nav-item">
                     <a href="{{ Route('skor-index-pool-self') }}" class="nav-link {{ Route::currentRouteName() == 'skor-index-pool-self' ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
@@ -94,9 +113,11 @@
                         <p>Staff</p>
                     </a>
                 </li>
+                -->
             </ul>
         </li>
     </ul>
+    <!--
     <ul class="nav nav-treeview" style="display: none;">
         <li class="nav-item {{ request()->is('rekap/*') ? 'menu-is-opening menu-open' : ''}}">
             <a href="#" class="nav-link">
@@ -153,11 +174,12 @@
             </ul>
         </li>
     </ul>
+    -->
     <ul class="nav nav-treeview" style="display: block;">
         <li class="nav-item {{ request()->is('penilai-rekap/*') ? 'menu-is-opening menu-open' : ''}}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
-                <p> Rekap Penilai<i class="right fas fa-angle-left"></i></p>
+                <p> Rekap Nilai<i class="right fas fa-angle-left"></i></p>
             </a>
             <ul class="nav nav-treeview" style="display: {{ request()->is('penilai-rekap/*') ? 'block;' : 'none;' }}">
             <li class="nav-item">
@@ -166,6 +188,7 @@
                     <p>DP3 Semua</p>
                 </a>
             </li>
+            <!--
             <li class="nav-item">
                 <a href="{{Route('penilai-rekap-self')}}" class="nav-link {{ Route::currentRouteName() == 'penilai-rekap-self' ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
@@ -190,6 +213,7 @@
                     <p>DP3 Staff</p>
                 </a>
             </li>
+            -->
             </ul>
         </li>
     </ul>

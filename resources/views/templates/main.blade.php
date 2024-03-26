@@ -96,7 +96,7 @@
             </a>
 
             <!-- Sidebar -->
-            <div class="sidebar">
+            <div class="sidebar text-uppercase">
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
@@ -148,7 +148,7 @@
                                                     height="32" class="img-circle">
                                             @endif
                                             <p>{{ $sheet['NPP_ATASAN'] }} -
-                                                {{ optional(App\Models\Employee::where('npp', $sheet['NPP_ATASAN'])->first())->nama }}
+                                                {{ optional(App\Models\RelasiKaryawan::where('npp_karyawan', $sheet['NPP_ATASAN'])->first())->nama_karyawan }}
                                             </p>
                                         </a>
                                     </li>
@@ -177,7 +177,7 @@
                                                     height="32" class="img-circle">
                                             @endif
                                             <p>{{ $sheet['NPP_SELEVEL'] }} -
-                                                {{ optional(App\Models\Employee::where('npp', $sheet['NPP_SELEVEL'])->first())->nama }}
+                                                {{ optional(App\Models\RelasiKaryawan::where('npp_karyawan', $sheet['NPP_SELEVEL'])->first())->nama_karyawan }}
                                             </p>
                                         </a>
                                     </li>
@@ -208,7 +208,7 @@
                                                             height="32" class="img-circle">
                                                     @endif
                                                     <p>{{ $item['NPP_STAFF'] }} -
-                                                        {{ optional(App\Models\Employee::where('npp', $item['NPP_STAFF'])->first())->nama }}
+                                                        {{ optional(App\Models\RelasiKaryawan::where('npp_karyawan', $item['NPP_STAFF'])->first())->nama_karyawan }}
                                                     </p>
                                                 </a>
                                             </li>

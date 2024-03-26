@@ -66,6 +66,17 @@ class SkorController extends Controller
         }   
     }
 
+    public function index_pool_all()
+    {
+        $skor_pool_data = PoolRespon::with('karyawan')->orderBy('npp_dinilai')
+        ->orderByDesc('sum_nilai')
+        ->get();
+
+        return view('hc.skor.pool.all')->with([
+            'data_pool_skor' => $skor_pool_data
+        ]);
+    }
+
     public function index_pool_self()
     {
         $skor_pool_data = PoolRespon::with('karyawan')->where('relasi','self')->get(); 
@@ -150,6 +161,14 @@ class SkorController extends Controller
             // });
             // return $find_relasi;
         }
+    }
+
+    public function pool_all(Request $request)
+    {
+        $this->pool_self($request);
+        $this->pool_atasan($request);
+        $this->pool_rekanan($request);
+        $this->pool_staff($request);
     }
 
     public function pool_self(Request $request)

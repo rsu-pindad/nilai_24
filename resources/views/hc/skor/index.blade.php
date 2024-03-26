@@ -9,7 +9,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">{{ $title ?? 'Skor Tabel' }}</h1>
+                        <h1 class="m-0">{{ $title ?? 'Tabel Skor' }}</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -32,7 +32,7 @@
                                 <table class="table table-striped table-bordered" id="dataTablesSkor">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>No</th>
                                             <th>Aspek</th>
                                             <th>Indikator</th>
                                             <th>Jawaban</th>
@@ -95,7 +95,7 @@
                         <div class="col-md-2 mb-3">
                         <label for="aspek">Tambah</label>
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#formTambahAspek">
-                                <i class="far fa-plus-square"></i> Aspek
+                                <i class="far fa-plus-square px-2"></i> Aspek
                             </button>
                         </div>
                         <div class="col-md-4 mb-3">
@@ -107,7 +107,7 @@
                         <div class="col-md-2 mb-3">
                         <label for="indikator">Tambah</label>
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#formTambahIndikator">
-                                <i class="far fa-plus-square"></i> Indikator
+                                <i class="far fa-plus-square px-2"></i>Indikator
                             </button>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                             <input type="number" class="form-control" id="input_skor" name="input_skor" required>
                         </div>
                     </div>
-                    <button class="btn btn-primary" id="btnTambahSkor" type="submit">simpan</button>
+                    <button class="btn btn-primary" id="btnTambahSkor" type="submit"><i class="far fa-save px-2"></i>Simpan</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -210,8 +210,8 @@ $("#dataTablesSkor").DataTable({
     responsive: true,
     ordering: false,
     scrollX: false,
-    scrollY: '25vh',
-    searching : false,
+    scrollY: '50vh',
+    searching : true,
 });
 </script>
 @endpush

@@ -83,14 +83,21 @@ class AppServiceProvider extends ServiceProvider
 
                     // NEW LINK BASED ON DATABASE
                     
-                    $form_link = LinkNilai::where('active', 1)->first();
+                    // $form_link = LinkNilai::where('active', 1)->first();
                     $relasi_karyawan = RelasiKaryawan::where('npp_karyawan', Auth::user()->npp)->first();
                     $relasi_atasan = RelasiAtasan::where('relasi_karyawan_id', $relasi_karyawan->id);
                     $relasi_selevel = RelasiSelevel::where('relasi_karyawan_id', $relasi_karyawan->id);
                     $relasi_staff = RelasiStaff::with(['relasi_karyawan'])->where('relasi_karyawan_id', $relasi_karyawan->id)->get();
                     
-                    if($form_link){
-                        $form_data = $form_link->toArray();
+                    // if($form_link){
+                        // $form_data = $form_link->toArray();
+                        $form_data = [];
+                        $form_data['form_start'] = 'https://docs.google.com/forms/d/e/1FAIpQLSfTQ2DyudZ-cGmfqWjS1Gz4fPJK33jJXIa7nOi4vVm-LYwnfA/viewform?usp=pp_url';
+                        $form_data['form_1'] = 'entry.309041911=';
+                        $form_data['form_2'] = 'entry.2024238832=';
+                        $form_data['form_3'] = 'entry.1845465427=';
+                        $form_data['form_4'] = 'entry.825413986=';
+                        $form_data['form_5'] = 'entry.1491559044=';
                         $self = $relasi_karyawan->toArray();
 
                         // if($self['level_jabatan'])
@@ -133,7 +140,7 @@ class AppServiceProvider extends ServiceProvider
                             $data_staff = RelasiKaryawan::where('npp_karyawan', $items['npp_staff'])->first();
                             if($data_staff){
                                 $data_staff->toArray();
-                                $form_selevel = $form_data['form_start'].
+                                $form_staff = $form_data['form_start'].
                                 '&'.$form_data['form_1'].Auth::user()->npp.
                                 '&'.$form_data['form_2'].$self['nama_karyawan'].
                                 '&'.$form_data['form_3'].$data_staff['npp_karyawan'].
@@ -141,12 +148,12 @@ class AppServiceProvider extends ServiceProvider
                                 '&'.$form_data['form_5'].$data_staff['level_jabatan'];
 
                                 $daftarStaff[$key]['NPP_STAFF'] = $data_staff['npp_karyawan'];
-                                $daftarStaff[$key]['LINK_STAFF'] = $form_selevel;
+                                $daftarStaff[$key]['LINK_STAFF'] = $form_staff;
                             }
                         }
-                    }else{
-                        $form_data = $form_link;
-                    }
+                    // }else{
+                    //     $form_data = $form_link;
+                    // }
 
                     $custom_data = [
                         'NPP' => Auth::user()->npp,
@@ -159,20 +166,11 @@ class AppServiceProvider extends ServiceProvider
                     
                     $page = request()->input('page');
                     $link = request()->input('link');
-                    // dd($custom_data);
+                    // dd($daftarStaff);
                 }
             }
             $view->with(['page' => $page, 'sheet' => $custom_data, 'link' => $link, 'staff_data' => $daftarStaff ?? []]);
             // $view->with(['page' => $page, 'sheet' => $chunk, 'link' => $link, 'staff' => $daftarStaff ?? false]);
-            // $view->with([
-            //     'page' => $page, 
-            //     'link' => $link, 
-            //     'form' => $form_link,
-            //     'self' => $relasi_karyawan,
-            //     'atasan' => $relasi_atasan ?? false,
-            //     'selevel' => $relasi_selevel ?? false,
-            //     'staff' => $relasi_staff ?? false,
-            // ]);
         });
     }
 }

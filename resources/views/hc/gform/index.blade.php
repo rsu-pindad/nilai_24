@@ -8,7 +8,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">{{ $title ?? 'GForm Pull Response' }}</h1>
+                        <h1 class="m-0">{{ $title ?? 'Google Form Tarik Response' }}</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -23,7 +23,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <button type="button" class="btn btn-secondary" id="btnPullResponse">
-                                    <i class="far fa-plus-square"></i> Pull Response
+                                <i class="fas fa-arrow-down px-2"></i>Tarik Response Form
                                 </button>
                             </div>
                             <div class="card-body">
@@ -86,8 +86,9 @@ $(document).ready(function(e){
 
     async function swalAjax()
     {
+        const uri = '/gform/pull';
         $.ajax({
-            url : '/gform/pull',
+            url : uri,
             type : 'get',
             dataType: 'json',
             success : function (response){

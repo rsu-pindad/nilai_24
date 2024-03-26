@@ -21,54 +21,55 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
-                                <div class="tab-content">
-                                    <div class="active tab-pane" id="settings">
-                                        <h5>Form Setting Jadwal</h5>
-                                        <form class="form-horizontal" action="{{ route('aturjadwal/store', Auth::user()) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('POST')
-                                            <div class="form-group row">
-                                                <label for="jadwal" class="col-sm-2 col-form-label">Jadwal Penilaian</label>
-                                                <div class="col-sm-10">
-                                                    <input type="date"
-                                                        class="form-control @error('jadwal') is-invalid @enderror"
-                                                        id="jadwal" name="jadwal"
-                                                        value="{{ old('jadwal') ? old('jadwal') : '' }}">
-                                                    @error('jadwal')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
+                                <div class="tab-content p-3">
+                                    <div class="active tab-pane" id="jadwalberjalan">
+                                        <div class="container">
+                                            <h5>Jadwal Penilaian</h5>
+                                            <div class="row">
+                                                <label class="col-sm-4" for="jadwalsetting">
+                                                    Dilaksanakan
+                                                </label>
+                                                <div class="col-sm-8">
+                                                    <input type="date" id="jadwalsetting" value="{{ $jadwalberjalan['jadwal'] }}" 
+                                                    class="form-control"
+                                                    disabled>
                                                 </div>
                                             </div>
-
-                                            <div class="form-group row">
-                                                <div class="offset-sm-2 col-sm-10">
-                                                    <button type="submit" class="btn btn-primary"
-                                                        onclick="return confirm('Yakin anda menetapkan jadwal?')">Tetapkan</button>
-                                                </div>
-                                            </div>
-                                        </form>
+                                        </div>
                                     </div>
                                     <!-- /.tab-pane -->
                                 </div>
                                 <!-- /.tab-content -->
-                            </div><!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                    <!-- /.col -->
-                    <!-- /.col -->
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="tab-content">
-                                    <div class="active tab-pane" id="jadwalberjalan">
-                                        <h5>Jadwal Penilaian</h5>
-                                        <p>
-                                            Dilaksanakan : {{$jadwalberjalan['jadwal'] ?? ''}}
-                                        </p>
+                                <div class="tab-content p-3">
+                                    <div class="active tab-pane" id="settings">
+                                        <div class="container">
+                                            <h5>Form Setting Jadwal Penilaian</h5>
+                                            <form class="form-horizontal" action="{{ route('aturjadwal/store', Auth::user()) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('POST')
+                                                <div class="form-group row">
+                                                    <label for="jadwal" class="col-sm-4 col-form-label">Jadwal Penilaian</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="date"
+                                                            class="form-control @error('jadwal') is-invalid @enderror"
+                                                            id="jadwal" name="jadwal"
+                                                            value="{{ old('jadwal', date('Y-m-d')) ? old('jadwal', date('Y-m-d')) : '' }}">
+                                                        @error('jadwal')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <div class="offset-10 col-sm-2">
+                                                        <button type="submit" class="btn btn-primary"
+                                                            onclick="return confirm('Yakin anda menetapkan jadwal?')">Tetapkan</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                     <!-- /.tab-pane -->
                                 </div>
