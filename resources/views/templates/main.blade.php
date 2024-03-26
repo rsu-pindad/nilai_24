@@ -216,8 +216,6 @@
                                     @endforeach
                                 </ul>
                             </li>
-                        @else
-                        {{-- </div> --}}
                         @endif
                         @endif
                         @if(Auth::user()->level == 1)

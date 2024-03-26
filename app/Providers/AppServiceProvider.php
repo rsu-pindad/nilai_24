@@ -150,11 +150,11 @@ class AppServiceProvider extends ServiceProvider
 
                     $custom_data = [
                         'NPP' => Auth::user()->npp,
-                        'NPP_ATASAN' => $atasan[0] ?? '',
-                        'NPP_SELEVEL' => $selevel[0] ?? '',
-                        'LINK_SELF' => $form_self ?? '',
-                        'LINK_ATASAN' => $form_atasan ?? '',
-                        'LINK_SELEVEL' => $form_selevel ?? '',
+                        'NPP_ATASAN' => $atasan[0] ?? [],
+                        'NPP_SELEVEL' => $selevel[0] ?? [],
+                        'LINK_SELF' => $form_self ?? [],
+                        'LINK_ATASAN' => $form_atasan ?? [],
+                        'LINK_SELEVEL' => $form_selevel ?? [],
                     ];
                     
                     $page = request()->input('page');
