@@ -109,6 +109,7 @@ Route::middleware(['auth', 'hc'])->group(function () {
     });
 
     Route::controller(RekapPenilaiController::class)->group(function(){
+        Route::get('/penilai-rekap/all', 'index')->name('penilai-rekap-all');
         Route::get('/penilai-rekap/self', 'index_self')->name('penilai-rekap-self');
         Route::get('/penilai-rekap/atasan', 'index_atasan')->name('penilai-rekap-atasan');
         Route::get('/penilai-rekap/rekan', 'index_rekanan')->name('penilai-rekap-rekanan');
@@ -117,7 +118,8 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::get('/penilai-rekap/personal', 'index_personal')->name('penilai-rekap-personal');
         Route::get('/penilai-rekap/report{id?}{npp?}', 'report')->name('penilai-rekap-report');
         
-        Route::get('/penilai-rekap/penilai{id?}', 'show')->name('penilai-rekap-detail');
+        // Route::get('/penilai-rekap/penilai{id?}', 'show')->name('penilai-rekap-detail');
+        Route::get('/penilai-rekap/detail{dinilai?}{relasi?}', 'showRelasi')->name('penilai-rekap-detail-relasi');
         
         Route::get('/penilai-rekap/calculate', 'calculate')->name('penilai-rekap-calculate');
         Route::get('/penilai-rekap/calculate-dp3', 'final_calculate')->name('penilai-rekap-calculate-dp3');

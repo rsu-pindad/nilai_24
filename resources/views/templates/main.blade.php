@@ -104,7 +104,7 @@
                         data-accordion="false">
                         @if(Auth::user()->level != 1)
                         <li class="nav-header">PENILAIAN</li>
-                        @if(isset($sheet['LINK_SELF-ASSESSMENT']) != '' || isset($sheet['LINK_SELF-ASSESSMENT']) != '#N/A')
+                        @isset($sheet['LINK_SELF'])
                             <li class="nav-item {{ $page == 'SELF ASSESSMENT' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link {{ $page == 'SELF ASSESSMENT' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
@@ -115,8 +115,8 @@
                                 </a>
                                 <ul class="nav nav-treeview small">
                                     <li class="nav-item ">
-                                        <a href="{{ route('self', ['page' => 'SELF ASSESSMENT', 'link' => $sheet['LINK_SELF-ASSESSMENT']]) }}"
-                                            class="nav-link {{ $sheet['LINK_SELF-ASSESSMENT'] == $sheet ? 'active' : '' }}">
+                                        <a href="{{ route('self', ['page' => 'SELF ASSESSMENT', 'link' => $sheet['LINK_SELF']]) }}"
+                                            class="nav-link {{ $sheet['LINK_SELF'] == $sheet ? 'active' : '' }}">
                                             <img src="{{ asset('storage/' . Auth::user()->foto) }}"
                                                 alt="foto" width="32" height="32" class="img-circle">
                                             <p>{{ Auth::user()->npp . ' - ' . Auth::user()->nama }}
@@ -125,8 +125,8 @@
                                     </li>
                                 </ul>
                             </li>
-                        @endif
-                        @if(isset($sheet['LINK_MENILAI_ATASAN']) != '' || isset($sheet['LINK_MENILAI_ATASAN']) != '#N/A')
+                        @endisset
+                        @isset($sheet['LINK_ATASAN'])
                             <li class="nav-item {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }} ">
                                 <a href="#" class="nav-link {{ $page == 'MENILAI ATASAN' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
@@ -137,8 +137,8 @@
                                 </a>
                                 <ul class="nav nav-treeview small">
                                     <li class="nav-sheet">
-                                        <a href="{{ route('atasan', ['page' => 'MENILAI ATASAN', 'link' => $sheet['LINK_MENILAI_ATASAN']]) }}"
-                                            class="nav-link {{ $sheet['LINK_MENILAI_ATASAN'] == $link ? 'active' : '' }}">
+                                        <a href="{{ route('atasan', ['page' => 'MENILAI ATASAN', 'link' => $sheet['LINK_ATASAN']]) }}"
+                                            class="nav-link {{ $sheet['LINK_ATASAN'] == $link ? 'active' : '' }}">
                                             @if (App\Models\User::where('npp', $sheet['NPP_ATASAN'])->first())
                                                 <img src="{{ asset('storage/' . App\Models\User::where('npp', $sheet['NPP_ATASAN'])->first()->foto) }}"
                                                     alt="foto" width="32" height="32"
@@ -154,8 +154,8 @@
                                     </li>
                                 </ul>
                             </li>
-                        @endif
-                        @if(isset($sheet['LINK_MENILAI_SELEVEL']) != '' || isset($sheet['LINK_MENILAI_SELEVEL']) != '#N/A')
+                        @endisset
+                        @isset($sheet['LINK_SELEVEL'])
                             <li class="nav-item {{ $page == 'MENILAI SELEVEL' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI SELEVEL' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>
@@ -166,8 +166,8 @@
                                 </a>
                                 <ul class="nav nav-treeview small">
                                     <li class="nav-item">
-                                        <a href="{{ route('selevel', ['page' => 'MENILAI SELEVEL', 'link' => $sheet['LINK_MENILAI_SELEVEL']]) }}"
-                                            class="nav-link {{ $sheet['LINK_MENILAI_SELEVEL'] == $link ? 'active' : '' }} ">
+                                        <a href="{{ route('selevel', ['page' => 'MENILAI SELEVEL', 'link' => $sheet['LINK_SELEVEL']]) }}"
+                                            class="nav-link {{ $sheet['LINK_SELEVEL'] == $link ? 'active' : '' }} ">
                                             @if (App\Models\User::where('npp', $sheet['NPP_SELEVEL'])->first())
                                                 <img src="{{ asset('storage/' . App\Models\User::where('npp', $sheet['NPP_SELEVEL'])->first()->foto) }}"
                                                     alt="foto" width="32" height="32"
@@ -183,7 +183,7 @@
                                     </li>
                                 </ul>
                             </li>
-                        @endif
+                        @endisset
                         @if(count($staff_data) != 0)
                             <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
@@ -195,10 +195,10 @@
                                 </a>
                                 <ul class="nav nav-treeview small">
                                     @foreach ($staff_data as $item)
-                                        @if ($item['LINK_MENILAI_STAFF'] && $item['LINK_MENILAI_STAFF'] != '#N/A')
+                                        @if ($item['LINK_STAFF'] && $item['LINK_STAFF'] != '#N/A')
                                             <li class="nav-item">
-                                                <a href="{{ route('staff', ['page' => 'MENILAI STAFF', 'link' => $item['LINK_MENILAI_STAFF']]) }}"
-                                                    class="nav-link {{ $item['LINK_MENILAI_STAFF'] == $link ? 'active' : '' }}">
+                                                <a href="{{ route('staff', ['page' => 'MENILAI STAFF', 'link' => $item['LINK_STAFF']]) }}"
+                                                    class="nav-link {{ $item['LINK_STAFF'] == $link ? 'active' : '' }}">
                                                     @if (App\Models\User::where('npp', $item['NPP_STAFF'])->first())
                                                         <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_STAFF'])->first()->foto) }}"
                                                             alt="foto" width="32" height="32"
