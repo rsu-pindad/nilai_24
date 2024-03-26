@@ -86,27 +86,27 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
-                            <label for="segment1">Segment 1</label>
+                            <label for="segment1">Segment 1 / NPP Penilai</label>
                             <input type="text" class="form-control" id="segment1" name="segment1">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="segment2">Segment 2</label>
+                            <label for="segment2">Segment 2 / Nama Penilai</label>
                             <input type="text" class="form-control" id="segment2" name="segment2">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
-                            <label for="segment3">Segment 3</label>
+                            <label for="segment3">Segment 3 / NPP Dinilai</label>
                             <input type="text" class="form-control" id="segment3" name="segment3">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="segment4">Segment 3</label>
+                            <label for="segment4">Segment 4 / Nama Dinilai</label>
                             <input type="text" class="form-control" id="segment4" name="segment4">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
-                            <label for="segment5">Segment 3</label>
+                            <label for="segment5">Segment 5 / Level Jabatan Dinilai</label>
                             <input type="text" class="form-control" id="segment5" name="segment5">
                         </div>
                         <div class="form-check">
