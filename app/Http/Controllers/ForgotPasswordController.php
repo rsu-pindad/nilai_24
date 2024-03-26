@@ -40,11 +40,11 @@ class ForgotPasswordController extends Controller
                         'target' => $request->no_hp,
                         'message' => "Password baru : $password
 
-https://assessment.pindadmedika.com/",
+                        https://assessment-2024.pindadmedika.com/",
                         'countryCode' => '62', //optional
                     ),
                     CURLOPT_HTTPHEADER => array(
-                        'Authorization: oXPbC39fCnkM3qXXHXWk' //change TOKEN to your actual token
+                        'Authorization: '.env('FONNTE_TOKEN', '') //change TOKEN to your actual token
                     ),
                 ));
 

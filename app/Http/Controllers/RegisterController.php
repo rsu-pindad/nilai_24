@@ -64,7 +64,7 @@ class RegisterController extends Controller
         NPP : $npp
         Password : $password
         
-        https://assessment.pindadmedika.com/";
+        https://assessment-2024.pindadmedika.com/";
 
         $wa = $this->sendMessage($request->no_hp, $text);
         // dd($wa->getData()->status);
