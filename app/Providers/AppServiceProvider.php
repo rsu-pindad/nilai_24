@@ -92,7 +92,7 @@ class AppServiceProvider extends ServiceProvider
                     if($form_link){
                         $form_data = $form_link->toArray();
                     }else{
-                        abort(404);
+                        return 'Penilaian blm di mulai.';
                     }
 
                     $self = $relasi_karyawan->toArray();
