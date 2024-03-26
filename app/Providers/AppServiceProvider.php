@@ -162,7 +162,7 @@ class AppServiceProvider extends ServiceProvider
                     // dd($custom_data);
                 }
             }
-            $view->with(['page' => $page, 'sheet' => $custom_data, 'link' => $link, 'staff_data' => $daftarStaff ?? 0]);
+            $view->with(['page' => $page, 'sheet' => $custom_data, 'link' => $link, 'staff_data' => $daftarStaff ?? []]);
             // $view->with(['page' => $page, 'sheet' => $chunk, 'link' => $link, 'staff' => $daftarStaff ?? false]);
             // $view->with([
             //     'page' => $page, 
