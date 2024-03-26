@@ -428,18 +428,18 @@ class HasilPersonalController extends Controller
                         'keterangan_nilai' => null,
                     ]
                 );
-                if($store)
-                {
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'berhasil menambahkan data'
-                    ]);
-                }else{
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'gagal menambahkan data'
-                    ]);
-                }
+                // if($store)
+                // {
+                //     return response()->json([
+                //         'status' => true,
+                //         'message' => 'berhasil menambahkan data'
+                //     ]);
+                // }else{
+                //     return response()->json([
+                //         'status' => false,
+                //         'message' => 'gagal menambahkan data'
+                //     ]);
+                // }
             } catch (\Illuminate\Database\QueryException $exception) {
                 return response()->json($exception->getMessage());
             }
