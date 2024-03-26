@@ -83,13 +83,18 @@ class AppServiceProvider extends ServiceProvider
 
                     // NEW LINK BASED ON DATABASE
                     
-                    $form_link = LinkNilai::where('active', 1)->first() ?? [];
+                    $form_link = LinkNilai::where('active', 1)->first();
                     $relasi_karyawan = RelasiKaryawan::where('npp_karyawan', Auth::user()->npp)->first();
                     $relasi_atasan = RelasiAtasan::where('relasi_karyawan_id', $relasi_karyawan->id);
                     $relasi_selevel = RelasiSelevel::where('relasi_karyawan_id', $relasi_karyawan->id);
                     $relasi_staff = RelasiStaff::with(['relasi_karyawan'])->where('relasi_karyawan_id', $relasi_karyawan->id)->get();
                     
-                    $form_data = $form_link->toArray();
+                    if($form_link){
+                        $form_data = $form_link->toArray();
+                    }else{
+                        abort(404);
+                    }
+
                     $self = $relasi_karyawan->toArray();
 
                     // if($self['level_jabatan'])
