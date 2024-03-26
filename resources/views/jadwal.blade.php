@@ -67,7 +67,7 @@
                                     <div class="active tab-pane" id="jadwalberjalan">
                                         <h5>Jadwal Penilaian</h5>
                                         <p>
-                                            Dilaksanakan : {{$jadwalberjalan['jadwal']}}
+                                            Dilaksanakan : {{$jadwalberjalan['jadwal'] ?? ''}}
                                         </p>
                                     </div>
                                     <!-- /.tab-pane -->
