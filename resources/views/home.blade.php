@@ -8,7 +8,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">{{ $page }}</h1>
+                        <h4 class="m-0">{{ $page }}</h4>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -37,7 +37,7 @@
                                 <!-- 16:9 aspect ratio -->
                                 <div class="embed-responsive embed-responsive-1by1">
                                     <iframe src="{{ $link }}" frameborder="0" class="embed-responsive-item"
-                                        style="min-height: 100%; height: auto !important!;"></iframe>
+                                        style="min-height: 100%; height: auto !important!;" id="google-form-nilai"></iframe>
                                 </div>
                             </div>
                             <!-- ./card-body -->
@@ -55,3 +55,21 @@
     </div>
     <!-- /.content-wrapper -->
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function(){
+
+        $('#google-form-nilai').on('load', function(){
+            // alert('Frame Loaded');
+
+            $('#mG61Hd .DE3NNc CekdCb .NPEfkd RveJvd snByac').on('click', function(){
+                console.log('button clicked');
+                alert('button clicked');
+            })
+
+        })
+
+    })
+</script>
+@endpush

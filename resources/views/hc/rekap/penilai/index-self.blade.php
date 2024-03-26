@@ -28,7 +28,6 @@
                                 </button>
                                 <ul class="list-inline">
                                     <li class="list-inline-item">B-A (Aspek)</li>
-                                    <li class="list-inline-item">B-P (Penilai)</li>
                                     <li class="list-inline-item">&sum; (Total Dp3)</li>
                                 </ul>
                             </div>
@@ -37,11 +36,11 @@
                                     <thead>
                                         <tr>
                                             <th colspan='5'>Identitas</th>
-                                            <th colspan='2'>Kepemimpinan</th>
-                                            <th colspan='2'>Perilaku</th>
-                                            <th colspan='2'>Sasaran</th>
+                                            <th>Kepemimpinan</th>
+                                            <th>Perilaku</th>
+                                            <th>Sasaran</th>
                                             <th>Total DP3</th>
-                                            <th>Aksi</th>
+                                            <th rowspan='2'>Aksi</th>
                                         </tr>
                                         <tr>
                                             <th>No</th>
@@ -50,13 +49,9 @@
                                             <th>Npp Dinilai</th>
                                             <th>Jabatan Dinilai</th>
                                             <th>B-A</th>
-                                            <th>B-P</th>
                                             <th>B-A</th>
-                                            <th>B-P</th>
                                             <th>B-A</th>
-                                            <th>B-P</th>
                                             <th>&sum; DP3</th>
-                                            <th>Detil</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -68,11 +63,8 @@
                                         <td>{{$p->npp_dinilai}}</td>
                                         <td>{{$p->jabatan_dinilai}}</td>
                                         <td>{{$p->sum_nilai_k_bobot_aspek}}</td>
-                                        <td>{{$p->sum_nilai_k_bobot_penilai}}</td>
                                         <td>{{$p->sum_nilai_p_bobot_aspek}}</td>
-                                        <td>{{$p->sum_nilai_p_bobot_penilai}}</td>
                                         <td>{{$p->sum_nilai_s_bobot_aspek}}</td>
-                                        <td>{{$p->sum_nilai_s_bobot_penilai}}</td>
                                         <td>{{$p->sum_nilai_dp3}}</td>
                                         <td>
                                             <a href="/penilai-rekap/penilai?id={{$p->id}}" target="_blank" class="btn btn-sm btn-warning">
@@ -108,7 +100,8 @@
             ordering: false,
             scrollCollapse: true,
             searching : true,
-            scrollX: true,
+            scrollX: false,
+            scrollY: '50vh',
         });
     </script>
 @endpush
@@ -152,10 +145,10 @@ $(document).ready(function(e){
         confirmButtonText: confirmButtonText,
         cancelButtonText: "batal"
         }).then((result) => {
-        if (result.isConfirmed) {
-            swalAjax();
-            swalOk();
-        }
+            if (result.isConfirmed) {
+                swalAjax();
+                swalOk();
+            }
         });
     }
 

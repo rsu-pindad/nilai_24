@@ -31,7 +31,7 @@
                                             <th>No</th>
                                             <th>Npp Dinilai</th>
                                             <th>Jabatan Dinilai</th>
-                                            <th>&sum; Skor Akhir DP3</th>
+                                            <th>Mean Skor DP3</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -41,7 +41,7 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$p->relasi_karyawan->npp_karyawan}}</td>
                                         <td>{{$p->relasi_karyawan->level_jabatan}}</td>
-                                        <td>{{round($p->total)}}</td>
+                                        <td>{{round($p->total,2)}}</td>
                                         <td class="p-2">
                                             <a href="/penilai-rekap/report?id={{$p->relasi_karyawan->id}}&npp={{$p->relasi_karyawan->npp_karyawan}}" target="_blank" class="btn btn-sm btn-danger">
                                                 <i class="far fa-file-pdf"></i>

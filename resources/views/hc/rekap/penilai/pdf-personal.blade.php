@@ -260,7 +260,7 @@
         </tr>
         <tr class="boldText">
             <td colspan="3" class="text-right">Skor Akhir DP3</td>
-            <td>{{round(($raspek_k + $raspek_s + $raspek_p) * 100)}}</td>
+            <td>{{round($total_raspek)}}</td>
         </tr>
         <tr style="font-size: 0.9em;">
             <td colspan="2">
@@ -291,7 +291,7 @@
                     <table>
                     <tr>
                         <td>Nilai Kinerja</td>
-                        <td>{{round(($raspek_k + $raspek_s + $raspek_p) * 100)}}</td>
+                        <td>{{round(($total_raspek))}}</td>
                     </tr>
                     <tr>
                         <td>Kriteria</td>

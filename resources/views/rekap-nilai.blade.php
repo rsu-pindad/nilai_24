@@ -18,26 +18,25 @@
             <div class="container-fluid">
                 <div class="row">
                     <!-- /.col -->
-                    <div class="col-12 col-md-6">
+                    <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                            <h5>Nilai Masuk</h5>
-                                <table class="table table-sm table-border table-responsive">
+                                <table class="table table-border table-responsive">
                                     <thead>
                                         <tr>
-                                            <th>&sum; Jumlah Skor</th>
+                                            <th>&sum; Skor Akhir DP3</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    @forelse($nilai as $n)
-                                    <tr>
-                                        <td>{{$n->total}}</td>
-                                    </tr>  
-                                    @empty
-                                    <tr>
-                                        <td>maaf blm ada nilai masuk</td>
-                                    </tr>
-                                    @endforelse
+                                        @forelse($nilai as $n)
+                                        <tr>
+                                            <td>{{round($n->total)}}</td>
+                                        </tr>  
+                                        @empty
+                                        <tr>
+                                            <td>maaf blm ada nilai masuk</td>
+                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div><!-- /.card-body -->
