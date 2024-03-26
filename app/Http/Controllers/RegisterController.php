@@ -43,33 +43,40 @@ class RegisterController extends Controller
         $newUser['npp'] = $npp;
         $newUser['nama'] = $nama;
 
-
         $password = Str::random(10);
 
-        $newUser['nama'] = $employee->nama;
+        $newUser['nama'] = $employee->nama_karyawan;
+        $newUser['penempatan'] = $employee->unit_jabatan ?? '';
+        $newUser['jabatan'] = $employee->level_jabatan ?? '';
         $newUser['password'] = Hash::make($password);
 
-        $path = $request->file('foto')->store('foto');
-
+        if($request->file('fote')){
+            $path = $request->file('foto')->store('foto');
+        }
+        $path = '';
         $newUser['foto'] = $path;
 
-        User::create($newUser);
+        // User::create($newUser);
 
         // send message wa
         $text = "Silahkan login menggunakan
+        
+        NPP : $npp
+        Password : $password
+        
+        https://assessment.pindadmedika.com/";
 
-NPP : $npp
-Password : $password
-
-https://assessment.pindadmedika.com/
-";
-
-        $this->sendMessage($request->no_hp, $text);
-        $request->session()->flush();
-        return redirect()->route('login')->with('toast_success', 'Berhasil melakukan registrasi');
+        $wa = $this->sendMessage($request->no_hp, $text);
+        // dd($wa->getData()->status);
+        if($wa->getData()->status == true){
+            User::create($newUser);
+            
+            $request->session()->flush();
+            return redirect()->route('login')->with('toast_success', 'Berhasil melakukan registrasi');
+        }
     }
 
-    public function sendMessage($phone, $text)
+    private function sendMessage($phone, $text)
     {
         $curl = curl_init();
 
@@ -88,14 +95,17 @@ https://assessment.pindadmedika.com/
                 'countryCode' => '62', //optional
             ),
             CURLOPT_HTTPHEADER => array(
-                'Authorization: 2qB#yoP6MKX2Z3_pDZfj' //change TOKEN to your actual token
+                // 'Authorization: 2qB#yoP6MKX2Z3_pDZfj' //change TOKEN to your actual token
+                'Authorization: '.env('FONNTE_TOKEN', '') //change TOKEN to your actual token
             ),
         ));
 
         $response = curl_exec($curl);
 
         curl_close($curl);
-        echo $response;
+        // echo $response;
+        $res = json_decode($response);
+        return response()->json($res,200);
     }
 
     public function check(Request $request)
