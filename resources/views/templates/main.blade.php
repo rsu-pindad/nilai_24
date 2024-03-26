@@ -105,9 +105,10 @@
                         @if(Auth::user()->level != 1)
                         <li class="nav-header">PENILAIAN</li>
                         @isset($sheet['LINK_SELF'])
+                            @if($sheet['LINK_SELF'] != '')
                             <li class="nav-item {{ $page == 'SELF ASSESSMENT' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link {{ $page == 'SELF ASSESSMENT' ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-sticky-note"></i>
+                                    <i class="nav-icon fas fas fa-file-alt"></i>
                                     <p>
                                         MENILAI SENDIRI
                                         <i class="right fas fa-angle-left"></i>
@@ -125,11 +126,13 @@
                                     </li>
                                 </ul>
                             </li>
+                            @endif
                         @endisset
                         @isset($sheet['LINK_ATASAN'])
+                            @if($sheet['LINK_ATASAN'] != '')
                             <li class="nav-item {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }} ">
                                 <a href="#" class="nav-link {{ $page == 'MENILAI ATASAN' ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-sticky-note"></i>
+                                    <i class="nav-icon fas fas fa-file-alt"></i>
                                     <p>
                                         MENILAI ATASAN
                                         <i class="right fas fa-angle-left"></i>
@@ -154,11 +157,13 @@
                                     </li>
                                 </ul>
                             </li>
+                            @endif
                         @endisset
                         @isset($sheet['LINK_SELEVEL'])
+                            @if($sheet['LINK_SELEVEL'] != '')
                             <li class="nav-item {{ $page == 'MENILAI SELEVEL' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI SELEVEL' ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-sticky-note"></i>
+                                    <i class="nav-icon fas fas fa-file-alt"></i>
                                     <p>
                                         MENILAI SELEVEL
                                         <i class="right fas fa-angle-left"></i>
@@ -183,11 +188,12 @@
                                     </li>
                                 </ul>
                             </li>
+                            @endif
                         @endisset
                         @if(count($staff_data) > 0)
                             <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-sticky-note"></i>
+                                    <i class="nav-icon fas fas fa-file-alt"></i>
                                     <p>
                                         MENILAI STAFF
                                         <i class="right fas fa-angle-left"></i>
@@ -226,7 +232,7 @@
                         <li class="nav-header">NILAI</li>
                         <li class="nav-item">
                             <a href="{{ url('/nilai-rekap/'.Auth::user()->npp) }}" class="nav-link {{ Route::currentRouteName() == 'penilai-rekap-rekapitulasi' ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="nav-icon fas fa-book-open"></i>
                                 <p>Rekapitulasi</p>
                             </a>
                         </li>
@@ -248,7 +254,7 @@
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                 data-target="#popup">
-                                <i class="fas fa-info-circle"></i> Help
+                                <i class="fas fa-info-circle"></i> Bantuan
                             </button>
                         </li>
                     </ul>
