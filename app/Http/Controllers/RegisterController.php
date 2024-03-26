@@ -50,7 +50,7 @@ class RegisterController extends Controller
         $newUser['jabatan'] = $employee->level_jabatan ?? '';
         $newUser['password'] = Hash::make($password);
 
-        if($request->file('fote')){
+        if($request->file('foto')){
             $path = $request->file('foto')->store('foto');
         }
         $path = '';
