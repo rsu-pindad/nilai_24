@@ -161,6 +161,12 @@
             </a>
             <ul class="nav nav-treeview" style="display: {{ request()->is('penilai-rekap/*') ? 'block;' : 'none;' }}">
             <li class="nav-item">
+                <a href="{{Route('penilai-rekap-all')}}" class="nav-link {{ Route::currentRouteName() == 'penilai-rekap-all' ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>DP3 Semua</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{Route('penilai-rekap-self')}}" class="nav-link {{ Route::currentRouteName() == 'penilai-rekap-self' ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>DP3 Self</p>
