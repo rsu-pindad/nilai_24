@@ -184,7 +184,7 @@
                                 </ul>
                             </li>
                         @endisset
-                        @if(count($staff_data) != 0)
+                        @if(count($staff_data) > 0)
                             <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link  {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-sticky-note"></i>

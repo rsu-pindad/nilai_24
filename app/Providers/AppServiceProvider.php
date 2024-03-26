@@ -92,7 +92,7 @@ class AppServiceProvider extends ServiceProvider
                     if($form_link){
                         $form_data = $form_link->toArray();
                     }else{
-                        return back()->with('toast_error', 'maaf data belum disiapkan sdm');
+                        $form_data = $form_link;
                     }
 
                     $self = $relasi_karyawan->toArray();
@@ -163,7 +163,7 @@ class AppServiceProvider extends ServiceProvider
                     // dd($custom_data);
                 }
             }
-            $view->with(['page' => $page, 'sheet' => $custom_data, 'link' => $link, 'staff_data' => $daftarStaff ?? false]);
+            $view->with(['page' => $page, 'sheet' => $custom_data, 'link' => $link, 'staff_data' => $daftarStaff ?? 0]);
             // $view->with(['page' => $page, 'sheet' => $chunk, 'link' => $link, 'staff' => $daftarStaff ?? false]);
             // $view->with([
             //     'page' => $page, 
