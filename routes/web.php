@@ -83,8 +83,10 @@ Route::middleware(['auth', 'hc'])->group(function () {
 
     Route::controller(GResponseController::class)->group(function() {
         Route::get('/gform', 'index')->name('gform');
+        Route::delete('/gform/destroy/{id}', 'destroy')->name('gform-destroy');
         Route::get('/gform/pull', 'pull')->name('gform-pull'); // Button btnPullResponse
         Route::get('/gform/pull2', 'pull_excel')->name('gform-pull2');
+        Route::get('/gform/getDetail/{id}', 'getDetailAjax')->name('gform-detail-ajax');
         // Route::get('gform/populate', 'populate')->name('gform-populate');
     });
 

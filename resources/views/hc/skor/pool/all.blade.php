@@ -29,20 +29,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="px-4">
-                                <table class="table table-striped table-hover table-bordered" id="dataTablesPoolSkor">
-                                    <thead>
-                                        <tr>
-                                            <th colspan='4'>Identitas</th>
-                                            <th colspan='6' rowspan='2'>Kepemimpinan</th>
-                                            <th colspan='5' rowspan='2'>Perilaku</th>
-                                            <th colspan='5' rowspan='2'>Sasaran</th>
-                                            <th colspan='2' rowspan='2'></th>
-                                        </tr>
-                                        <tr>
-                                            <th></th>
-                                            <th colspan="2">NPP</th>
-                                            <th></th>
-                                        </tr>    
+                                <table class="table table-striped table-hover table-bordered table-responsive" id="dataTablesPoolSkor">
+                                    <thead> 
                                         <tr>
                                             <th>No</th>
                                             <th>Penilai</th>
@@ -119,12 +107,13 @@
 
 @push('scripts')
 <script>
-$("#dataTablesPoolSkor").DataTable({
+var table = $("#dataTablesPoolSkor").DataTable({
     ordering: false,
-    scrollCollapse: true,
+    scrollCollapse: false,
     responsive: true,
     searching : true,
-    scrollX: false,
+    // scrollX: false,
+    scrollY: '50vh',
 });
 </script>
 @endpush
