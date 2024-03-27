@@ -26,7 +26,7 @@
     </a>
 </li>
 -->
-<li class="nav-header">INTERFACE 2</li>
+<li class="nav-header">INTERFACE 2024</li>
 <li class="nav-item menu-is-opening menu-open">
 <!--
     <ul class="nav nav-treeview" style="display: block;">
@@ -50,6 +50,12 @@
     </ul>
 -->
     <ul class="nav nav-treeview" style="display: block;">
+        <li class="nav-item">
+            <a href="{{Route('relasi-karyawan')}}" class="nav-link {{ Route::currentRouteName() == 'relasi-karyawan' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Relasi Karyawan</p>
+            </a>
+        </li>
         <li class="nav-item {{ Route::is('gform') ? 'block;' : '' }}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
@@ -57,12 +63,6 @@
                 </p>
             </a>
             <ul class="nav nav-treeview" style="display: {{ Route::is('gform') ? 'block;' : 'none;' }}">
-            <li class="nav-item">
-                <a href="{{Route('relasi-karyawan')}}" class="nav-link {{ Route::currentRouteName() == 'relasi-karyawan' ? 'active' : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Relasi Karyawan</p>
-                </a>
-            </li>
             <li class="nav-item">
                 <a href="{{Route('gform')}}" class="nav-link {{ Route::currentRouteName() == 'gform' ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
@@ -176,7 +176,7 @@
     </ul>
     -->
     <ul class="nav nav-treeview" style="display: block;">
-        <li class="nav-item {{ request()->is('penilai-rekap/*') ? 'menu-is-opening menu-open' : ''}}">
+        <li class="nav-item {{ request()->is('penilai-rekap-all') ? 'menu-is-opening menu-open' : ''}}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
                 <p> Rekap Nilai<i class="right fas fa-angle-left"></i></p>
@@ -186,6 +186,12 @@
                 <a href="{{Route('penilai-rekap-all')}}" class="nav-link {{ Route::currentRouteName() == 'penilai-rekap-all' ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>DP3 Semua</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('penilai-rekap-personal') }}" class="nav-link {{ Route::currentRouteName() == 'penilai-rekap-personal' ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Rekap Personal</p>
                 </a>
             </li>
             <!--
@@ -218,6 +224,7 @@
         </li>
     </ul>
 </li>
+<!--
 <li class="nav-header">INTERFACE 3</li>
 <li class="nav-item">
     <a href="{{ route('penilai-rekap-personal') }}" class="nav-link {{ Route::currentRouteName() == 'penilai-rekap-personal' ? 'active' : '' }}">
@@ -225,6 +232,7 @@
         <p>Rekap Personal</p>
     </a>
 </li>
+-->
 <!-- <li class="nav-header">INTERFACE 3</li>
 <li class="nav-item">
     <a href="{{ route('rekap-personal') }}" class="nav-link {{ Route::currentRouteName() == 'rekap-personal' ? 'active' : '' }}">

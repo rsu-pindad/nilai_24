@@ -35,6 +35,13 @@ class SkorController extends Controller
         ]);
     }
 
+    public function destroy($id)
+    {
+        Skor::find($id)->delete();
+
+        return redirect()->back()->withSuccess('berhasil menghapus data');
+    }
+
     public function storeAjax(Request $request)
     {
         $tempData = [];
@@ -60,6 +67,37 @@ class SkorController extends Controller
                     'icon' => "error",
                 ];
                 return response()->json($tempData);
+            }
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return response()->json($exception->getMessage());
+        }   
+    }
+    public function updateAjax(Request $request, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'aspek_id' => 'required',
+                'indikator_id' => 'required',
+                'jawaban' => 'required',
+                'skor' => 'required',
+            ]);
+            if($validated){
+                $store = Skor::find($id)->update($validated);
+                if($store){
+                    $tempData['data'] = [
+                        'title' => "berhasil",
+                        'html' => "berhasil edit data <b></b>",
+                        'icon' => "success",
+                    ];
+                    return response()->json($tempData);
+                }else{
+                    $tempData['data'] = [
+                        'title' => "gagal",
+                        'html' => "gagal edit data <b></b>",
+                        'icon' => "error",
+                    ];
+                    return response()->json($tempData);
+                }
             }
         } catch (\Illuminate\Database\QueryException $exception) {
             return response()->json($exception->getMessage());

@@ -22,7 +22,7 @@ class GResponseController extends Controller
             // return GResponse::get();
         // });
 
-        $form_data = GResponse::get();
+        $form_data = GResponse::orderBy('npp_penilai', 'ASC')->get();
 
         return view('hc.gform.index')->with([
             'grespon_data' => $form_data,
@@ -67,7 +67,7 @@ class GResponseController extends Controller
         $sameData = 0;
         $newData = 0;
         $message = [
-                'info' => 'poll pulled',
+                'info' => 'data disimpan ke database',
                 'same_data' => $sameData,
                 'new_pulled' => $newData,
                 'failure' => '',

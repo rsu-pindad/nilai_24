@@ -263,9 +263,28 @@ class RekapPenilaiController extends Controller
                 $s4_staff[$keys]['s4'] = $item['proses_inisiatif_bobot_aspek'];
                 $s5_staff[$keys]['s5'] = $item['proses_polapikir_bobot_aspek'];
 
-                $raspek_k_staff[$keys]['raspek_k'] = $item['sum_nilai_k_bobot_aspek'];
-                $raspek_s_staff[$keys]['raspek_s'] = $item['sum_nilai_s_bobot_aspek'];
-                $raspek_p_staff[$keys]['raspek_p'] = $item['sum_nilai_p_bobot_aspek'];
+                $raspek_k_staff[$keys]['raspek_k'] = round(
+                                                            $item['strategi_perencanaan_bobot_aspek']+
+                                                            $item['strategi_pengawasan_bobot_aspek'] +
+                                                            $item['strategi_inovasi_bobot_aspek'] +
+                                                            $item['kepemimpinan_bobot_aspek'] +
+                                                            $item['membimbing_membangun_bobot_aspek'] +
+                                                            $item['pengambilan_keputusan_bobot_aspek']
+                                                    ,2);
+                $raspek_s_staff[$keys]['raspek_s'] = round(
+                                                            $item['kerjasama_bobot_aspek'] +
+                                                            $item['komunikasi_bobot_aspek'] +
+                                                            $item['absensi_bobot_aspek'] +
+                                                            $item['integritas_bobot_aspek'] +
+                                                            $item['etika_bobot_aspek']
+                                                    ,2);
+                $raspek_p_staff[$keys]['raspek_p'] = round(
+                                                            $item['goal_kinerja_bobot_aspek'] +
+                                                            $item['error_kinerja_bobot_aspek'] +
+                                                            $item['proses_dokumen_bobot_aspek'] +
+                                                            $item['proses_inisiatif_bobot_aspek'] +
+                                                            $item['proses_polapikir_bobot_aspek']
+                                                    ,2);
             }else{
                 $avg_dp3_non_staff[$keys]['sum_nilai_dp3'] = $item['sum_nilai_dp3'];
                 $k1_non[$keys]['k1'] = $item['strategi_perencanaan_bobot_aspek'];
@@ -287,9 +306,28 @@ class RekapPenilaiController extends Controller
                 $s4_non[$keys]['s4'] = $item['proses_inisiatif_bobot_aspek'];
                 $s5_non[$keys]['s5'] = $item['proses_polapikir_bobot_aspek'];
 
-                $raspek_k_non[$keys]['raspek_k'] = $item['sum_nilai_k_bobot_aspek'];
-                $raspek_s_non[$keys]['raspek_s'] = $item['sum_nilai_s_bobot_aspek'];
-                $raspek_p_non[$keys]['raspek_p'] = $item['sum_nilai_p_bobot_aspek'];
+                $raspek_k_non[$keys]['raspek_k'] = round(
+                    $item['strategi_perencanaan_bobot_aspek']+
+                    $item['strategi_pengawasan_bobot_aspek'] +
+                    $item['strategi_inovasi_bobot_aspek'] +
+                    $item['kepemimpinan_bobot_aspek'] +
+                    $item['membimbing_membangun_bobot_aspek'] +
+                    $item['pengambilan_keputusan_bobot_aspek']
+            ,2);
+                $raspek_s_non[$keys]['raspek_s'] = round(
+                    $item['kerjasama_bobot_aspek'] +
+                    $item['komunikasi_bobot_aspek'] +
+                    $item['absensi_bobot_aspek'] +
+                    $item['integritas_bobot_aspek'] +
+                    $item['etika_bobot_aspek']
+            ,2);
+                $raspek_p_non[$keys]['raspek_p'] = round(
+                    $item['goal_kinerja_bobot_aspek'] +
+                    $item['error_kinerja_bobot_aspek'] +
+                    $item['proses_dokumen_bobot_aspek'] +
+                    $item['proses_inisiatif_bobot_aspek'] +
+                    $item['proses_polapikir_bobot_aspek']
+            ,2);
                 $divider++;
             }
         }

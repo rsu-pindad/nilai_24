@@ -74,8 +74,8 @@ $('#dataTablesPull').DataTable({
     responsive: true,
     ordering: false,
     scrollX: false,
-    scrollY: '25vh',
-    searching : false,
+    scrollY: '50vh',
+    searching : true,
 });
 </script>
 @endpush

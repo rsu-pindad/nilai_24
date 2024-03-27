@@ -22,6 +22,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResultController;
+use Google\Service\Slides\RerouteLineRequest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,10 +67,13 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::get('/skor-pool-staff{refresh?}', 'pool_staff')->name('skor-pool-staff');
         
         Route::post('/skor/store-ajax', 'storeAjax')->name('skor-store-ajax');
+        Route::put('/skor/update-ajax/{id}', 'updateAjax')->name('skor-update-ajax');
+        Route::delete('/skor/destroy/{id}', 'destroy')->name('skor-destroy');
     });
 
     Route::controller(AspekController::class)->group(function() {
         Route::post('/aspek/store', 'store')->name('aspek-store');
+        Route::get('/aspek/getajax/{id}', 'getAjax')->name('aspek-get-ajax');
     });
 
     Route::controller(IndikatorController::class)->group(function() {
