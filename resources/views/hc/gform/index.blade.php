@@ -51,11 +51,11 @@
                                             <td>
                                                 <a href="javascript:void(0)" 
                                                     class="text-decoration-none lihatProfilePenilai"
-                                                    data-penilai-id="{{$gres->relasi_penilai->id}}"
-                                                    data-penilai-npp="{{$gres->relasi_penilai->npp_karyawan}}"
-                                                    data-penilai-nama="{{$gres->relasi_penilai->nama_karyawan}}"
-                                                    data-penilai-level="{{$gres->relasi_penilai->level_jabatan}}"
-                                                    data-penilai-unit="{{$gres->relasi_penilai->unit_jabatan}}"
+                                                    data-penilai-id="{{$gres->relasi_penilai->id ?? ''}}"
+                                                    data-penilai-npp="{{$gres->relasi_penilai->npp_karyawan ?? ''}}"
+                                                    data-penilai-nama="{{$gres->relasi_penilai->nama_karyawan ?? ''}}"
+                                                    data-penilai-level="{{$gres->relasi_penilai->level_jabatan ?? ''}}"
+                                                    data-penilai-unit="{{$gres->relasi_penilai->unit_jabatan ?? ''}}"
                                                     >
                                                     {{ $gres->npp_penilai }}
                                                 </a>
