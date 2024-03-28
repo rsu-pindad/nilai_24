@@ -23,9 +23,37 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button type="button" class="btn btn-warning" id="btnSkorPoolModal">
-                                <i class="fas fa-calculator px-2"></i>Hitung
-                                </button>
+                                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                                        <button type="button" class="btn btn-warning" id="btnSkorPoolModal">
+                                            <i class="fas fa-calculator px-1"></i>Hitung
+                                        </button>
+                                    </div>
+                                    <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-file-export px-1"></i>Export
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <form action="{{route('skor-export')}}" 
+                                                method="post" 
+                                                class="dropdown-item btn btn-outline-info"
+                                                enctype="multipart/form-data">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm">xlsx
+                                                </button>
+                                            </form>
+                                            <div class="dropdown-divider"></div>
+                                            <form action="{{route('skor-export-csv')}}" 
+                                                method="post" 
+                                                class="dropdown-item btn btn-outline-info"
+                                                enctype="multipart/form-data">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm">csv
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="px-4">

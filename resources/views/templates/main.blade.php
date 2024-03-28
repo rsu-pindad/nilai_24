@@ -33,6 +33,8 @@
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
     <script src="{{asset('/plugins/jquery/jquery.min.js')}}"></script>
+    <!-- Popper -->
+    <script src="{{asset('/plugins/popper/umd/popper.min.js')}}"></script>
     <!-- Bootstrap -->
     <script src="{{asset('/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
     <!-- overlayScrollbars -->

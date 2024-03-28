@@ -13,6 +13,10 @@ use App\Models\GResponse;
 use App\Models\PoolRespon;
 use App\Models\RelasiKaryawan;
 use Illuminate\Support\Facades\Cache;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Excel as ExcelExt;
+use Carbon\Carbon;
+use App\Exports\SkorAllExport;
 
 class SkorController extends Controller
 {
@@ -102,6 +106,18 @@ class SkorController extends Controller
         } catch (\Illuminate\Database\QueryException $exception) {
             return response()->json($exception->getMessage());
         }   
+    }
+
+    public function export()
+    {
+        $nows = Carbon::now()->toDateTimeString().'.xlsx';
+        return Excel::download(new SkorAllExport, 'PoolRespon_'.$nows,ExcelExt::XLSX);
+    }
+    
+    public function exportCsv()
+    {
+        $nows = Carbon::now()->toDateTimeString().'.csv';
+        return Excel::download(new SkorAllExport, 'PoolRespon_'.$nows,ExcelExt::CSV);
     }
 
     public function index_pool_all()

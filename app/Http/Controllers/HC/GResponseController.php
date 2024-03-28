@@ -25,9 +25,7 @@ class GResponseController extends Controller
                     ->select('id','npp_penilai','nama_penilai','npp_dinilai','nama_dinilai')
                     ->orderBy('npp_penilai', 'ASC')
                     ->get();
-
-        // dd($form_data);
-
+                    
         return view('hc.gform.index')->with([
             'grespon_data' => $form_data,
         ]);

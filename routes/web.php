@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth', 'hc'])->group(function () {
+    
     Route::controller(ResponseController::class)->group(function () {
         Route::get('/response', 'index')->name('response');
         Route::post('/response/calculate', 'calculate_dp3')->name('response/calculate');
@@ -69,6 +70,9 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::post('/skor/store-ajax', 'storeAjax')->name('skor-store-ajax');
         Route::put('/skor/update-ajax/{id}', 'updateAjax')->name('skor-update-ajax');
         Route::delete('/skor/destroy/{id}', 'destroy')->name('skor-destroy');
+
+        Route::post('/skor/export', 'export')->name('skor-export');
+        Route::post('/skor/export-csv', 'exportCsv')->name('skor-export-csv');
     });
 
     Route::controller(AspekController::class)->group(function() {
@@ -128,9 +132,16 @@ Route::middleware(['auth', 'hc'])->group(function () {
         
         // Route::get('/penilai-rekap/penilai{id?}', 'show')->name('penilai-rekap-detail');
         Route::get('/penilai-rekap/detail{dinilai?}{relasi?}', 'showRelasi')->name('penilai-rekap-detail-relasi');
+        Route::get('/penilai-rekap/detail/staff{dinilai?}', 'showRelasiStaff')->name('penilai-rekap-staff-relasi');
         
         Route::get('/penilai-rekap/calculate', 'calculate')->name('penilai-rekap-calculate');
         Route::get('/penilai-rekap/calculate-dp3', 'final_calculate')->name('penilai-rekap-calculate-dp3');
+
+        Route::get('/penilai-rekap/export-raw-xlsx', 'exportRawXlsx')->name('penilai-rekap-export-raw-xlsx');
+        Route::get('/penilai-rekap/export-raw-csv', 'exportRawCsv')->name('penilai-rekap-export-raw-csv');
+
+        Route::get('/penilai-rekap/export-xlsx', 'exportXlsx')->name('penilai-rekap-export-xlsx');
+        Route::get('/penilai-rekap/export-csv', 'exportCsv')->name('penilai-rekap-export-csv');
     });
 
     Route::controller(HasilPersonalController::class)->group(function(){
