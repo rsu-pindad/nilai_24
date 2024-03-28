@@ -484,9 +484,9 @@ $('.editSkor').on('click', function(ev){
                 error : function(response){
                     //console.log(response.data);
                     alertSwal(
-                        response.data.title,
-                        response.data.html,
-                        response.data.icon
+                        'error'
+                        'terjadi kesalahan',
+                        'warning'
                     );
                     setTimeout(() => {
                         location.reload();

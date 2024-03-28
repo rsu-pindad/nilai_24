@@ -12,6 +12,10 @@ use App\Models\RekapPenilai;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Excel as ExcelExt;
+use App\Exports\RekapPenilaiRawExport;
+use App\Exports\RekapPenilaiExport;
 
 class RekapPenilaiController extends Controller
 {
@@ -26,6 +30,30 @@ class RekapPenilaiController extends Controller
         return view('hc.rekap.penilai.index')->with([
             'data_penilai' => $penilai,
         ]);
+    }
+
+    public function exportRawXlsx()
+    {
+        $nows = Carbon::now()->toDateTimeString().'.xlsx';
+        return Excel::download(new RekapPenilaiRawExport, 'Dp3Raw-'.$nows,ExcelExt::XLSX);
+    }
+
+    public function exportRawCsv()
+    {
+        $nows = Carbon::now()->toDateTimeString().'.csv';
+        return Excel::download(new RekapPenilaiRawExport, 'Dp3Raw'.$nows,ExcelExt::CSV);
+    }
+
+    public function exportXlsx()
+    {
+        $nows = Carbon::now()->toDateTimeString().'.xlsx';
+        return Excel::download(new RekapPenilaiExport, 'Dp3Group'.$nows,ExcelExt::XLSX);
+    }
+
+    public function exportCsv()
+    {
+        $nows = Carbon::now()->toDateTimeString().'.csv';
+        return Excel::download(new RekapPenilaiExport, 'Dp3Group'.$nows,ExcelExt::CSV);
     }
 
     public function index_self()
@@ -74,6 +102,7 @@ class RekapPenilaiController extends Controller
             'data_penilai' => $penilai,
         ]);
     }
+
     public function showRelasi(Request $request)
     {
         $penilai = RekapPenilai::with([
@@ -83,11 +112,70 @@ class RekapPenilaiController extends Controller
             ->where('npp_dinilai', $request->dinilai)
             ->where('relasi', $request->relasi)
             ->first();
-        
         if($penilai){
             return view('hc.rekap.penilai.index-detail')->with([
-                'data_penilai' => $penilai,
+                'data_penilai' => $penilai
             ]);
+        }else{
+            return abort(404);
+        }
+    }
+
+    public function showRelasiStaff(Request $request)
+    {
+        $penilai = collect([]);
+        $res = RekapPenilai::with([
+            'relasi_karyawan',
+            'relasi_respon',
+            ])
+            ->where('npp_dinilai', $request->dinilai)
+            ->where('relasi', 'staff')
+            ->get();
+        $avg = $res->groupBy('relasi');
+        $avg->values()->all();
+
+        $penilai['jabatan_dinilai'] = $avg->map(function($pool){
+            $temp = $pool->toArray();
+            dd($temp);
+            $k1 = $temp['relasi_respon']['strategi_perencanaan'];
+            $k2 = $temp['relasi_respon']['strategi_perencanaan'];
+            $k3 = $temp['relasi_respon']['strategi_perencanaan'];
+            $k4 = $temp['relasi_respon']['strategi_perencanaan'];
+            $k5 = $temp['relasi_respon']['strategi_perencanaan'];
+            $k6 = $temp['relasi_respon']['strategi_perencanaan'];
+        });
+        
+        dd($penilai);
+
+        $jabatan = $avg['staff']->unique('jabatan_dinilai')->pluck('jabatan_dinilai')->toArray()[0];
+        $penilai['jabatan_dinilai'] = $jabatan;
+        $penilai['strategi_perencanaan_bobot_aspek'] = $avg['staff']->avg('strategi_perencanaan_bobot_aspek');
+        $penilai['strategi_pengawasan_bobot_aspek'] = $avg['staff']->avg('strategi_pengawasan_bobot_aspek');
+        $penilai['strategi_inovasi_bobot_aspek'] = $avg['staff']->avg('strategi_inovasi_bobot_aspek');
+        $penilai['kepemimpinan_bobot_aspek'] = $avg['staff']->avg('kepemimpinan_bobot_aspek');
+        $penilai['membimbing_membangun_bobot_aspek'] = $avg['staff']->avg('membimbing_membangun_bobot_aspek');
+        $penilai['kerjasama_bobot_aspek'] = $avg['staff']->avg('kerjasama_bobot_aspek');
+        $penilai['komunikasi_bobot_aspek'] = $avg['staff']->avg('komunikasi_bobot_aspek');
+        $penilai['absensi_bobot_aspek'] = $avg['staff']->avg('absensi_bobot_aspek');
+        $penilai['integritas_bobot_aspek'] = $avg['staff']->avg('integritas_bobot_aspek');
+        $penilai['etika_bobot_aspek'] = $avg['staff']->avg('etika_bobot_aspek');
+        $penilai['goal_kinerja_bobot_aspek'] = $avg['staff']->avg('goal_kinerja_bobot_aspek');
+        $penilai['error_kinerja_bobot_aspek'] = $avg['staff']->avg('error_kinerja_bobot_aspek');
+        $penilai['proses_dokumen_bobot_aspek'] = $avg['staff']->avg('proses_dokumen_bobot_aspek');
+        $penilai['proses_inisiatif_bobot_aspek'] = $avg['staff']->avg('proses_inisiatif_bobot_aspek');
+        $penilai['proses_polapikir_bobot_aspek'] = $avg['staff']->avg('proses_polapikir_bobot_aspek');
+        $penilai['sum_nilai_k_bobot_aspek'] = $avg['staff']->avg('sum_nilai_k_bobot_aspek');
+        $penilai['sum_nilai_s_bobot_aspek'] = $avg['staff']->avg('sum_nilai_s_bobot_aspek');
+        $penilai['sum_nilai_p_bobot_aspek'] = $avg['staff']->avg('sum_nilai_p_bobot_aspek');
+        $penilai['sum_nilai_dp3'] = $avg['staff']->avg('sum_nilai_dp3');
+        $penilai['relasi'] = 'staff';
+
+        // dd($penilai);
+
+        if($penilai){
+            return view('hc.rekap.penilai.index-detail-staff')->with([
+                    'data_penilai' => $penilai,
+                ]);
         }else{
             return abort(404);
         }
@@ -270,21 +358,21 @@ class RekapPenilaiController extends Controller
                                                             $item['kepemimpinan_bobot_aspek'] +
                                                             $item['membimbing_membangun_bobot_aspek'] +
                                                             $item['pengambilan_keputusan_bobot_aspek']
-                                                    ,2);
+                                                    ,1);
                 $raspek_s_staff[$keys]['raspek_s'] = round(
                                                             $item['kerjasama_bobot_aspek'] +
                                                             $item['komunikasi_bobot_aspek'] +
                                                             $item['absensi_bobot_aspek'] +
                                                             $item['integritas_bobot_aspek'] +
                                                             $item['etika_bobot_aspek']
-                                                    ,2);
+                                                    ,1);
                 $raspek_p_staff[$keys]['raspek_p'] = round(
                                                             $item['goal_kinerja_bobot_aspek'] +
                                                             $item['error_kinerja_bobot_aspek'] +
                                                             $item['proses_dokumen_bobot_aspek'] +
                                                             $item['proses_inisiatif_bobot_aspek'] +
                                                             $item['proses_polapikir_bobot_aspek']
-                                                    ,2);
+                                                    ,1);
             }else{
                 $avg_dp3_non_staff[$keys]['sum_nilai_dp3'] = $item['sum_nilai_dp3'];
                 $k1_non[$keys]['k1'] = $item['strategi_perencanaan_bobot_aspek'];
@@ -313,21 +401,21 @@ class RekapPenilaiController extends Controller
                     $item['kepemimpinan_bobot_aspek'] +
                     $item['membimbing_membangun_bobot_aspek'] +
                     $item['pengambilan_keputusan_bobot_aspek']
-            ,2);
+            ,1);
                 $raspek_s_non[$keys]['raspek_s'] = round(
                     $item['kerjasama_bobot_aspek'] +
                     $item['komunikasi_bobot_aspek'] +
                     $item['absensi_bobot_aspek'] +
                     $item['integritas_bobot_aspek'] +
                     $item['etika_bobot_aspek']
-            ,2);
+            ,1);
                 $raspek_p_non[$keys]['raspek_p'] = round(
                     $item['goal_kinerja_bobot_aspek'] +
                     $item['error_kinerja_bobot_aspek'] +
                     $item['proses_dokumen_bobot_aspek'] +
                     $item['proses_inisiatif_bobot_aspek'] +
                     $item['proses_polapikir_bobot_aspek']
-            ,2);
+            ,1);
                 $divider++;
             }
         }

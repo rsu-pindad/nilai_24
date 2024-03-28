@@ -22,9 +22,23 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-header">
-                                <button type="button" class="btn btn-secondary" id="btnPullResponse">
-                                <i class="fas fa-arrow-down px-2"></i>Tarik Response Form
-                                </button>
+                                <div class="d-flex flex-row bd-highlight">
+                                    <div class="p-2 bd-highlight">
+                                        <button type="button" class="btn btn-secondary btn-sm" id="btnPullResponse">
+                                        <i class="fas fa-arrow-down px-2"></i>Tarik Response Form
+                                        </button>
+                                    </div>
+                                    <div class="p-2 bd-highlight">
+                                        <form action="{{ route('skor-reset') }}" method="Post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('ANDA YAKIN INGIN MENGKOSONGKAN TABEL')">
+                                                <i class="fas fa-trash-alt px-2"></i>Kosongkan Table
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <table class="table table-striped table-bordered" id="dataTablesPull">
@@ -335,15 +349,15 @@ $(document).ready(function(e){
             success : function(response){
                 // return response;
                 swalOk(response.info,response.data_sama,'data baru '+response.data_baru,'success');
-                setTimeout(() => {
-                    location.reload();
-                }, 3100);
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 3100);
             },
             error: function(response){
                 swalOk(response.info,response.data_sama,'data gagal '+response.data_gagal,'warning');
-                setTimeout(() => {
-                    location.reload();
-                }, 3100);
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 3100);
             }
         });
     }

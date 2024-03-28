@@ -23,12 +23,62 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button type="button" class="btn btn-info mb-4" id="btnRekapPenilaiModal">
-                                <i class="fas fa-calculator px-2"></i>Rekap Nilai DP3
-                                </button>
-                                <ul class="list-inline">
-                                    <li class="list-inline-item">B-A (Bobot Aspek)</li>
-                                </ul>
+                                <div class="d-flex flex-row bd-highlight">
+                                    <div class="px-2 bd-highlight">        
+                                        <button type="button" class="btn btn-info" id="btnRekapPenilaiModal">
+                                            <i class="fas fa-calculator px-2"></i>Rekap Nilai DP3
+                                        </button>
+                                    </div>
+                                    <div class="px-2 bd-highlight">
+                                        <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-file-export px-1"></i>Export
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <span class="dropdown-item-text">Raw Bobot</span>
+                                                <form action="{{route('penilai-rekap-export-raw-xlsx')}}" 
+                                                    method="post" 
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">xlsx
+                                                    </button>
+                                                </form>
+                                                <form action="{{route('penilai-rekap-export-raw-csv')}}" 
+                                                    method="post" 
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">csv
+                                                    </button>
+                                                </form>
+                                                <div class="dropdown-divider"></div>
+                                                <span class="dropdown-item-text">Group Bobot</span>
+                                                <form action="{{route('penilai-rekap-export-xlsx')}}" 
+                                                    method="post" 
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">xlsx
+                                                    </button>
+                                                </form>
+                                                <form action="{{route('penilai-rekap-export-csv')}}" 
+                                                    method="post" 
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">csv
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="px-2 bd-highlight">        
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">B-A (Bobot Aspek)</li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <table class="table table-striped table-hover table-bordered" id="dataTablesRekap2">
@@ -82,9 +132,9 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=staff" target="_blank" class="btn btn-sm btn-warning">
+                                            <!-- <a href="/penilai-rekap/detail/staff?dinilai={{$p->npp_dinilai}}" target="_blank" class="btn btn-sm btn-warning">
                                                 <i class="far fa-eye"></i>
-                                            </a>
+                                            </a> -->
                                         </td>
                                     </tr>
                                     @endforeach

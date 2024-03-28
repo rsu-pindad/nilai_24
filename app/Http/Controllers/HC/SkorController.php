@@ -41,9 +41,27 @@ class SkorController extends Controller
 
     public function destroy($id)
     {
-        Skor::find($id)->delete();
+        try {
+            $delete = Skor::find($id)->delete();
+            if($delete){
+                return redirect()->back()->withSuccess('berhasil menghapus data');
+            }
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors($th->getMessage());
+        }
+    }
+    
+    public function reset()
+    {
+        try {
+            $pool = PoolRespon::truncate();
+            if($pool){
+                return redirect()->back()->withSuccess('tabel di kosongkan');
+            }
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors($th->getMessage());
+        }
 
-        return redirect()->back()->withSuccess('berhasil menghapus data');
     }
 
     public function storeAjax(Request $request)
