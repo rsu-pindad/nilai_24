@@ -349,15 +349,15 @@ $(document).ready(function(e){
             success : function(response){
                 // return response;
                 swalOk(response.info,response.data_sama,'data baru '+response.data_baru,'success');
-                // setTimeout(() => {
-                //     location.reload();
-                // }, 3100);
+                setTimeout(() => {
+                    location.reload();
+                }, 3100);
             },
             error: function(response){
                 swalOk(response.info,response.data_sama,'data gagal '+response.data_gagal,'warning');
-                // setTimeout(() => {
-                //     location.reload();
-                // }, 3100);
+                setTimeout(() => {
+                    location.reload();
+                }, 3100);
             }
         });
     }
