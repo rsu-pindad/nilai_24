@@ -48,17 +48,10 @@
 @push('scripts')
 <script>
     $(document).ready(function(){
-
-        $('#google-form-nilai').on('load', function(){
-            // alert('Frame Loaded');
-
-            $('#mG61Hd .DE3NNc CekdCb .NPEfkd RveJvd snByac').on('click', function(){
-                console.log('button clicked');
-                alert('button clicked');
-            })
-
-        })
-
+        // $('#google-form-nilai').on('load', function(){
+        // });
+        // var frame = document.getElementById("myframe");
+        // frame.src = "about:blank";
     })
 </script>
 @endpush
