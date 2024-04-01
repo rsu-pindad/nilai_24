@@ -71,4 +71,9 @@ class RekapPenilai extends Model
         return $this->belongsTo(PoolRespon::class, 'pool_respon_id', 'id');
     }
 
+    public function identitas_dinilai()
+    {
+        return $this->hasOne(RelasiKaryawan::class, 'npp_karyawan', 'npp_dinilai');
+    }
+
 }

@@ -109,10 +109,13 @@ class RekapPenilaiController extends Controller
         $penilai = RekapPenilai::with([
             'relasi_karyawan',
             'relasi_respon',
+            'identitas_dinilai',
             ])
             ->where('npp_dinilai', $request->dinilai)
             ->where('relasi', $request->relasi)
             ->first();
+
+            // dd($penilai->toArray());    
         if($penilai){
             return view('hc.rekap.penilai.index-detail')->with([
                 'data_penilai' => $penilai

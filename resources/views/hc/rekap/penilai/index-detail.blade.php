@@ -128,21 +128,23 @@ use Carbon\Carbon;
                             <tr>
                                 <td>Nama</td>
                                 <td rowspan="3" id="head-nama-dinilai" colspan="2">
+                                    {{$data_penilai->identitas_dinilai->nama_karyawan}}
                                 </td>
                                 <td>Npp</td>
                                 <td id="head-npp-dinilai">
-                                    {{$data_penilai->npp_dinilai}}
+                                    {{$data_penilai->identitas_dinilai->npp_karyawan}}
                                 </td>
                             </tr>
                             <tr>
                                 <td>Jabatan</td>
                                 <td id="head-jabatan-dinilai" colspan="2">
-                                    {{$data_penilai->jabatan_dinilai}}
+                                    {{$data_penilai->identitas_dinilai->level_jabatan}}
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-wrap">Unit Kerja</td>
                                 <td id="head-unit-dinilai" colspan="2">
+                                    {{$data_penilai->identitas_dinilai->unit_jabatan}}
                                 </td>
                             </tr>
                             <tr>
