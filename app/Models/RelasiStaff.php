@@ -24,4 +24,9 @@ class RelasiStaff extends Model
     {
         return $this->hasOne(RelasiKaryawan::class, 'id', 'relasi_karyawan_id');
     }
+
+    public function identitas_staff()
+    {
+        return $this->hasOne(RelasiKaryawan::class, 'npp_karyawan','npp_staff');
+    }
 }
