@@ -486,7 +486,7 @@ $('.editSkor').on('click', function(ev){
                 error : function(response){
                     //console.log(response.data);
                     alertSwal(
-                        'error'
+                        'error',
                         'terjadi kesalahan',
                         'warning'
                     );
