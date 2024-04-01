@@ -31,7 +31,7 @@
                                             <th>No</th>
                                             <th>Npp Dinilai</th>
                                             <th>Jabatan Dinilai</th>
-                                            <th>Mean Skor DP3</th>
+                                            <th>Rata-rata Skor DP3</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>

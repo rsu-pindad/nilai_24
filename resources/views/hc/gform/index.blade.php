@@ -84,7 +84,8 @@
                                                     data-penilai-unit="{{$gres->relasi_dinilai->unit_jabatan}}"
                                                     >
                                                     {{ $gres->npp_dinilai }}
-                                                </a></td>
+                                                </a>
+                                            </td>
                                             <td>{{ $gres->nama_dinilai }}</td>
                                             <td class="px-2">
                                                 <div class="btn-toolbar" role="toolbar" aria-label="group aksi">
