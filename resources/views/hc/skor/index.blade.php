@@ -49,43 +49,45 @@
                                             <td>{{ $skor['jawaban'] }}</td>
                                             <td>{{ $skor['skor'] }}</td>
                                             <td class="px-2">
-                                                <div class="btn-group" role="group" aria-label="group aksi">
-                                                    <button 
-                                                        type="button"
-                                                        class="btn btn-outline-secondary btn-sm lihatSkor"
-                                                        data-id="{{ $skor->id }}"
-                                                        data-aspek="{{ $skor->aspek->nama_aspek }}"
-                                                        data-indikator="{{ $skor->indikator->nama_indikator }}"
-                                                        data-jawaban="{{ $skor['jawaban'] }}"
-                                                        data-skors="{{ $skor['skor'] }}"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#lihatSkor"
-                                                        >
-                                                        <i class="fas fa-eye"></i>Lihat
-                                                    </button>
-                                                    <button 
-                                                        type="button"
-                                                        class="btn btn-outline-info btn-sm editSkor"
-                                                        data-id="{{ $skor->id }}"
-                                                        data-aspek="{{ $skor->aspek->nama_aspek }}"
-                                                        data-aspek-id="{{ $skor->aspek->id }}"
-                                                        data-indikator="{{ $skor->indikator->nama_indikator }}"
-                                                        data-indikator-id="{{ $skor->indikator->id }}"
-                                                        data-jawaban="{{ $skor['jawaban'] }}"
-                                                        data-skors="{{ $skor['skor'] }}"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#editSkor"
-                                                        >
-                                                        <i class="fas fa-edit"></i>Edit
-                                                    </button>
-                                                    <form action="{{ route('skor-destroy', $skor->id) }}" method="Post">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-outline-warning btn-sm"
-                                                            onclick="return confirm('Yakin akan menghapus data ini?')">
-                                                            <i class="fas fa-trash-alt"></i>Hapus
+                                                <div class="btn-toolbar" role="toolbar" arua-label="grup satu">
+                                                    <div class="btn-group mr-2" role="group" aria-label="group aksi">
+                                                        <button 
+                                                            type="button"
+                                                            class="btn btn-outline-secondary btn-sm lihatSkor"
+                                                            data-id="{{ $skor->id }}"
+                                                            data-aspek="{{ $skor->aspek->nama_aspek }}"
+                                                            data-indikator="{{ $skor->indikator->nama_indikator }}"
+                                                            data-jawaban="{{ $skor['jawaban'] }}"
+                                                            data-skors="{{ $skor['skor'] }}"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#lihatSkor"
+                                                            >
+                                                            <i class="fas fa-eye"></i>Lihat
                                                         </button>
-                                                    </form>
+                                                        <button 
+                                                            type="button"
+                                                            class="btn btn-outline-info btn-sm editSkor"
+                                                            data-id="{{ $skor->id }}"
+                                                            data-aspek="{{ $skor->aspek->nama_aspek }}"
+                                                            data-aspek-id="{{ $skor->aspek->id }}"
+                                                            data-indikator="{{ $skor->indikator->nama_indikator }}"
+                                                            data-indikator-id="{{ $skor->indikator->id }}"
+                                                            data-jawaban="{{ $skor['jawaban'] }}"
+                                                            data-skors="{{ $skor['skor'] }}"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editSkor"
+                                                            >
+                                                            <i class="fas fa-edit"></i>Edit
+                                                        </button>
+                                                        <form action="{{ route('skor-destroy', $skor->id) }}" method="Post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-outline-warning btn-sm"
+                                                                onclick="return confirm('Yakin akan menghapus data ini?')">
+                                                                <i class="fas fa-trash-alt"></i>Hapus
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>

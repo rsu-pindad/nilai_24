@@ -10,11 +10,20 @@
 
     <!-- <script src="{{public_path('/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script> -->
     <style>
+        @page {
+            margin: 0cm 0cm;
+        }
+
         body {
             font-family: Georgia, serif;
             background: none;
             color: black;
+            margin-top: 2cm;
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
+            margin-bottom: 2cm;
         }
+
         .styled-table,{
             /* border: 1px solid black; */
             /* padding: 0.1rem 0.50rem 0.1rem 0.50rem; */
@@ -116,17 +125,53 @@
 
         .floatRight{
             position: fixed;
-            bottom: 160px;
-            right: 30px;
+            bottom: 176px;
+            right: 70px;
         }
 
         /* table td { width: 10em; border: 1px solid black; } */
         /* table td:nth-child(2) { text-align: end; } */
 
+        /* WaterMark */
+        /* .watermark {
+            position: fixed;
+            bottom: 260;
+            left: 50;
+            transform: rotate(-45deg);
+            font-size: 100px;
+            color: #989595;
+            opacity: 0.25;
+            pointer-events: none;
+            white-space: nowrap;
+        } */
+        .watermark {
+            position: fixed;
+            bottom: 400;
+            left: 20;
+            transform: rotate(-45deg);
+            font-size: 90px;
+            color: #989595;
+            opacity: 0.18;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        header {
+                position: fixed;
+                top: 0.5cm;
+                left: 0.5cm;
+                right: 0cm;
+                height: 3cm;
+            }
     </style>
 
 </head>
 <body>
+    <header>
+        <img src="{{ public_path('/dist/img/logo.png')}}" alt="Logo" width="18%" height="100%">
+    </header>
+    <div class="watermark">RSU PINDAD <br>CONFIDENTIAL</div>
+    <main>
     <div class="two alt-two">
         <h1>Laporan Hasil Kinerja Pegawai
             <span>Level {{$level}}</span>
@@ -153,7 +198,7 @@
         </tr>
         
         <tr class="boldText">
-            <td >NO</td>
+            <td>NO</td>
             <td colspan="2">ASPEK</td>
             <td>NILAI</td>
         </tr>
@@ -162,104 +207,104 @@
             <td colspan="3">NILAI-NILAI PERUSAHAAN DAN PERILAKU</td>
         </tr>
         <tr>
-            <td>1</td>
+            <td style="text-align:right;">1</td>
             <td colspan="2">Kerjasama</td>
-            <td>{{round($p1 * 100)}}</td>
+            <td style="text-align:right;">{{round($p1 * 100)}}</td>
         </tr>
         <tr>
-            <td>2</td>
+            <td style="text-align:right;">2</td>
             <td colspan="2">Komunikasi</td>
-            <td>{{round($p2 * 100)}}</td>
+            <td style="text-align:right;">{{round($p2 * 100)}}</td>
         </tr>
         <tr>
-            <td>3</td>
+            <td style="text-align:right;">3</td>
             <td colspan="2">Kedisiplinan</td>
-            <td>{{round($p3 * 100)}}</td>
+            <td style="text-align:right;">{{round($p3 * 100)}}</td>
         </tr>
         <tr>
-            <td>4</td>
+            <td style="text-align:right;">4</td>
             <td colspan="2">Dedikasi dan Integritas</td>
-            <td>{{round($p4 * 100)}}</td>
+            <td style="text-align:right;">{{round($p4 * 100)}}</td>
         </tr>
         <tr>
-            <td>5</td>
+            <td style="text-align:right;">5</td>
             <td colspan="2">Etika</td>
-            <td>{{round($p5 * 100)}}</td>
+            <td style="text-align:right;">{{round($p5 * 100)}}</td>
         </tr>
         <tr class="semiBoldText">
             <td colspan="3" class="text-right">Jumlah A</td>
-            <td>{{round($raspek_p * 100)}}</td>
+            <td style="text-align:right;">{{round($raspek_p * 100)}}</td>
         </tr>
         <tr class="boldText">
             <td class="text-right">B</td>
             <td colspan="3" class="text-left">SASARAN KINERJA DAN PROSES PENCAPAIAN</td>
         </tr>
         <tr>
-            <td>1</td>
+            <td style="text-align:right;">1</td>
             <td colspan="2">Goal</td>
-            <td>{{round($s1 * 100)}}</td>
+            <td style="text-align:right;">{{round($s1 * 100)}}</td>
         </tr>
         <tr>
-            <td>2</td>
+            <td style="text-align:right;">2</td>
             <td colspan="2">Error</td>
-            <td>{{round($s2 * 100)}}</td>
+            <td style="text-align:right;">{{round($s2 * 100)}}</td>
         </tr>
         <tr>
-            <td>3</td>
+            <td style="text-align:right;">3</td>
             <td colspan="2">Dokumentasi</td>
-            <td>{{round($s3 * 100)}}</td>
+            <td style="text-align:right;">{{round($s3 * 100)}}</td>
         </tr>
         <tr>
-            <td>4</td>
+            <td style="text-align:right;">4</td>
             <td colspan="2">Inisiatif</td>
-            <td>{{round($s4 * 100)}}</td>
+            <td style="text-align:right;">{{round($s4 * 100)}}</td>
         </tr>
         <tr>
-            <td>5</td>
+            <td style="text-align:right;">5</td>
             <td colspan="2">Pola Pikir</td>
-            <td>{{round($s5 * 100)}}</td>
+            <td style="text-align:right;">{{round($s5 * 100)}}</td>
         </tr>
         <tr class="semiBoldText">
             <td colspan="3" class="text-right">Jumlah B</td>
-            <td>{{round($raspek_s * 100)}}</td>
+            <td style="text-align:right;">{{round($raspek_s * 100)}}</td>
         </tr>
         <tr class="boldText">
             <td class="text-right">B</td>
             <td colspan="3" class="text-left">LEADERSHIP</td>
         </tr>
         <tr>
-            <td>1</td>
+            <td style="text-align:right;">1</td>
             <td colspan="2">Strategi - Perencanaan</td>
-            <td>{{round($k1 * 100)}}</td>
+            <td style="text-align:right;">{{round($k1 * 100)}}</td>
         </tr>
         <tr>
-            <td>2</td>
+            <td style="text-align:right;">2</td>
             <td colspan="2">Strategi – Pengawasan</td>
-            <td>{{round($k2 * 100)}}</td>
+            <td style="text-align:right;">{{round($k2 * 100)}}</td>
         </tr>
         <tr>
-            <td>3</td>
+            <td style="text-align:right;">3</td>
             <td colspan="2">Strategi - Inovasi</td>
-            <td>{{round($k3 * 100)}}</td>
+            <td style="text-align:right;">{{round($k3 * 100)}}</td>
         </tr>
         <tr>
-            <td>4</td>
+            <td style="text-align:right;">4</td>
             <td colspan="2">Kepemimpinan</td>
-            <td>{{round($k4 * 100)}}</td>
+            <td style="text-align:right;">{{round($k4 * 100)}}</td>
         </tr>
         <tr>
-            <td>5</td>
+            <td style="text-align:right;">5</td>
             <td colspan="2">Membimbingan dan Membangun</td>
-            <td>{{round($k5 * 100)}}</td>
+            <td style="text-align:right;">{{round($k5 * 100)}}</td>
         </tr>
         <tr>
-            <td>6</td>
+            <td style="text-align:right;">6</td>
             <td colspan="2">Pengambilan keputusan</td>
-            <td>{{round($k6 * 100)}}</td>
+            <td style="text-align:right;">{{round($k6 * 100)}}</td>
         </tr>
         <tr class="semiBoldText">
             <td colspan="3" class="text-right">Jumlah C</td>
-            <td>{{round($raspek_k * 100)}}</td>
+            <td style="text-align:right;">{{round($raspek_k * 100)}}</td>
         </tr>
         <!-- <tr class="semiBoldText">
             <td colspan="3" class="text-right">Jumlah A+B+C</td>
@@ -267,7 +312,7 @@
         </tr> -->
         <tr class="boldText">
             <td colspan="3" class="text-right">Skor Akhir DP3</td>
-            <td>{{round($total_raspek,1)}}</td>
+            <td style="text-align:right;">{{round($total_raspek,1)}}</td>
         </tr>
         <tr style="font-size: 0.9em;">
             <td colspan="2">
@@ -298,7 +343,7 @@
                     <table>
                     <tr>
                         <td>Nilai Kinerja</td>
-                        <td>{{round($total_raspek,1)}}</td>
+                        <td style="text-align:right;">{{round($total_raspek,1)}}</td>
                     </tr>
                     <tr>
                         <td>Kriteria</td>
@@ -306,7 +351,7 @@
                     </tr>
                     <tr>
                         <td>Point</td>
-                        <td>{{$point_dp3}}</td>
+                        <td style="text-align:right;">{{$point_dp3}}</td>
                     </tr>
                 </table>
             </td>
@@ -316,7 +361,7 @@
     <table class="floatRight">
         <tbody>
             <tr>
-                <td class="px-4">
+                <td class="px-4" style="text-align:center;">
                     <span>Bandung,</span> {{$nows}}<br/>
                     <span class="font-weight-bold">
                         PT PINDAD MEDIKA UTAMA
@@ -324,15 +369,16 @@
                 </td>
             </tr>
             <tr>
-                <td style="height: 3em;"></td>
+                <td style="height: 2.6em;"></td>
             </tr>
             <tr>
-                <td class="font-weight-bold center">
+                <td class="font-weight-bold" style="text-align:center;">
                     <u>Novita Indah Fitriyani</u><br>
                     <span>Kepala Bidang HC</span>
                 </td>
             </tr>
         </tbody>
     </table>
+    </main>  
 </body>
 </html>
