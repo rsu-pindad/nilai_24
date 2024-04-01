@@ -85,14 +85,13 @@
                                     <thead>
                                         <tr>
                                             <th rowspan='2' colspan='3'>Identitas Dinilai</th>
-                                            <th colspan='4'>Aspek</th>
+                                            <th colspan='3'>Aspek</th>
                                             <th rowspan='2' colspan='4'>Aksi</th>
                                         </tr>
                                         <tr>
                                             <th>Kepemimpinan</th>
                                             <th>Perilaku</th>
                                             <th>Sasaran</th>
-                                            <th>DP3</th>
                                         </tr>
                                         <tr>
                                             <th>No</th>

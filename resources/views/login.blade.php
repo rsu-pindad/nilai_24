@@ -18,6 +18,13 @@
 
     <link rel="icon" href="dist/img/logo.png" type="image/x-icon">
     <link rel="shortcut icon" href="dist/img/logo.png" type="image/x-icon">
+
+    <!-- jQuery -->
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="dist/js/adminlte.min.js"></script>
 </head>
 
 <body class="hold-transition login-page">
@@ -37,7 +44,6 @@
         <div class="card">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Form Login</p>
-
                 <form action="{{ route('login/authenticate') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
@@ -49,9 +55,9 @@
                             </div>
                         </div>
                         @error('npp')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
                         @enderror
                     </div>
                     <div class="input-group mb-3">
@@ -63,15 +69,13 @@
                             </div>
                         </div>
                         @error('password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
                         @enderror
                     </div>
-
                     <button type="submit" class="btn btn-primary btn-block">Masuk</button>
                 </form>
-
                 <p class="mb-0">
                     Belum punya akun? <a href="{{ route('register') }}" class="text-center">Daftar</a>
                 </p>
@@ -82,13 +86,6 @@
         </div>
     </div>
     <!-- /.login-box -->
-
-    <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.min.js"></script>
     @include('sweetalert::alert')
 </body>
 
