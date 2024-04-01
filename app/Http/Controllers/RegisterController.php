@@ -95,7 +95,6 @@ class RegisterController extends Controller
                 'countryCode' => '62', //optional
             ),
             CURLOPT_HTTPHEADER => array(
-                // 'Authorization: 2qB#yoP6MKX2Z3_pDZfj' //change TOKEN to your actual token
                 'Authorization: '.env('FONNTE_TOKEN', '') //change TOKEN to your actual token
             ),
         ));

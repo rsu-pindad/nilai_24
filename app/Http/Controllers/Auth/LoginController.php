@@ -39,7 +39,6 @@ class LoginController extends Controller
             return redirect()->intended('profile');
         }
 
-
         return back()->with('toast_error', 'username atau password salah')->withInput();
     }
 }
