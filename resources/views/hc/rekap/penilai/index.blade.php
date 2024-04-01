@@ -84,26 +84,17 @@
                                 <table class="table table-striped table-hover table-bordered" id="dataTablesRekap2">
                                     <thead>
                                         <tr>
-                                            <th rowspan='2' colspan='3'>Identitas Dinilai</th>
+                                            <th colspan='3'>Identitas</th>
                                             <th colspan='3'>Aspek</th>
-                                            <th rowspan='2' colspan='4'>Aksi</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Kepemimpinan</th>
-                                            <th>Perilaku</th>
-                                            <th>Sasaran</th>
+                                            <th rowspan='2'>Aksi</th>
                                         </tr>
                                         <tr>
                                             <th>No</th>
                                             <th>Npp</th>
                                             <th>Jabatan</th>
-                                            <th>B-A</th>
-                                            <th>B-A</th>
-                                            <th>B-A</th>
-                                            <th>Self</th>
-                                            <th>Atasan</th>
-                                            <th>Rekan</th>
-                                            <th>Staff</th>
+                                            <th>Kepemimpinan</th>
+                                            <th>Perilaku</th>
+                                            <th>Sasaran</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -116,27 +107,31 @@
                                         <td>{{round($p->sum_k2 * 100,3)}}</td>
                                         <td>{{round($p->sum_k3 * 100,3)}}</td>
                                         <td>
-                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=self" target="_blank" class="btn btn-sm btn-info">
-                                                <i class="far fa-eye"></i>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=atasan" target="_blank" class="btn btn-sm btn-info">
-                                                <i class="far fa-eye"></i>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=rekanan" target="_blank" class="btn btn-sm btn-info">
-                                                <i class="far fa-eye"></i>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <!-- <a href="/penilai-rekap/detail/staff?dinilai={{$p->npp_dinilai}}" target="_blank" class="btn btn-sm btn-warning">
-                                                <i class="far fa-eye"></i>
-                                            </a> -->
-                                            <button type="button" class="btn btn-info btn-sm btnInfoStaff" data-toggle="modal" data-target="#staffModal" data-npp-dinilai='{{$p->npp_dinilai}}' data-rekap-id="{{$p->id}}">
-                                                <i class="far fa-eye"></i>
-                                            </button>
+                                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                                <div class="btn-group mr-2" role="group" aria-label="First group">
+                                                    <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=self" target="_blank" class="btn btn-sm btn-info">
+                                                        <i class="far fa-eye px-1"></i>Self
+                                                    </a>
+                                                </div>
+                                                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                                <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=atasan" target="_blank" class="btn btn-sm btn-primary">
+                                                    <i class="far fa-eye px-1"></i>Atasan
+                                                </a>
+                                                </div>
+                                                <div class="btn-group mr-2" role="group" aria-label="Third group">
+                                                    <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=rekanan" target="_blank" class="btn btn-sm btn-success">
+                                                        <i class="far fa-eye px-1"></i>Rekanan
+                                                    </a>
+                                                </div>
+                                                <!-- <a href="/penilai-rekap/detail/staff?dinilai={{$p->npp_dinilai}}" target="_blank" class="btn btn-sm btn-warning">
+                                                    <i class="far fa-eye px-1"></i>
+                                                </a> -->
+                                                <div class="btn-group mr-2" role="group" aria-label="Third group">
+                                                    <button type="button" class="btn btn-warning btn-sm btnInfoStaff" data-toggle="modal" data-target="#staffModal" data-npp-dinilai='{{$p->npp_dinilai}}' data-rekap-id="{{$p->id}}">
+                                                        <i class="far fa-eye px-1"></i>Staff
+                                                    </button>
+                                                </div>
+                                            </td>
                                         </td>
                                     </tr>
                                     @endforeach
