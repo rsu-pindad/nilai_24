@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\FinalDp3;
 use App\Models\PoolRespon;
 use App\Models\RelasiKaryawan;
+use App\Models\RelasiStaff;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\RekapPenilai;
@@ -26,7 +27,7 @@ class RekapPenilaiController extends Controller
         ->selectRaw('AVG(sum_nilai_k_bobot_aspek) as sum_k1')
         ->selectRaw('AVG(sum_nilai_s_bobot_aspek) as sum_k2')
         ->selectRaw('AVG(sum_nilai_p_bobot_aspek) as sum_k3')
-        ->groupBy('npp_dinilai')->get(); 
+        ->groupBy('npp_dinilai')->get();
         return view('hc.rekap.penilai.index')->with([
             'data_penilai' => $penilai,
         ]);
@@ -121,63 +122,84 @@ class RekapPenilaiController extends Controller
         }
     }
 
-    public function showRelasiStaff(Request $request)
+    public function showStaff(Request $request)
     {
-        $penilai = collect([]);
-        $res = RekapPenilai::with([
-            'relasi_karyawan',
-            'relasi_respon',
+        $karyawanDinilai = RelasiKaryawan::where('npp_karyawan', $request->dinilai)->first();
+        $data = [];
+        try {
+            if($karyawanDinilai){
+                $staff = RelasiStaff::with(['parent_staff', 'identitas_staff'])
+                ->where('relasi_karyawan_id', $karyawanDinilai->id)
+                ->get();
+                if($staff){
+                    $data = [
+                        'data' => $staff
+                    ];
+                }
+            }
+            return response()->json($data,200);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage());
+        }
+    }
+
+    public function showStaffDetailPenilai(Request $request)
+    {
+        try {
+            $penilais = collect([]);
+            $penilai = RekapPenilai::with([
+                'relasi_karyawan',
+                'relasi_respon'
             ])
+            ->where('npp_penilai', $request->penilai)
             ->where('npp_dinilai', $request->dinilai)
-            ->where('relasi', 'staff')
-            ->get();
-        $avg = $res->groupBy('relasi');
-        $avg->values()->all();
+            ->where('relasi','staff')
+            ->first();
 
-        $penilai['jabatan_dinilai'] = $avg->map(function($pool){
-            $temp = $pool->toArray();
-            dd($temp);
-            $k1 = $temp['relasi_respon']['strategi_perencanaan'];
-            $k2 = $temp['relasi_respon']['strategi_perencanaan'];
-            $k3 = $temp['relasi_respon']['strategi_perencanaan'];
-            $k4 = $temp['relasi_respon']['strategi_perencanaan'];
-            $k5 = $temp['relasi_respon']['strategi_perencanaan'];
-            $k6 = $temp['relasi_respon']['strategi_perencanaan'];
-        });
-        
-        dd($penilai);
+            $raw_penilai = RekapPenilai::with([
+                'relasi_karyawan',
+                'relasi_respon',
+                ])
+                ->where('npp_dinilai', $request->dinilai)
+                ->where('relasi', 'staff')
+                ->get();
+            $avg = $raw_penilai->groupBy('relasi');
+            $avg->values()->all();
+            
+            $jabatan = $avg['staff']->unique('jabatan_dinilai')->pluck('jabatan_dinilai')->toArray()[0];
+            $penilais['jabatan_dinilai'] = $jabatan;
+            $penilais['strategi_perencanaan_bobot_aspek'] = $avg['staff']->avg('strategi_perencanaan_bobot_aspek');
+            $penilais['strategi_pengawasan_bobot_aspek'] = $avg['staff']->avg('strategi_pengawasan_bobot_aspek');
+            $penilais['strategi_inovasi_bobot_aspek'] = $avg['staff']->avg('strategi_inovasi_bobot_aspek');
+            $penilais['kepemimpinan_bobot_aspek'] = $avg['staff']->avg('kepemimpinan_bobot_aspek');
+            $penilais['membimbing_membangun_bobot_aspek'] = $avg['staff']->avg('membimbing_membangun_bobot_aspek');
+            $penilais['kerjasama_bobot_aspek'] = $avg['staff']->avg('kerjasama_bobot_aspek');
+            $penilais['komunikasi_bobot_aspek'] = $avg['staff']->avg('komunikasi_bobot_aspek');
+            $penilais['absensi_bobot_aspek'] = $avg['staff']->avg('absensi_bobot_aspek');
+            $penilais['integritas_bobot_aspek'] = $avg['staff']->avg('integritas_bobot_aspek');
+            $penilais['etika_bobot_aspek'] = $avg['staff']->avg('etika_bobot_aspek');
+            $penilais['goal_kinerja_bobot_aspek'] = $avg['staff']->avg('goal_kinerja_bobot_aspek');
+            $penilais['error_kinerja_bobot_aspek'] = $avg['staff']->avg('error_kinerja_bobot_aspek');
+            $penilais['proses_dokumen_bobot_aspek'] = $avg['staff']->avg('proses_dokumen_bobot_aspek');
+            $penilais['proses_inisiatif_bobot_aspek'] = $avg['staff']->avg('proses_inisiatif_bobot_aspek');
+            $penilais['proses_polapikir_bobot_aspek'] = $avg['staff']->avg('proses_polapikir_bobot_aspek');
+            $penilais['sum_nilai_k_bobot_aspek'] = $avg['staff']->avg('sum_nilai_k_bobot_aspek');
+            $penilais['sum_nilai_s_bobot_aspek'] = $avg['staff']->avg('sum_nilai_s_bobot_aspek');
+            $penilais['sum_nilai_p_bobot_aspek'] = $avg['staff']->avg('sum_nilai_p_bobot_aspek');
+            $penilais['sum_nilai_dp3'] = $avg['staff']->avg('sum_nilai_dp3');
+            $penilais['relasi'] = 'staff';
 
-        $jabatan = $avg['staff']->unique('jabatan_dinilai')->pluck('jabatan_dinilai')->toArray()[0];
-        $penilai['jabatan_dinilai'] = $jabatan;
-        $penilai['strategi_perencanaan_bobot_aspek'] = $avg['staff']->avg('strategi_perencanaan_bobot_aspek');
-        $penilai['strategi_pengawasan_bobot_aspek'] = $avg['staff']->avg('strategi_pengawasan_bobot_aspek');
-        $penilai['strategi_inovasi_bobot_aspek'] = $avg['staff']->avg('strategi_inovasi_bobot_aspek');
-        $penilai['kepemimpinan_bobot_aspek'] = $avg['staff']->avg('kepemimpinan_bobot_aspek');
-        $penilai['membimbing_membangun_bobot_aspek'] = $avg['staff']->avg('membimbing_membangun_bobot_aspek');
-        $penilai['kerjasama_bobot_aspek'] = $avg['staff']->avg('kerjasama_bobot_aspek');
-        $penilai['komunikasi_bobot_aspek'] = $avg['staff']->avg('komunikasi_bobot_aspek');
-        $penilai['absensi_bobot_aspek'] = $avg['staff']->avg('absensi_bobot_aspek');
-        $penilai['integritas_bobot_aspek'] = $avg['staff']->avg('integritas_bobot_aspek');
-        $penilai['etika_bobot_aspek'] = $avg['staff']->avg('etika_bobot_aspek');
-        $penilai['goal_kinerja_bobot_aspek'] = $avg['staff']->avg('goal_kinerja_bobot_aspek');
-        $penilai['error_kinerja_bobot_aspek'] = $avg['staff']->avg('error_kinerja_bobot_aspek');
-        $penilai['proses_dokumen_bobot_aspek'] = $avg['staff']->avg('proses_dokumen_bobot_aspek');
-        $penilai['proses_inisiatif_bobot_aspek'] = $avg['staff']->avg('proses_inisiatif_bobot_aspek');
-        $penilai['proses_polapikir_bobot_aspek'] = $avg['staff']->avg('proses_polapikir_bobot_aspek');
-        $penilai['sum_nilai_k_bobot_aspek'] = $avg['staff']->avg('sum_nilai_k_bobot_aspek');
-        $penilai['sum_nilai_s_bobot_aspek'] = $avg['staff']->avg('sum_nilai_s_bobot_aspek');
-        $penilai['sum_nilai_p_bobot_aspek'] = $avg['staff']->avg('sum_nilai_p_bobot_aspek');
-        $penilai['sum_nilai_dp3'] = $avg['staff']->avg('sum_nilai_dp3');
-        $penilai['relasi'] = 'staff';
-
-        // dd($penilai);
-
-        if($penilai){
-            return view('hc.rekap.penilai.index-detail-staff')->with([
+            if($penilai){
+                return view('hc.rekap.penilai.index-detail')->with([
                     'data_penilai' => $penilai,
+                    'avg_penilai' => $penilais
                 ]);
-        }else{
+            }else{
+                return abort(404);
+            }
+        } catch (\Throwable $th) {
             return abort(404);
+            // return $th->getMessage();
         }
     }
 

@@ -108,7 +108,27 @@
                                             <td>{{ $pool['proses_inisiatif'] }}</td>
                                             <td>{{ $pool['proses_polapikir'] }}</td>
                                             <td>{{ $pool['sum_nilai'] }}</td>
-                                            <td>{{ $pool['relasi'] }}</td>
+                                            <td>
+                                                @if($pool['relasi'] == 'atasan')
+                                                    <p>
+                                                        <span class="badge badge-primary">
+                                                        {{ $pool['relasi'] }}
+                                                        </span>
+                                                    </p>
+                                                @elseif($pool['relasi'] == 'rekanan')
+                                                    <p>
+                                                        <span class="badge badge-secondary">
+                                                        {{ $pool['relasi'] }}
+                                                        </span>
+                                                    </p>
+                                                @else
+                                                    <p>
+                                                        <span class="badge badge-success">
+                                                        {{ $pool['relasi'] }}
+                                                        </span>
+                                                    </p>
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                     </tbody>

@@ -346,6 +346,14 @@ use Carbon\Carbon;
                                     {{round(($data_penilai->sum_nilai_dp3 * 100),3)}} {{'('.$bobot_penilai.')'}}
                                     </td>
                                 </tr>
+                                @isset($avg_penilai)
+                                <tr class="text-center font-weight-bold">
+                                    <td colspan="4">Rata - Rata DP 3</td>
+                                    <td>
+                                    {{round($avg_penilai['sum_nilai_dp3'] * 100,2)}}
+                                    </td>
+                                </tr>
+                                @endisset
                             </tbody>
                         </table>
                     </div>

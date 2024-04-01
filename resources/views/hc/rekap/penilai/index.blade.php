@@ -73,7 +73,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="px-2 bd-highlight">        
+                                    <div class="p-2 bd-highlight">        
                                         <ul class="list-inline">
                                             <li class="list-inline-item">B-A (Bobot Aspek)</li>
                                         </ul>
@@ -117,17 +117,17 @@
                                         <td>{{round($p->sum_k2 * 100,3)}}</td>
                                         <td>{{round($p->sum_k3 * 100,3)}}</td>
                                         <td>
-                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=self" target="_blank" class="btn btn-sm btn-warning">
+                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=self" target="_blank" class="btn btn-sm btn-info">
                                                 <i class="far fa-eye"></i>
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=atasan" target="_blank" class="btn btn-sm btn-warning">
+                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=atasan" target="_blank" class="btn btn-sm btn-info">
                                                 <i class="far fa-eye"></i>
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=rekanan" target="_blank" class="btn btn-sm btn-warning">
+                                            <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=rekanan" target="_blank" class="btn btn-sm btn-info">
                                                 <i class="far fa-eye"></i>
                                             </a>
                                         </td>
@@ -135,6 +135,9 @@
                                             <!-- <a href="/penilai-rekap/detail/staff?dinilai={{$p->npp_dinilai}}" target="_blank" class="btn btn-sm btn-warning">
                                                 <i class="far fa-eye"></i>
                                             </a> -->
+                                            <button type="button" class="btn btn-info btn-sm btnInfoStaff" data-toggle="modal" data-target="#staffModal" data-npp-dinilai='{{$p->npp_dinilai}}' data-rekap-id="{{$p->id}}">
+                                                <i class="far fa-eye"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -155,20 +158,97 @@
 
 @endsection
 
+@push('modals')
+<!-- Modal -->
+<div class="modal fade" id="staffModal" tabindex="-1" aria-labelledby="staffModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staffModalLabel">List Staff</h5>
+      </div>
+      <div class="modal-body staffModalBody">
+        <p class="text-center"><em>tunggu...</em></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+@endpush
+
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush
 
 @push('scripts')
-    <script>
-        $("#dataTablesRekap2").DataTable({
-            ordering: false,
-            scrollCollapse: true,
-            searching : true,
-            scrollX: false,
-            scrollY: '50vh',
-        });
-    </script>
+<script>
+var request_staff = null;
+$('.btnInfoStaff').on('click', function()
+{
+    // alert('ok hooked');
+    let id = $(this).attr('data-npp-dinilai')
+    let rekapId = $(this).attr('data-rekap-id')
+    // console.log(id);
+    const uri = `/penilai-rekap/detail/staff?dinilai=${id}`
+    if(request_staff && request_staff.readyState != 2){
+        request_staff.abort();
+    }
+    request_staff = $.ajax({
+        url : uri,
+        type : 'get',
+        dataType: 'json',
+        success : function (response){
+            const local_uri = `/penilai-rekap/detail/staff/detail?dinilai=`;
+            var len = 0;
+            if(response['data'] != null){
+                len = response['data'].length;
+            }
+            var head = `<div class="list-group">`;
+                $('.staffModalBody').empty();
+                $('.staffModalBody').prepend(head);
+            if(len > 0){
+                for(var i=0; i<len;i++){
+                    var id = response['data'][i].id;
+                    var identitasNamaStaff = response['data'][i].identitas_staff.nama_karyawan;
+                    var identitasNppStaff = response['data'][i].identitas_staff.npp_karyawan;
+                    var identitaIdStaff = response['data'][i].identitas_staff.id;
+                    var parentStaff = response['data'][i].parent_staff.npp_karyawan;
+                    // var nppStaff = response['data'][i].npp_staff;
+                    var option = `<a href="${local_uri+parentStaff+'&penilai='+identitaIdStaff+'&relasi=staff'}" 
+                        class="list-group-item list-group-item-action" 
+                        target="_blank"
+                        data-parent-npp=${parentStaff}
+                        data-staff-id=${identitaIdStaff}>${identitasNppStaff} - ${identitasNamaStaff}
+                        <i class="fas fa-hand-point-left px-2"></i>
+                        </a>`;
+                    $('.staffModalBody').append(option);
+                }
+            }else{
+                let content = `<p class="text-center"><em>tidak mempunya staff</em></p>`;
+                $('.staffModalBody').html(content);
+            }
+            var tail = `</div>`;
+        }
+    })
+})
+
+$('#staffModal').on('hidden.bs.modal', function(e){
+    e.preventDefault();
+    // alert('modal closed')
+    let content = `<p class="text-center"><em>tunggu...</em></p>`;
+    $('.staffModalBody').empty();
+    $('.staffModalBody').html(content);
+})
+
+var table = $("#dataTablesRekap2").DataTable({
+    ordering: false,
+    scrollCollapse: true,
+    searching : true,
+    scrollX: false,
+    scrollY: '50vh',
+});
+</script>
 @endpush
 
 @push('scripts')
@@ -176,10 +256,8 @@
 $(document).ready(function(e){
     async function swalAjax()
     {
-        // let clears = true;
         const uri = '/penilai-rekap/calculate?relasi=all';
         $.ajax({
-            // url : '/skor-pool-staff?refresh='+clears,
             url :uri,
             type : 'get',
             dataType: 'json',
@@ -223,8 +301,8 @@ $(document).ready(function(e){
             'anda yakin',
             'anda melakukan rekap semua penilai',
             'warning',
-            'Pool saja'
-            );
+            'Iya'
+        );
     });
 });
 </script>

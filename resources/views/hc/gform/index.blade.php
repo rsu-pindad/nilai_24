@@ -87,22 +87,26 @@
                                                 </a></td>
                                             <td>{{ $gres->nama_dinilai }}</td>
                                             <td class="px-2">
-                                                <div class="btn-group" role="group" aria-label="group aksi">
-                                                    <button 
-                                                        type="button"
-                                                        class="btn btn-outline-secondary btn-sm lihatResponse"
-                                                        data-id="{{ $gres->id }}"
-                                                        >
-                                                        <i class="fas fa-eye p-1"></i>Lihat
-                                                    </button>
-                                                    <form action="{{route('gform-destroy', $gres->id)}}" method="Post">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-outline-warning btn-sm"
-                                                            onclick="return confirm('Yakin akan menghapus data ini?')">
-                                                            <i class="fas fa-trash-alt p-1"></i>Hapus
+                                                <div class="btn-toolbar" role="toolbar" aria-label="group aksi">
+                                                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                                                        <button 
+                                                            type="button"
+                                                            class="btn btn-outline-secondary btn-sm lihatResponse"
+                                                            data-id="{{ $gres->id }}"
+                                                            >
+                                                            <i class="fas fa-eye p-1"></i>Lihat
                                                         </button>
-                                                    </form>
+                                                    </div>
+                                                    <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                                        <form action="{{route('gform-destroy', $gres->id)}}" method="Post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-outline-warning btn-sm"
+                                                                onclick="return confirm('Yakin akan menghapus data ini?')">
+                                                                <i class="fas fa-trash-alt p-1"></i>Hapus
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </td>
                                             </td>
                                         </tr>
@@ -132,6 +136,7 @@
         <p class="modal-title h4" id="lihatProfileModalLabel"></p>
       </div>
       <div class="modal-body" id="setProfile">
+        <p class="text-center"><em>tunggu...</em></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="exitProfilePenilaiModal" data-dismiss="modal">Close</button>
@@ -150,6 +155,7 @@
         <p class="modal-title h4" id="lihatResponseModalLabel"></p>
       </div>
       <div class="modal-body" id="setResponse">
+        <p class="text-center"><em>tunggu...</em></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="exitProfilePenilaiModal" data-dismiss="modal">Close</button>
@@ -258,6 +264,7 @@ $('.lihatResponse').on('click', function(e){
                     </dd>
                     
                 </dl>`;
+                $('#setResponse').empty()
                 $('#setResponse').html(content)
             },
             error: function(response){
@@ -296,6 +303,13 @@ $('.lihatProfileDinilai').on('click', function(e){
     })
 });
 
+$('#lihatResponseModal').on('hidden.bs.modal', function(e){
+    // alert('modal closed')
+    let content = `<p class="text-center"><em>tunggu...</em></p>`;
+    $('#setResponse').html(content)
+    $('#lihatResponseModalLabel').empty()
+})
+
 $('.lihatProfilePenilai').on('click', function(e){
     e.preventDefault();
     // console.log('ok opened');
@@ -321,9 +335,16 @@ $('.lihatProfilePenilai').on('click', function(e){
     $('#lihatProfileModal').on('shown.bs.modal', function(e){
         e.preventDefault();
         $('#lihatProfileModalLabel').text(`${npp} - ${nama}`)
-        $('#setProfile').html(content);
+        $('#setProfile').html(content)
     })
-});
+})
+
+$('#lihatProfileModal').on('hidden.bs.modal', function(e){
+    // alert('modal closed')
+    let content = `<p class="text-center"><em>tunggu...</em></p>`;
+    $('#setProfile').html(content)
+    $('#lihatProfileModalLabel').empty()
+})
 
 var table = $('#dataTablesPull').DataTable({
     responsive: true,

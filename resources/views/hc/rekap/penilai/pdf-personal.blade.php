@@ -120,6 +120,9 @@
             right: 30px;
         }
 
+        /* table td { width: 10em; border: 1px solid black; } */
+        /* table td:nth-child(2) { text-align: end; } */
+
     </style>
 
 </head>
@@ -314,14 +317,14 @@
         <tbody>
             <tr>
                 <td class="px-4">
-                    <span>Bandung,</span> {{$nows}}<br>
+                    <span>Bandung,</span> {{$nows}}<br/>
                     <span class="font-weight-bold">
                         PT PINDAD MEDIKA UTAMA
                     </span>
                 </td>
             </tr>
             <tr>
-                <td style="height: 60px"></td>
+                <td style="height: 3em;"></td>
             </tr>
             <tr>
                 <td class="font-weight-bold center">
