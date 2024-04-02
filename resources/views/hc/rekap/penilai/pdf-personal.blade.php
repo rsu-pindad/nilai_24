@@ -18,20 +18,23 @@
             font-family: Georgia, serif;
             background: none;
             color: black;
-            margin-top: 2cm;
+            margin-top: 1.5cm;
             margin-left: 1.5cm;
             margin-right: 1.5cm;
-            margin-bottom: 2cm;
+            margin-bottom: 1.5cm;
         }
 
         .styled-table,{
             /* border: 1px solid black; */
             /* padding: 0.1rem 0.50rem 0.1rem 0.50rem; */
             border-collapse: collapse;
-            margin: 16px 0;
+            table-layout: fixed;
+            margin: 8px 0;
             font-size: 0.8em;
             font-family: DejaVu Sans;
-            min-width: 400px;
+            /* min-width: 700px; */
+            min-width: 700px;
+            max-width: 700px;
             box-shadow: 0 0 20px rgba(0,0,0,0.15);
             /* width: 100%; */
         }
@@ -46,13 +49,13 @@
         } */
         .styled-table th,
         .styled-table td {
-            padding: 2px 16px;
+            padding: 2px 8px;
         }
         .styled-table tbody tr {
             border-bottom: 1px solid #dddddd;
         }
 
-        .styled-table tbody tr:nth-of-type(even) {
+        .styled-table tbody tr:nth-of-type(odd) {
             background-color: #f3f3f3;
         }
 
