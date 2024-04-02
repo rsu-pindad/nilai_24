@@ -52,7 +52,7 @@ use Carbon\Carbon;
                     @php
                         $jabatan = $data_penilai->jabatan_dinilai;
                         $relasi = $data_penilai->relasi;
-                        if($jabatan == 'IA' || $jabatan == 'IC')
+                        if($jabatan == 'IA' || $jabatan == 'IC' || $jabatan == 'I A' || $jabatan == 'I C')
                         {
                             $ket1 = '25%';
                             $ket2 = '25%';
@@ -63,7 +63,7 @@ use Carbon\Carbon;
                             $penilai_staff = '15%';
                             $penilai_self = '5%';
                         }
-                        elseif($jabatan == 'II' || $jabatan == 'IINS')
+                        elseif($jabatan == 'II' || $jabatan == 'IINS' || $jabatan == 'II NS')
                         {
                             $ket1 = '25%';
                             $ket2 = '30%';
@@ -85,7 +85,7 @@ use Carbon\Carbon;
                             $penilai_staff = '15%';
                             $penilai_self = '5%';
                         }
-                        else if($jabatan == 'IVA')
+                        else if($jabatan == 'IVA' || $jabatan == 'IV A')
                         {
                             $ket1 = '30%';
                             $ket2 = '60%';

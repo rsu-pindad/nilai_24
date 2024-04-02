@@ -109,12 +109,18 @@
                                             <td>{{ $pool['proses_polapikir'] }}</td>
                                             <td>{{ $pool['sum_nilai'] }}</td>
                                             <td>
-                                                @if($pool['relasi'] == 'atasan')
+                                                @if($pool['relasi'] == 'self')
                                                     <p>
-                                                        <span class="badge badge-primary">
+                                                        <span class="badge badge-warning">
                                                         {{ $pool['relasi'] }}
                                                         </span>
                                                     </p>
+                                                @elseif($pool['relasi'] == 'atasan')
+                                                <p>
+                                                    <span class="badge badge-primary">
+                                                    {{ $pool['relasi'] }}
+                                                    </span>
+                                                </p>
                                                 @elseif($pool['relasi'] == 'rekanan')
                                                     <p>
                                                         <span class="badge badge-secondary">
@@ -179,17 +185,27 @@ $(document).ready(function(e){
             type : 'get',
             dataType: 'json',
             success : function (response){
-                console.log(response)
+                // console.log(response)
+                swalOk(response.title,response.text,response.icon);
+                setTimeout(() => {
+                    location.reload();
+                }, 3100);
+            },
+            error : function (response){
+                swalOk(response.title, response.text,response.icon);
+                setTimeout(() => {
+                    location.reload();
+                }, 10000);
             }
         });
     }
 
-    async function swalOk()
+    async function swalOk(title, text, icon)
     {
         Swal.fire({
-            title: "success",
-            text: "anda menarik data dari database, muat ulang halaman",
-            icon: "success"
+            title: title,
+            text: text,
+            icon: icon
         });
     }
 
@@ -206,8 +222,9 @@ $(document).ready(function(e){
         cancelButtonText: "batal"
         }).then((result) => {
         if (result.isConfirmed) {
-            swalAjax();
-            swalOk();
+            setTimeout(() => {
+                swalAjax();
+            }, 1000);
         }
         });
     }
@@ -215,11 +232,11 @@ $(document).ready(function(e){
     $('#btnSkorPoolModal').on('click', function(ev){
         ev.preventDefault();
         alertswal(
-            'anda yakin',
+            'anda yakin ?',
             'anda akan melakukan kalkulasi data pada form response',
-            'warning',
-            'Hitung saja'
-            );
+            'info',
+            'iya'
+        );
     });
 
 });

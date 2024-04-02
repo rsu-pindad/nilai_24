@@ -49,7 +49,7 @@
                                             <td>{{ $skor['jawaban'] }}</td>
                                             <td>{{ $skor['skor'] }}</td>
                                             <td class="px-2">
-                                                <div class="btn-toolbar" role="toolbar" arua-label="grup satu">
+                                                <div class="btn-toolbar d-flex justify-content-around" role="toolbar" arua-label="grup satu">
                                                     <div class="btn-group mr-2" role="group" aria-label="group aksi">
                                                         <button 
                                                             type="button"

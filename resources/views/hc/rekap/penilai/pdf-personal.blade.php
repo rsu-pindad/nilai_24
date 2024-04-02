@@ -188,7 +188,7 @@
             <td class="boldText">NPP</td>
             <td>{{$npp}}</td>
             <td class="boldText">Unit</td>
-            <td>RSUP Bandung</td>
+            <td></td>
         </tr>
         <tr>
             <td class="boldText">Jabatan</td>

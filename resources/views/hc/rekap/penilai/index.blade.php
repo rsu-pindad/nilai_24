@@ -107,7 +107,7 @@
                                         <td>{{round($p->sum_k2 * 100,3)}}</td>
                                         <td>{{round($p->sum_k3 * 100,3)}}</td>
                                         <td>
-                                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                            <div class="btn-toolbar d-flex justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
                                                 <div class="btn-group mr-2" role="group" aria-label="First group">
                                                     <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=self" target="_blank" class="btn btn-sm btn-info">
                                                         <i class="far fa-eye px-1"></i>Self
@@ -256,17 +256,28 @@ $(document).ready(function(e){
             type : 'get',
             dataType: 'json',
             success : function (response){
-                console.log(response)
+                // console.log(response);
+                let msg = JSON.stringify(response.text.message);
+                swalOk(response.title, msg, response.icon);
+                setTimeout(() => {
+                    location.reload()
+                }, 10000);
+            },
+            error : function (response){
+                swalOk(response.title, JSON.stringify(response.text.message), response.icon);
+                setTimeout(() => {
+                    location.reload()
+                }, 10000);
             }
         });
     }
 
-    async function swalOk()
+    async function swalOk(title,text,icon)
     {
         Swal.fire({
-            title: "success",
-            text: "anda menarik data dari database, muat ulang halaman",
-            icon: "success"
+            title: title,
+            text: text,
+            icon: icon,
         });
     }
 
@@ -283,8 +294,9 @@ $(document).ready(function(e){
         cancelButtonText: "batal"
         }).then((result) => {
             if (result.isConfirmed) {
-                swalAjax();
-                swalOk();
+                setTimeout(() => {
+                    swalAjax();
+                }, 1000);
             }
         });
     }

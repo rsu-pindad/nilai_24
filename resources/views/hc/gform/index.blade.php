@@ -88,7 +88,7 @@
                                             </td>
                                             <td>{{ $gres->nama_dinilai }}</td>
                                             <td class="px-2">
-                                                <div class="btn-toolbar" role="toolbar" aria-label="group aksi">
+                                                <div class="btn-toolbar d-flex justify-content-center" role="toolbar" aria-label="group aksi">
                                                     <div class="btn-group mr-2" role="group" aria-label="First group">
                                                         <button 
                                                             type="button"
@@ -377,9 +377,9 @@ $(document).ready(function(e){
             },
             error: function(response){
                 swalOk(response.info,response.data_sama,'data gagal '+response.data_gagal,'warning');
-                setTimeout(() => {
-                    location.reload();
-                }, 3100);
+                // setTimeout(() => {
+                    // location.reload();
+                // }, 3100);
             }
         });
     }
@@ -413,6 +413,7 @@ $(document).ready(function(e){
 
     $('#btnPullResponse').on('click', function(ev){
         ev.preventDefault();
+        // $(this).prop('disabled',true);
         alertswal(
             'anda yakin',
             'anda melakukan penarikan data pada sheet google form response',

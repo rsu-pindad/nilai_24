@@ -100,7 +100,7 @@
 
 @push('scripts')
 <script>
-$('#tabelKaryawan').DataTable({
+var table = $('#tabelKaryawan').DataTable({
     responsive: true,
     ordering: false,
     scrollX: false,
@@ -116,23 +116,32 @@ $(document).ready(function(e){
 
     async function swalAjax()
     {
+        const uri = '/relasi-karyawan/pull-level';
         return await $.ajax({
-            url : '/relasi-karyawan/pull-level',
+            url : uri,
             type : 'get',
             dataType: 'json',
-            success : function (response)
-            {
-                console.log(response)
+            success : function (response){
+                swalOk(response.title, response.text, 'success');
+                setTimeout(() => {
+                    location.reload()
+                }, 3100);
+            },
+            error: function(response){
+                swalOk(response.title, response.text, 'danger');
+                setTimeout(() => {
+                    location.reload()
+                }, 10000)
             }
         });
     }
 
-    async function swalOk()
+    async function swalOk(title, text, icon)
     {
         Swal.fire({
-            title: "success",
-            text: "anda menarik data dari database, muat ulang halaman",
-            icon: "success"
+            title: title,
+            text: text,
+            icon: icon
         });
     }
 
@@ -148,23 +157,23 @@ $(document).ready(function(e){
         confirmButtonText: confirmButtonText,
         cancelButtonText: "batal"
         }).then((result) => {
-        if (result.isConfirmed) {
-            swalAjax();
-            swalOk();
-        }
+            if (result.isConfirmed) {
+                swalAjax();
+            }
         }).catch((result) => {
-            swalOk();
+            console.log(result);
         });
     }
 
     $('#btnPullRelasiKaryawan').on('click', function(ev){
         ev.preventDefault();
+        $(this).prop("disabled",true);
         alertswal(
             'anda yakin',
-            'anda melakukan pool(kalkulasi) data pada database',
-            'warning',
-            'Pool saja'
-            );
+            'anda melakukan penarikan data pada sheet karyawan',
+            'info',
+            'Iya'
+        );
     });
 });
 </script>
