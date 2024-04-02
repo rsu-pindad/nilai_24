@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
             $relasi_staff = [];
             $custom_data = [];
             $sheet_id = env('GOOGLE_SHEET_ID', '');
+            $googleFormLink = env('GOOGLE_SHEET_RESPONSE_LINK','');
             if ($user) {
                 if ($user->level != 1) {
                     // $sheet = Sheets::spreadsheet($sheet_id)->sheet('link')->range('A:I')->get() ?? [];
@@ -92,7 +93,8 @@ class AppServiceProvider extends ServiceProvider
                     // if($form_link){
                         // $form_data = $form_link->toArray();
                         $form_data = [];
-                        $form_data['form_start'] = 'https://docs.google.com/forms/d/e/1FAIpQLSfTQ2DyudZ-cGmfqWjS1Gz4fPJK33jJXIa7nOi4vVm-LYwnfA/viewform?usp=pp_url';
+                        // $form_data['form_start'] = 'https://docs.google.com/forms/d/e/1FAIpQLSfTQ2DyudZ-cGmfqWjS1Gz4fPJK33jJXIa7nOi4vVm-LYwnfA/viewform?usp=pp_url';
+                        $form_data['form_start'] = $googleFormLink;
                         $form_data['form_1'] = 'entry.309041911=';
                         $form_data['form_2'] = 'entry.2024238832=';
                         $form_data['form_3'] = 'entry.1845465427=';
@@ -108,16 +110,27 @@ class AppServiceProvider extends ServiceProvider
                         '&'.$form_data['form_4'].$self['nama_karyawan'].
                         '&'.$form_data['form_5'].$self['level_jabatan'];
                         
-                        $atasan = $relasi_atasan->first()->toArray();
-                        $data_atasan = RelasiKaryawan::where('npp_karyawan', $atasan['npp_atasan'])->first()->toArray();
-                        // $full_form = $form_data['form_start'].'&'.$form_data['form_1'].'&'.$form_data['form_2'].'&'.$form_data['form_3'].'&'.$form_data['form_4'].'&'.$form_data['form_5'];
-                        $atasan = json_decode($relasi_atasan->pluck('npp_atasan')->toJson());
-                        $form_atasan = $form_data['form_start'].
-                        '&'.$form_data['form_1'].Auth::user()->npp.
-                        '&'.$form_data['form_2'].$self['nama_karyawan'].
-                        '&'.$form_data['form_3'].$data_atasan['npp_karyawan'].
-                        '&'.$form_data['form_4'].$data_atasan['nama_karyawan'].
-                        '&'.$form_data['form_5'].$data_atasan['level_jabatan'];
+                        $atasan = $relasi_atasan->first();
+                        if($atasan){
+                            $atasan->toArray();
+                            $data_atasan = RelasiKaryawan::where('npp_karyawan', $atasan['npp_atasan'])->first();
+                            if($data_atasan)
+                            {
+                                $data_atasan->toArray();
+                                // $full_form = $form_data['form_start'].'&'.$form_data['form_1'].'&'.$form_data['form_2'].'&'.$form_data['form_3'].'&'.$form_data['form_4'].'&'.$form_data['form_5'];
+                                $atasan = json_decode($relasi_atasan->pluck('npp_atasan')->toJson());
+                                $form_atasan = $form_data['form_start'].
+                                '&'.$form_data['form_1'].Auth::user()->npp.
+                                '&'.$form_data['form_2'].$self['nama_karyawan'].
+                                '&'.$form_data['form_3'].$data_atasan['npp_karyawan'].
+                                '&'.$form_data['form_4'].$data_atasan['nama_karyawan'].
+                                '&'.$form_data['form_5'].$data_atasan['level_jabatan'];
+                            }else{
+                                $atasan = '#N/A';
+                                $form_atasan = '#N/A';
+                            }
+                        }
+                        
                         
                         $form_selevel = '#N/A';
                         $selevel = $relasi_selevel->first();
@@ -133,7 +146,6 @@ class AppServiceProvider extends ServiceProvider
                             '&'.$form_data['form_4'].$data_selevel['nama_karyawan'].
                             '&'.$form_data['form_5'].$data_selevel['level_jabatan'];
                         }
-                        
 
                         $daftarStaff = [];
                         foreach($relasi_staff as $key => $items){
@@ -166,11 +178,9 @@ class AppServiceProvider extends ServiceProvider
                     
                     $page = request()->input('page');
                     $link = request()->input('link');
-                    // dd($daftarStaff);
                 }
             }
             $view->with(['page' => $page, 'sheet' => $custom_data, 'link' => $link, 'staff_data' => $daftarStaff ?? []]);
-            // $view->with(['page' => $page, 'sheet' => $chunk, 'link' => $link, 'staff' => $daftarStaff ?? false]);
         });
     }
 }

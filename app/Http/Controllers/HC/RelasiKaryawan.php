@@ -31,7 +31,10 @@ class RelasiKaryawan extends Controller
     }
     public function pull()
     {
-        $values = Sheets::spreadsheet('1CX4q_BqkCgHr1TEe0_tlRHO9ZcSXqKv46Q-v7H1OykM')->sheet('DP3 2023')->range('F$5:I')->all();
+        // $values = Sheets::spreadsheet('1CX4q_BqkCgHr1TEe0_tlRHO9ZcSXqKv46Q-v7H1OykM')->sheet('DP3 2023')->range('F$5:I')->all();
+        $sheetId = env('GOOGLE_SHEET_DP_2023_ID', '');
+        $sheetName = env('GOOGLE_SHEET_DP_2023_NAME', '');
+        $values = Sheets::spreadsheet($sheetId)->sheet($sheetName)->range('F$5:I')->all();
         // unset($values[0]);
         // dd($values);
         $message = [];
@@ -123,31 +126,33 @@ class RelasiKaryawan extends Controller
     {
         // $values = Sheets::spreadsheet('1CX4q_BqkCgHr1TEe0_tlRHO9ZcSXqKv46Q-v7H1OykM')->sheet('DP3 2023')->range('C$5:I')->all();
         // $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2022')->range('A$2:G')->get();
-        $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2023')->range('C$5:I')->get();
-        $values = $rows->filter();
-        // unset($values[0]);
-        // dd($values);
+        // $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2023')->range('C$5:I')->get();
 
         try {
+            $sheetId = env('GOOGLE_SHEET_DP_2023_ID', '');
+            $sheetName = env('GOOGLE_SHEET_DP_2023_NAME', '');
+            $rows = Sheets::spreadsheet($sheetId)->sheet($sheetName)->range('C$5:I')->get();
+            // $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2023')->range('C$5:I')->get();
+            $values = $rows->filter();
+
+            // dd($values);
+
             $lastNppKaryawan = '';
             $rkid = '';
             $findIdRk = '';
             foreach($values as $key => $val){
-                // dd($values);
-                // dd($val);
                 if($val[3] != '' && $val[3] != '-')
                 {
-                    // $val[3] = $lastNppKaryawan;
-                    // dd($val[3]);
                     $checkTable = RK::where('npp_karyawan',$val[3])->first() ?? '';
                     if($checkTable == ''){
-                        // dd($val[2],$val[0],$val[1]);
                         $storeRk = RK::updateOrCreate(
                             [
-                            'npp_karyawan' => $val[3],
-                            'level_jabatan' => $val[1] ?? 'kosong',
-                            'unit_jabatan' => $val[2] ?? 'kosong',
-                            'nama_karyawan' => $val[0],
+                                'npp_karyawan' => $val[3],
+                            ],
+                            [
+                                'level_jabatan' => $val[1],
+                                'unit_jabatan' => $val[2],
+                                'nama_karyawan' => $val[0],
                             ]
                         ); 
                         // Insert
@@ -162,19 +167,17 @@ class RelasiKaryawan extends Controller
                 else
                 {
                     $val[3] = $lastNppKaryawan;
-                    // dd($values);
                     $checkTable = RK::where('npp_karyawan',$val[3])->first() ?? '';
                     if($checkTable == ''){
                         $storeRk = RK::create(
                             [
-                            'npp_karyawan' => $val[3],
-                            'level_jabatan' => $val[1] ?? 'kosong',
-                            'unit_jabatan' => $val[2] ?? 'kosong',
-                            'nama_karyawan' => $val[0],
+                                'npp_karyawan' => $val[3],
+                                'level_jabatan' => $val[1],
+                                'unit_jabatan' => $val[2],
+                                'nama_karyawan' => $val[0],
                             ]
                         ); // Insert
                         $rkid = $storeRk->id;
-                        // dd($storeRk);
                     }else{
                         $findIdRk = RK::where('npp_karyawan', $val[3])->first(); // dapatkan id rk
                         $rkid = $findIdRk->id;
@@ -183,32 +186,42 @@ class RelasiKaryawan extends Controller
                 }
                 // Dapatkan Id
                 // Insert ke tabel relasi staff
-                if(!empty($val[6])){
+                if(!empty($val[6]))
+                {
                     $staff = preg_replace("/[^a-zA-Z 0-9]+/", "", $val[6]);
                     if($staff != ''){
-                        RS::updateOrCreate([
-                            'relasi_karyawan_id' => $rkid,
-                            'npp_staff' => $staff,
+                        RS::updateOrCreate(
+                            [
+                                'relasi_karyawan_id' => $rkid,
+                                'npp_staff' => $staff,
                             ]
                         );
                     }
                 }
                 // Insert ke tabel relasi selevel
-                if(!empty($val[5])){
+                if(!empty($val[5]))
+                {
                     if($val[5] != ''){
-                        RL::updateOrCreate([
-                            'relasi_karyawan_id' => $rkid,
-                            'npp_selevel' => $val[5],
+                        RL::updateOrCreate(
+                            [
+                                'relasi_karyawan_id' => $rkid,
+                            ],
+                            [
+                                'npp_selevel' => $val[5],
                             ]
                         );
                     }
                 }
                 // Insert ke tabel atasan
-                if(!empty($val[4])){
+                if(!empty($val[4]))
+                {
                     if($val[4] != ''){
-                        RA::updateOrCreate([
-                            'relasi_karyawan_id' => $rkid,
-                            'npp_atasan' => $val[4],
+                        RA::updateOrCreate(
+                            [
+                                'relasi_karyawan_id' => $rkid,
+                            ],
+                            [
+                                'npp_atasan' => $val[4],
                             ]
                         );
                     }
@@ -217,15 +230,15 @@ class RelasiKaryawan extends Controller
             unset($values);
             return response()->json([
                 'status' => true,
-                'message' => 'Poll inserted'
-            ]);
+                'title' => 'berhasil',
+                'text' => 'data karyawan telah di simpan'
+            ],200);
         } catch (\Illuminate\Database\QueryException $exception) {
-            return response()->json(
-                [
-                    'status' => false,
-                    'message' => $exception->getMessage(),
-                ]
-            );
+            return response()->json([
+                'status' => false,
+                'title' => 'gagal',
+                'text' => $exception->getMessage()
+            ],501);
         }
     }
 }
