@@ -854,6 +854,7 @@ class RekapPenilaiController extends Controller
 
     public function final_calculate()
     {   
+        $message = [];
         $personal = RekapPenilai::select('id','relasi','npp_dinilai')
         ->selectRaw('AVG(sum_nilai_dp3) as avg_dp3')
         ->groupBy('npp_dinilai','relasi')
@@ -878,9 +879,13 @@ class RekapPenilaiController extends Controller
                     // if($store){
                     //     logger($items->id);
                     // }
+                    if($store){
+                        $message['message'][$key] = $key.' berhasil di hitung';
+                    }
                 } catch (\Throwable $th) {
                     // return response()->json($th);
                     // logger($items->id);
+                    $message['message'][$key] = $key.' gagal di hitung';
                     continue;
                 }
             }
@@ -888,8 +893,8 @@ class RekapPenilaiController extends Controller
         
         return response()->json([
             'title' => 'calculate dp3',
-            'message' => 'berhasil, sip',
-            'icon' => 'success',
+            'text' => $message,
+            'icon' => 'info',
         ], 200);
     }
 }
