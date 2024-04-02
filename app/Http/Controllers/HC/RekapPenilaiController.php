@@ -226,6 +226,7 @@ class RekapPenilaiController extends Controller
     public function report(Request $request)
     {
         $personal = RekapPenilai::select(
+            "npp_penilai",
             "strategi_perencanaan_bobot_aspek",
             "strategi_pengawasan_bobot_aspek" ,
             "strategi_inovasi_bobot_aspek" ,
@@ -250,7 +251,10 @@ class RekapPenilaiController extends Controller
         )
         ->where('npp_dinilai', $request->npp)
         ->orderBy('npp_dinilai')
-        ->get();
+        ->get()
+        ->unique('npp_penilai');
+
+        // dd($personal);
 
         $dp3 = FinalDp3::with(['relasi_karyawan'])
         ->select('npp_dinilai_id')->selectRaw('sum(avg_dp3) as total')
@@ -265,6 +269,8 @@ class RekapPenilaiController extends Controller
         
         $collectionPersonal = $personal->sortBy('relasi');
         $collectionPersonal->values()->all();
+
+        // dd(collect($collectionPersonal)->unique('npp_penilai'));
 
         $data_karyawan = collect($collectionDp3)->unique('npp_dinilai_id');
         $data_karyawan = Arr::flatten($data_karyawan->toArray());
@@ -426,21 +432,21 @@ class RekapPenilaiController extends Controller
                     $item['kepemimpinan_bobot_aspek'] +
                     $item['membimbing_membangun_bobot_aspek'] +
                     $item['pengambilan_keputusan_bobot_aspek']
-            ,1);
+                ,1);
                 $raspek_s_non[$keys]['raspek_s'] = round(
                     $item['kerjasama_bobot_aspek'] +
                     $item['komunikasi_bobot_aspek'] +
                     $item['absensi_bobot_aspek'] +
                     $item['integritas_bobot_aspek'] +
                     $item['etika_bobot_aspek']
-            ,1);
+                ,1);
                 $raspek_p_non[$keys]['raspek_p'] = round(
                     $item['goal_kinerja_bobot_aspek'] +
                     $item['error_kinerja_bobot_aspek'] +
                     $item['proses_dokumen_bobot_aspek'] +
                     $item['proses_inisiatif_bobot_aspek'] +
                     $item['proses_polapikir_bobot_aspek']
-            ,1);
+                ,1);
                 $divider++;
             }
         }
