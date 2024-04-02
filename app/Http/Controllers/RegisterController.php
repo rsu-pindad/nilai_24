@@ -64,13 +64,13 @@ class RegisterController extends Controller
         NPP : $npp
         Password : $password
         
-        https://assessment-2024.pindadmedika.com/";
+        https://assessment.pindadmedika.com/2024";
 
         $wa = $this->sendMessage($request->no_hp, $text);
         // dd($wa->getData()->status);
-        if($wa->getData()->status == true){
+        // if($wa->getData()->status == true){
+        if($wa){
             User::create($newUser);
-            
             $request->session()->flush();
             return redirect()->route('login')->with('toast_success', 'Berhasil melakukan registrasi');
         }
