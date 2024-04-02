@@ -219,7 +219,7 @@ $('.btnInfoStaff').on('click', function()
                     $('.staffModalBody').append(option);
                 }
             }else{
-                let content = `<p class="text-center"><em>tidak mempunya staff</em></p>`;
+                let content = `<p class="text-center"><em>tidak memiliki staff</em></p>`;
                 $('.staffModalBody').html(content);
             }
             var tail = `</div>`;

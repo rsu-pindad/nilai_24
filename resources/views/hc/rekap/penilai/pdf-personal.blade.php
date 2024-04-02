@@ -38,10 +38,10 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.15);
             /* width: 100%; */
         }
-        .center{
+        /* .center{
             margin-left: auto;
             margin-right: auto;
-        }
+        } */
         /* .styled-table thead tr {
             background-color: #009879;
             color: #ffffff;
@@ -49,14 +49,15 @@
         } */
         .styled-table th,
         .styled-table td {
-            padding: 2px 8px;
+            padding: 1px 16px;
         }
         .styled-table tbody tr {
-            border-bottom: 1px solid #dddddd;
+            border-bottom: 0px solid #dddddd;
         }
 
         .styled-table tbody tr:nth-of-type(odd) {
-            background-color: #f3f3f3;
+            /* background-color: #f3f3f3; */
+            background-color: #fff;
         }
 
         .styled-table tbody tr.active-row {
@@ -101,7 +102,7 @@
         left: 0;
         bottom: 0;
         width: 60px;
-        height: px;
+        height: 0px;
         content: "";
         /* background-color: #c50000; */
         }
@@ -171,7 +172,7 @@
 </head>
 <body>
     <header>
-        <img src="{{ public_path('/dist/img/logo.png')}}" alt="Logo" width="18%" height="100%">
+        <img src="{{ public_path('/dist/img/logo.png')}}" alt="Logo" width="14%" height="100%">
     </header>
     <div class="watermark">RSU PINDAD <br>CONFIDENTIAL</div>
     <main>
@@ -317,7 +318,7 @@
             <td colspan="3" class="text-right">Skor Akhir DP3</td>
             <td style="text-align:right;">{{round($total_raspek,1)}}</td>
         </tr>
-        <tr style="font-size: 0.9em;">
+        <tr style="font-size: 0.9em;background-color: #fff;">
             <td colspan="2">
                 <table style="font-family: DejaVu Sans;">
                     <tr>
@@ -359,28 +360,25 @@
                 </table>
             </td>
         </tr>
-        <tr>
     </table>
     <table class="floatRight">
-        <tbody>
-            <tr>
-                <td class="px-4" style="text-align:center;">
-                    <span>Bandung,</span> {{$nows}}<br/>
-                    <span class="font-weight-bold">
-                        PT PINDAD MEDIKA UTAMA
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td style="height: 2.6em;"></td>
-            </tr>
-            <tr>
-                <td class="font-weight-bold" style="text-align:center;">
-                    <u>Novita Indah Fitriyani</u><br>
-                    <span>Kepala Bidang HC</span>
-                </td>
-            </tr>
-        </tbody>
+        <tr>
+            <td class="px-4" style="text-align:center;">
+                <span>Bandung,</span> {{$nows}}<br/>
+                <span class="font-weight-bold">
+                    PT PINDAD MEDIKA UTAMA
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td style="height: 2.6em;"></td>
+        </tr>
+        <tr>
+            <td class="font-weight-bold" style="text-align:center;">
+                <u>Novita Indah Fitriyani</u><br>
+                <span>Kepala Bidang HC</span>
+            </td>
+        </tr>
     </table>
     </main>  
 </body>

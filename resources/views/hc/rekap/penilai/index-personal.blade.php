@@ -42,10 +42,14 @@
                                         <td>{{$p->relasi_karyawan->npp_karyawan}}</td>
                                         <td>{{$p->relasi_karyawan->level_jabatan}}</td>
                                         <td>{{round($p->total,2)}}</td>
-                                        <td class="p-2">
-                                            <a href="/penilai-rekap/report?id={{$p->relasi_karyawan->id}}&npp={{$p->relasi_karyawan->npp_karyawan}}" target="_blank" class="btn btn-sm btn-danger">
-                                                <i class="far fa-file-pdf"></i>
-                                            </a>
+                                        <td class="px-2">
+                                            <div class="btn-toolbar d-flex justify-content-around" role="toolbar" arua-label="grup satu">
+                                                <div class="btn-group mr-2" role="group" aria-label="group aksi">
+                                                    <a href="/penilai-rekap/report?id={{$p->relasi_karyawan->id}}&npp={{$p->relasi_karyawan->npp_karyawan}}" target="_blank" class="btn btn-sm btn-danger">
+                                                        <i class="far fa-file-pdf"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach
