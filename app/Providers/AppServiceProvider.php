@@ -136,15 +136,21 @@ class AppServiceProvider extends ServiceProvider
                         $selevel = $relasi_selevel->first();
                         if($selevel){
                             $selevel->toArray();
-                            $data_selevel = RelasiKaryawan::where('npp_karyawan', $selevel['npp_selevel'])->first()->toArray();
-                            $selevel = json_decode($relasi_selevel->pluck('npp_selevel')->toJson());
+                            $data_selevel = RelasiKaryawan::where('npp_karyawan', $selevel['npp_selevel'])->first();
+                            if($data_selevel){
+                                $data_selevel->toArray();
+                                $selevel = json_decode($relasi_selevel->pluck('npp_selevel')->toJson());
 
-                            $form_selevel = $form_data['form_start'].
-                            '&'.$form_data['form_1'].Auth::user()->npp.
-                            '&'.$form_data['form_2'].$self['nama_karyawan'].
-                            '&'.$form_data['form_3'].$data_selevel['npp_karyawan'].
-                            '&'.$form_data['form_4'].$data_selevel['nama_karyawan'].
-                            '&'.$form_data['form_5'].$data_selevel['level_jabatan'];
+                                $form_selevel = $form_data['form_start'].
+                                '&'.$form_data['form_1'].Auth::user()->npp.
+                                '&'.$form_data['form_2'].$self['nama_karyawan'].
+                                '&'.$form_data['form_3'].$data_selevel['npp_karyawan'].
+                                '&'.$form_data['form_4'].$data_selevel['nama_karyawan'].
+                                '&'.$form_data['form_5'].$data_selevel['level_jabatan'];
+                            }else{
+                                $selevel = '#N/A';
+                            }
+                            
                         }
 
                         $daftarStaff = [];
