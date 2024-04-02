@@ -142,20 +142,20 @@
                                 </a>
                                 <ul class="nav nav-treeview small">
                                     <li class="nav-sheet">
+                                        @if (App\Models\User::where('npp', $sheet['NPP_ATASAN'])->first())
                                         <a href="{{ route('atasan', ['page' => 'MENILAI ATASAN', 'link' => $sheet['LINK_ATASAN']]) }}"
                                             class="nav-link {{ $sheet['LINK_ATASAN'] == $link ? 'active' : '' }}">
-                                            @if (App\Models\User::where('npp', $sheet['NPP_ATASAN'])->first())
                                                 <img src="{{ asset('storage/' . App\Models\User::where('npp', $sheet['NPP_ATASAN'])->first()->foto) }}"
                                                     alt="foto" width="32" height="32"
                                                     class="img-circle">
-                                            @else
-                                                <img src="dist/img/avatar.png" alt="foto" width="32"
-                                                    height="32" class="img-circle">
-                                            @endif
-                                            <p>{{ $sheet['NPP_ATASAN'] }} -
+                                                    <p>
+                                                {{ $sheet['NPP_ATASAN'] }} -
                                                 {{ optional(App\Models\RelasiKaryawan::where('npp_karyawan', $sheet['NPP_ATASAN'])->first())->nama_karyawan }}
                                             </p>
                                         </a>
+                                        @else
+                                                <p class="nav-link">atasan tidak ditemukan<br>mohon hub sdm</p>
+                                        @endif
                                     </li>
                                 </ul>
                             </li>
