@@ -52,48 +52,46 @@ class GResponseController extends Controller
     {
         // $user = Auth::user();
         // all() returns array
-        $url = env('GOOGLE_SHEET_ID_SCRIPT_PULL_RESPONSE', '');
-        $sheetId = env('GOOGLE_SHEET_ID','');
-        $values = Sheets::spreadsheet($sheetId)->sheet('Form Responses 3')->get();
+        // $url = env('GOOGLE_SHEET_ID_SCRIPT_PULL_RESPONSE', '');
+        // $sheetId = env('GOOGLE_SHEET_ID','');
+        // $values = Sheets::spreadsheet($sheetId)->sheet('Form Responses 3')->get(); // YANG LAMA
         // $values = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('Copy of Form Responses 1')->get();
-        $values = array_filter($values->toArray());
-
         // $ch = curl_init($url);
         // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // follow redirects response
         // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         // $result = curl_exec($ch);
         // curl_close($ch);
-
         // $values = json_encode($result);
         // $response = Http::get('https://script.googleusercontent.com/macros/echo?user_content_key=ddWekXAK_1eWvd_C0PZCzNNpSuh9edj6Y5_AoeDs5fAj01hbl5Whz4kWvIz6I4GdVn5mMM4n7fx9P5esMgRjk-4HLjQAVVKzm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnGAM6T6KYphyOtjh3TX_FP32CRM0-pGjelBH_Z5GdBCDWq1m2ln8nKjNOx85_ZBdxfG7FhgBVoIo0_zMgn6gqJa3k5AHqkHbXQ&lib=M_YuvaZGjGFOzAFGla-Eh8LFkxVl_vIbd');
         // $values = json_decode($response, true);
-
-        unset($values[0]);
-        $message = [];
-        $sameData = 0;
-        $newData = 0;
-        $failureData = 0;
-        $message = 
-            [
-                'info' => 'penarikan data',
-                'data_sama' => $sameData,
-                'data_baru' => $newData,
-                'data_gagal' => $failureData,
-            ];
+        // dd($values);
         try {
+            $sheetId = env('GOOGLE_SHEET_RESPONSE_ID', '');
+            $sheetName = env('GOOGLE_SHEET_RESPONSE_NAME', '');
+            $values = Sheets::spreadsheet($sheetId)->sheet($sheetName)->get(); // YANG BARU
+            $values = array_filter($values->toArray());
+            unset($values[0]);
+            $message = [];
+            $sameData = 0;
+            $newData = 0;
+            $failureData = 0;
+            $message['info'] = 'penarikan data';
+            $message['data_sama'] = $sameData;
+            $message['data_baru'] = $newData;
+            $mesaage['data_gagal'] = $failureData;
+
             foreach($values as $key => $val){
-                // $timesValue = Carbon::parse($val[0])->toDateTimeString();
                 $timesValue = Carbon::createFromFormat('d/m/Y H:i:s', $val[0])->format('Y-m-d H:i:s');
                 $findTime = GResponse::where('timestamp', $timesValue)->first();
-                // dd($timesValue,$findTime);
-                if($findTime){
-                        if(isset($findTime->timestamp) == $timesValue){
-                            // unset($values[$key]);
-                            $sameData += 1;
-                            $message['data_sama'] = $sameData;
-                        }
-                }else{
-                    // dd($val);
+                if($findTime)
+                {
+                    if(isset($findTime->timestamp) == $timesValue){
+                        $sameData += 1;
+                        $message['data_sama'] = $sameData;
+                    }
+                }
+                else
+                {
                     $store = GResponse::updateOrCreate(
                         [
                             // 'timestamp' => Carbon::createFromFormat('d/m/Y H:i:s',$val[0])->format('Y-m-d H:i:s'),
@@ -121,33 +119,20 @@ class GResponseController extends Controller
                             'proses_polapikir' => $val[21],
                         ]
                     );
-                    if($store)
-                    {
+                    if($store){
                         $newData += 1;
                         $message['data_baru'] = $newData;
                     }else{
                         $failureData += 1;
-                        $message['failure'] = $failureData;
+                        $message['data_gagal'] = $failureData;
                     }
                 }
             }
+            return response()->json($message,200);
         } catch (\Illuminate\Database\QueryException $exception) {
-            $message['fatal'] = $exception->getMessage();
-            return response()->json($message);
+            $message['info'] = $exception->getMessage();
+            return response()->json($message,501);
         }
-        return response()->json($message,200);
+        // return response()->json($message,200);
     }
-
-    public function pull_excel(Request $request)
-    {
-
-        $content = file_get_contents("https://docs.google.com/spreadsheets/d/1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk/export?format=xlsx&gid=1567324228");
-        Storage::disk('local')->put('storage/response.xlsx', $content);
-
-        // Excel::import(new GoogleResponse, 'users.xlsx');
-        
-        // return redirect('/')->with('success', 'All good!');
-        
-    }
-
 }

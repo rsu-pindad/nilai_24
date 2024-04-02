@@ -599,6 +599,8 @@ class RekapPenilaiController extends Controller
         }
 
         // dd($getPoolRespon);
+        $message = [];
+        // $message['message'];
         
         $bobot_penilai = 0;
 
@@ -831,13 +833,23 @@ class RekapPenilaiController extends Controller
                             'relasi' => $items['relasi'],
                         ]
                     );
+                    if($store){
+                        $message['message'][$key] = $key.' data berhasil di hitung';
+                    }else{
+                        $message['message'][$key] = $key.' data gagal di hitung';
+                    }
                 } catch (\Throwable $th) {
                     // return response()->json($th);
+                    $message['message'] = response()->json($th);
                     continue;
                 }
             }
         }
-
+        return response()->json([
+            'title' => 'info',
+            'text' => $message,
+            'icon' => 'info',
+        ], 200);
     }
 
     public function final_calculate()

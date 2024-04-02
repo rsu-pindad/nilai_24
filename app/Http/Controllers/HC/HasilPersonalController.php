@@ -36,14 +36,11 @@ class HasilPersonalController extends Controller
             ->where('hasil_personal.id', $request->detail)
             ->first() ?? [];
         
-        // dd($personal);
-        
         $atasan = RelasiKaryawan::where('npp_karyawan',$personal->karyawan_atasan[0]->npp_atasan)->first();
         $rekan = RelasiKaryawan::where('npp_karyawan',$personal->karyawan_selevel[0]->npp_selevel)->first();
         $staff = [];
         $statusPenilai = [];
         
-
         if($personal->karyawan_staff != null){
             // dd($personal->karyawan_staff->toArray());
             $karyawan_staff = $personal->karyawan_staff->toArray();
