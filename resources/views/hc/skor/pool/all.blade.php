@@ -60,10 +60,18 @@
                                 <table class="table table-striped table-hover table-bordered table-responsive" id="dataTablesPoolSkor">
                                     <thead> 
                                         <tr>
+                                            <th></th>
+                                            <th colspan="2">Penilai</th>
+                                            <th colspan="3">Dinilai</th>
+                                            <th colspan="18"></th>
+                                        </tr>
+                                        <tr>
                                             <th>No</th>
-                                            <th>Penilai</th>
-                                            <th>Dinilai</th>
-                                            <th>Jabatan Dinilai</th>
+                                            <th>Npp</th>
+                                            <th>Nama</th>
+                                            <th>Npp</th>
+                                            <th>Nama</th>
+                                            <th>Jabatan</th>
                                             <th>K1</th>
                                             <th>K2</th>
                                             <th>K3</th>
@@ -89,7 +97,9 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $pool->karyawan->npp_karyawan }}</td>
-                                            <td>{{ $pool['npp_dinilai'] }}</td>
+                                            <td class="text-break">{{ $pool->karyawan->nama_karyawan }}</td>
+                                            <td>{{ $pool->karyawan_dinilai->npp_karyawan }}</td>
+                                            <td class="text-break">{{ $pool->karyawan_dinilai->nama_karyawan }}</td>
                                             <td>{{ $pool['jabatan_dinilai'] }}</td>
                                             <td>{{ $pool['strategi_perencanaan'] }}</td>
                                             <td>{{ $pool['strategi_pengawasan'] }}</td>
@@ -221,19 +231,22 @@ $(document).ready(function(e){
         confirmButtonText: confirmButtonText,
         cancelButtonText: "batal"
         }).then((result) => {
-        if (result.isConfirmed) {
-            setTimeout(() => {
-                swalAjax();
-            }, 1000);
-        }
+            if (result.isConfirmed) {
+                setTimeout(() => {
+                    swalAjax();
+                }, 1000);
+            }else{
+                $('#btnSkorPoolModal').prop("disabled",false);
+            }
         });
     }
 
     $('#btnSkorPoolModal').on('click', function(ev){
         ev.preventDefault();
+        $(this).prop("disabled",true);
         alertswal(
             'anda yakin ?',
-            'anda akan melakukan kalkulasi data pada form response',
+            'anda akan melakukan kalkulasi skor',
             'info',
             'iya'
         );

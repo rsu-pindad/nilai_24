@@ -84,13 +84,14 @@
                                 <table class="table table-striped table-hover table-bordered" id="dataTablesRekap2">
                                     <thead>
                                         <tr>
-                                            <th colspan='3'>Identitas</th>
+                                            <th colspan='4'>Identitas Dinilai</th>
                                             <th colspan='3'>Aspek</th>
                                             <th rowspan='2'>Aksi</th>
                                         </tr>
                                         <tr>
                                             <th>No</th>
                                             <th>Npp</th>
+                                            <th>Nama</th>
                                             <th>Jabatan</th>
                                             <th>Kepemimpinan</th>
                                             <th>Perilaku</th>
@@ -101,6 +102,7 @@
                                     @foreach($data_penilai as $p)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
+                                        <td>{{$p->npp_dinilai}}</td>
                                         <td>{{$p->npp_dinilai}}</td>
                                         <td>{{$p->jabatan_dinilai}}</td>
                                         <td>{{round($p->sum_k1 * 100,3)}}</td>

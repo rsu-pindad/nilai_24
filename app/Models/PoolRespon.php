@@ -41,4 +41,9 @@ class PoolRespon extends Model
     {
         return $this->belongsTo(RelasiKaryawan::class,'npp_penilai');
     }
+
+    public function karyawan_dinilai()
+    {
+        return $this->belongsTo(RelasiKaryawan::class, 'npp_dinilai','npp_karyawan');
+    }
 }

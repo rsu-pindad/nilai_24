@@ -159,6 +159,8 @@ $(document).ready(function(e){
         }).then((result) => {
             if (result.isConfirmed) {
                 swalAjax();
+            }else{
+                $('#btnPullRelasiKaryawan').prop("disabled",false);
             }
         }).catch((result) => {
             console.log(result);

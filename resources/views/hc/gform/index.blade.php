@@ -24,7 +24,7 @@
                             <div class="card-header">
                                 <div class="d-flex flex-row bd-highlight">
                                     <div class="p-2 bd-highlight">
-                                        <button type="button" class="btn btn-secondary btn-sm" id="btnPullResponse">
+                                        <button type="button" class="btn btn-secondary" id="btnPullResponse">
                                         <i class="fas fa-arrow-down px-2"></i>Tarik Response Form
                                         </button>
                                     </div>
@@ -32,7 +32,7 @@
                                         <form action="{{ route('skor-reset') }}" method="Post">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn btn-danger btn-sm"
+                                            <button type="submit" class="btn btn-danger"
                                                 onclick="return confirm('ANDA YAKIN INGIN MENGKOSONGKAN TABEL')">
                                                 <i class="fas fa-trash-alt px-2"></i>Kosongkan Table
                                             </button>
@@ -410,13 +410,15 @@ $(document).ready(function(e){
         }).then((result) => {
             if (result.isConfirmed) {
                 swalAjax();
+            }else{
+                $('#btnPullResponse').prop("disabled",false);
             }
         });
     }
 
     $('#btnPullResponse').on('click', function(ev){
         ev.preventDefault();
-        // $(this).prop('disabled',true);
+        $(this).prop('disabled',true);
         alertswal(
             'anda yakin',
             'anda melakukan penarikan data pada sheet google form response',

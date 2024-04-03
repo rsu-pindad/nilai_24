@@ -140,9 +140,13 @@ class SkorController extends Controller
 
     public function index_pool_all()
     {
-        $skor_pool_data = PoolRespon::with('karyawan')->orderBy('npp_dinilai')
+        $skor_pool_data = PoolRespon::with(['karyawan','karyawan_dinilai'])
+        ->orderBy('npp_dinilai')
         ->orderByDesc('sum_nilai')
         ->get();
+        // ->limit(10)
+
+        // dd($skor_pool_data->toArray());
 
         return view('hc.skor.pool.all')->with([
             'data_pool_skor' => $skor_pool_data
