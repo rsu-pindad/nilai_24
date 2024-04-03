@@ -51,7 +51,7 @@
 -->
     <ul class="nav nav-treeview" style="display: block;">
         <li class="nav-item">
-            <a href="{{Route('relasi-user')}}" class="nav-link {{ Route::currentRouteName() == 'relasi-karyawan' ? 'active' : '' }}">
+            <a href="{{Route('relasi-user')}}" class="nav-link {{ Route::currentRouteName() == 'relasi-user' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>User MGMT</p>
             </a>
