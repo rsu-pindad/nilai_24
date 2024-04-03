@@ -21,7 +21,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button type="button" class="btn btn-secondary" id="btnHitungPersonal">
+                                <button type="button" class="btn btn-secondary" id="btnHitungPersonal" disabled>
                                     <i class="far fa-plus-square"></i> Hitung Penilaian
                                 </button>
                             </div>

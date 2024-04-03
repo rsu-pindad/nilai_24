@@ -25,7 +25,7 @@
                             <div class="card-header">
                                 <div class="d-flex flex-row bd-highlight">
                                     <div class="px-2 bd-highlight">        
-                                        <button type="button" class="btn btn-info" id="btnRekapPenilaiModal">
+                                        <button type="button" class="btn btn-info" id="btnRekapPenilaiModal" disabled>
                                             <i class="fas fa-calculator px-2"></i>Rekap Nilai DP3
                                         </button>
                                     </div>
