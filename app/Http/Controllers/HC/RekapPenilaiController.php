@@ -626,7 +626,13 @@ class RekapPenilaiController extends Controller
             if($penilaiKaryawan){
                 $penilaiKaryawan->toArray();
                 // Untuk Pengkalian Bobot setelah skor di dapat
-                if(Str::remove(' ',$items['jabatan_dinilai']) == 'IA' || Str::remove(' ',$items['jabatan_dinilai']) == 'IC'){
+                if(
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'DIREKSI' ||
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IA' || 
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IB' || 
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IC' || 
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IANS'
+                ){
                     $aspek_k = 0.40; // 3
                     $aspek_p = 0.25; // 1
                     $aspek_s = 0.35; // 2
@@ -635,7 +641,10 @@ class RekapPenilaiController extends Controller
                     $penilai_rekanan = 0.20;
                     $penilai_staff = 0.15;
                     $penilai_self = 0.05;
-                }elseif(Str::remove(' ',$items['jabatan_dinilai']) == 'II' || Str::remove(' ',$items['jabatan_dinilai']) == 'IINS'){
+                }elseif(
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'II' || 
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IINS'
+                    ){
                     $aspek_k = 0.35;
                     $aspek_p = 0.25;
                     $aspek_s = 0.40;
@@ -644,7 +653,11 @@ class RekapPenilaiController extends Controller
                     $penilai_rekanan = 0.20;
                     $penilai_staff = 0.15;
                     $penilai_self = 0.05;
-                }elseif(Str::remove(' ',$items['jabatan_dinilai']) == 'III'){
+                }elseif(
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'III' ||
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IIINS' ||
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IIII'
+                    ){
                     $aspek_k = 0.30;
                     $aspek_p = 0.25;
                     $aspek_s = 0.45;
@@ -653,7 +666,12 @@ class RekapPenilaiController extends Controller
                     $penilai_rekanan = 0.20;
                     $penilai_staff = 0.15;
                     $penilai_self = 0.05;
-                }elseif(Str::remove(' ',$items['jabatan_dinilai']) == 'IV' || Str::remove(' ',$items['jabatan_dinilai']) == 'IVA'){
+                }elseif(
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IV' || 
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IVA(III)' ||
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IVA(IIINS)' ||
+                    Str::remove(' ',$items['jabatan_dinilai']) == 'IVA' 
+                    ){
                     $aspek_k = 0.10;
                     $aspek_p = 0.30;
                     $aspek_s = 0.60;
@@ -861,10 +879,13 @@ class RekapPenilaiController extends Controller
     public function final_calculate()
     {   
         $message = [];
-        $personal = RekapPenilai::select('id','relasi','npp_dinilai')
+        $personal = RekapPenilai::select('id','relasi','npp_dinilai','npp_penilai')
+        ->unique('npp_penilai')
         ->selectRaw('AVG(sum_nilai_dp3) as avg_dp3')
         ->groupBy('npp_dinilai','relasi')
         ->get();
+        // $personal->unique(['npp_penilai']);
+        dd($personal->toArray());
 
         $personals = $personal->toArray();
         // if($personal > 0){

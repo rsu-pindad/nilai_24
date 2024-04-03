@@ -10,7 +10,8 @@ use App\Models\RelasiKaryawan as RK;
 use App\Models\RelasiStaff as RS;
 use App\Models\RelasiSelevel as RL;
 use App\Models\RelasiAtasan as RA;
-
+use App\Models\User;
+use Illuminate\Validation\Rule;
 
 class RelasiKaryawan extends Controller
 {
@@ -29,6 +30,61 @@ class RelasiKaryawan extends Controller
             'karyawan_data' => $rk_cache,
         ]);
     }
+
+    public function index_user()
+    {
+        $karyawan = User::get();
+
+        return view('hc.gform.relasi.index-user')->with([
+            'user_data' => $karyawan
+        ]);
+    }
+
+    public function updateUser(Request $request, User $user, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'npp' => 'required',
+                'nama' => 'required',
+                'email' => 'required',
+                'no_hp' => 'required',
+            ]);
+
+            if($validated){
+                $data = [
+                    'npp' => $request->npp,
+                    'nama' => $request->nama,
+                    'email' => $request->email,
+                    'no_hp' => $request->no_hp
+                ];
+                // dd($data);
+                $store = User::find($id)->update($data);
+                if($store){
+                    $tempData['data'] = [
+                        'title' => "berhasil",
+                        'html' => "berhasil edit data <b></b>",
+                        'icon' => "success",
+                    ];
+                    return response()->json($tempData);
+                }else{
+                    $tempData['data'] = [
+                        'title' => "gagal",
+                        'html' => "gagal edit data <b></b>",
+                        'icon' => "error",
+                    ];
+                    return response()->json($tempData);
+                }
+            }
+        } catch (\Illuminate\Database\QueryException $exception) {
+            $tempData['data'] = [
+                'title' => "gagal",
+                'html' => $exception->getMessage()." <b></b>",
+                'icon' => "error",
+            ];
+            return response()->json($tempData);
+        }
+    }
+
     public function pull()
     {
         // $values = Sheets::spreadsheet('1CX4q_BqkCgHr1TEe0_tlRHO9ZcSXqKv46Q-v7H1OykM')->sheet('DP3 2023')->range('F$5:I')->all();
@@ -131,7 +187,7 @@ class RelasiKaryawan extends Controller
         try {
             $sheetId = env('GOOGLE_SHEET_DP_2023_ID', '');
             $sheetName = env('GOOGLE_SHEET_DP_2023_NAME', '');
-            $rows = Sheets::spreadsheet($sheetId)->sheet($sheetName)->range('C$5:I')->get();
+            $rows = Sheets::spreadsheet($sheetId)->sheet($sheetName)->range('C$3:I')->get();
             // $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2023')->range('C$5:I')->get();
             $values = $rows->filter();
 

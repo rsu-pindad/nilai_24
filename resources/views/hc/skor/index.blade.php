@@ -276,7 +276,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <p class="modal-title fs-5" id="editSkorLabel">Edit Masa Pajak</h1>
+                <p class="modal-title fs-5" id="editSkorLabel">Edit Skor</h1>
             </div>
             <div class="modal-body">
                 <form>

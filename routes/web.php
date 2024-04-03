@@ -98,6 +98,8 @@ Route::middleware(['auth', 'hc'])->group(function () {
 
     Route::controller(RelasiKaryawan::class)->group(function() {
         Route::get('/relasi-karyawan', 'index')->name('relasi-karyawan');
+        Route::get('/relasi-karyawan/user', 'index_user')->name('relasi-user');
+        Route::put('/relasi-karyawan/update-user/{id}', 'updateUser')->name('relasi-user-update');
         // Route::get('/relasi-karyawan/pull', 'pull')->name('relasi-karyawan-pull');
         Route::get('/relasi-karyawan/pull-level', 'pull_level')->name('relasi-karyawan-pull-level');
     });

@@ -47,6 +47,7 @@
                                             <th></th>
                                             <th colspan="2">Penilai</th>
                                             <th colspan="2">Dinilai</th>
+                                            <th>Hari</th>
                                             <th></th>
                                         </tr>
                                         <tr>
@@ -55,6 +56,7 @@
                                             <th>Nama</th>
                                             <th>NPP</th>
                                             <th>Nama</th>
+                                            <th>Data Masuk</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -77,16 +79,17 @@
                                             <td>{{ $gres->nama_penilai }}</td>
                                             <td><a href="javascript:void(0)" 
                                                     class="text-decoration-none lihatProfileDinilai"
-                                                    data-penilai-id="{{$gres->relasi_dinilai->id}}"
-                                                    data-penilai-npp="{{$gres->relasi_dinilai->npp_karyawan}}"
-                                                    data-penilai-nama="{{$gres->relasi_dinilai->nama_karyawan}}"
-                                                    data-penilai-level="{{$gres->relasi_dinilai->level_jabatan}}"
-                                                    data-penilai-unit="{{$gres->relasi_dinilai->unit_jabatan}}"
+                                                    data-penilai-id="{{$gres->relasi_dinilai->id ?? ''}}"
+                                                    data-penilai-npp="{{$gres->relasi_dinilai->npp_karyawan ?? ''}}"
+                                                    data-penilai-nama="{{$gres->relasi_dinilai->nama_karyawan ?? ''}}"
+                                                    data-penilai-level="{{$gres->relasi_dinilai->level_jabatan ?? ''}}"
+                                                    data-penilai-unit="{{$gres->relasi_dinilai->unit_jabatan ?? ''}}"
                                                     >
                                                     {{ $gres->npp_dinilai }}
                                                 </a>
                                             </td>
                                             <td>{{ $gres->nama_dinilai }}</td>
+                                            <td>{{ $gres->timestamp }}</td>
                                             <td class="px-2">
                                                 <div class="btn-toolbar d-flex justify-content-center" role="toolbar" aria-label="group aksi">
                                                     <div class="btn-group mr-2" role="group" aria-label="First group">

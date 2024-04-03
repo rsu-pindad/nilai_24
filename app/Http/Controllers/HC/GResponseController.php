@@ -22,8 +22,9 @@ class GResponseController extends Controller
         // });
 
         $form_data = GResponse::with(['relasi_penilai', 'relasi_dinilai'])
-                    ->select('id','npp_penilai','nama_penilai','npp_dinilai','nama_dinilai')
-                    ->orderBy('npp_penilai', 'ASC')
+                    ->select('id','npp_penilai','nama_penilai','npp_dinilai','nama_dinilai','timestamp')
+                    // ->orderBy('npp_penilai', 'ASC')
+                    ->orderBy('created_at', 'ASC')
                     ->get();
 
         return view('hc.gform.index')->with([
