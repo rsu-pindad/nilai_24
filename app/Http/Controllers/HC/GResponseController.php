@@ -42,9 +42,9 @@ class GResponseController extends Controller
         }
     }
 
-    public function getDetailAjax($id)
+    public function getDetailAjax(Request $request)
     {
-        $data = GResponse::find($id)->first();
+        $data = GResponse::where('id',$request->id)->first();
 
         return response()->json(['data' => $data]);
     }

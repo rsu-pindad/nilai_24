@@ -183,7 +183,7 @@ $('.lihatResponse').on('click', function(e){
     $('#lihatResponseModal').on('shown.bs.modal', function(e){
         e.preventDefault();
         const uri = '/gform/getDetail/' + id;
-        if(request_response && request_response.readyState != 2){
+        if(request_response && request_response.readyState != 4){
             request_response.abort();
         }
         request_response = $.ajax({
@@ -304,7 +304,7 @@ $('.lihatProfileDinilai').on('click', function(e){
         e.preventDefault();
         $('#lihatProfileModalLabel').text(`${npp} - ${nama}`)
         $('#setProfile').html(content);
-    })
+    });
 });
 
 $('#lihatResponseModal').on('hidden.bs.modal', function(e){
