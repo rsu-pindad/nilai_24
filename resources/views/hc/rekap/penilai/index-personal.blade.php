@@ -20,7 +20,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button type="button" class="btn btn-secondary mb-4" id="btnRekapPerilakuModal">
+                                <button type="button" class="btn btn-secondary mb-4" id="btnRekapPerilakuModal" disabled>
                                     <i class="far fa-plus-square"></i> Hitung Skor Akhir DP3
                                 </button>
                             </div>
