@@ -50,10 +50,12 @@ class RegisterController extends Controller
         $newUser['jabatan'] = $employee->level_jabatan ?? '';
         $newUser['password'] = Hash::make($password);
 
+        $path = '';
+
         if($request->file('foto')){
             $path = $request->file('foto')->store('foto');
         }
-        $path = '';
+        
         $newUser['foto'] = $path;
 
         // User::create($newUser);

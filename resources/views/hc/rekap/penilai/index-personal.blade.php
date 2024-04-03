@@ -149,7 +149,7 @@ $(document).ready(function(e){
             'anda melakukan rekap perilaku tanpa bobot data pada database',
             'warning',
             'Pool saja'
-            );
+        );
     });
 });
 </script>
