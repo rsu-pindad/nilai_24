@@ -29,11 +29,15 @@ class RegisterRequest extends FormRequest
             // 'jabatan' => 'required',
             // 'level' => 'required',
             // 'no_hp' => 'required|numeric|unique:tbl_pengguna',
-            'no_hp' => 'required|numeric|:tbl_pengguna',
+            // 'no_hp' => 'required|numeric|:tbl_pengguna',
             // 'email' => 'required|unique:tbl_pengguna',
             // 'foto' => 'required|mimes:png,jpeg,jpg',
             // 'password' => 'required',
             // 'confirm_password' => 'required|same:password',
+
+            'no_hp' => 'required|numeric|unique:tbl_pengguna',
+            'email' => 'required|unique:tbl_pengguna',
+            'foto' => 'required|mimes:png,jpeg,jpg',
         ];
     }
 }
