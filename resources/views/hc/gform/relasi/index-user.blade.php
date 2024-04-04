@@ -54,6 +54,14 @@
                                                         >
                                                         <i class="fas fa-edit"></i>Edit
                                                     </button>
+                                                    <form action="{{route('relasi-user-reset-password', $user->id)}}" method="Post">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn btn-outline-warning btn-sm"
+                                                            onclick="return confirm('anda yakin password akan di reset?')">
+                                                            <i class="fas fa-trash-alt p-1"></i>Reset Password
+                                                        </button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         @endforeach
