@@ -135,16 +135,16 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::get('/penilai-rekap/report{id?}{npp?}', 'report')->name('penilai-rekap-report');
         
         // Route::get('/penilai-rekap/penilai{id?}', 'show')->name('penilai-rekap-detail');
-        Route::get('/penilai-rekap/detail{dinilai?}{relasi?}', 'showRelasi')->name('penilai-rekap-detail-relasi');
+        Route::get('/penilai-rekap/detail{dinilai?}{relasi?}{penilai?}', 'showRelasi')->name('penilai-rekap-detail-relasi');
         Route::get('/penilai-rekap/detail/staff{dinilai?}', 'showStaff')->name('penilai-rekap-staff-relasi');
         Route::get('/penilai-rekap/detail/staff/detail{dinilai?}{penilai?}', 'showStaffDetailPenilai')->name('penilai-rekap-staff-detail-relasi');
         
         Route::get('/penilai-rekap/calculate', 'calculate')->name('penilai-rekap-calculate');
         Route::get('/penilai-rekap/calculate-dp3', 'final_calculate')->name('penilai-rekap-calculate-dp3');
-
+        
         Route::post('/penilai-rekap/export-raw-xlsx', 'exportRawXlsx')->name('penilai-rekap-export-raw-xlsx');
         Route::post('/penilai-rekap/export-raw-csv', 'exportRawCsv')->name('penilai-rekap-export-raw-csv');
-
+        
         Route::post('/penilai-rekap/export-xlsx', 'exportXlsx')->name('penilai-rekap-export-xlsx');
         Route::post('/penilai-rekap/export-csv', 'exportCsv')->name('penilai-rekap-export-csv');
     });

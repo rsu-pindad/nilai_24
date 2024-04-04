@@ -76,4 +76,9 @@ class RekapPenilai extends Model
         return $this->hasOne(RelasiKaryawan::class, 'npp_karyawan', 'npp_dinilai');
     }
 
+    public function identitas_penilai()
+    {
+        return $this->hasOne(RelasiKaryawan::class, 'id', 'npp_penilai');
+    }
+
 }

@@ -99,11 +99,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($data_penilai as $p)
+                                    @foreach($data_dinilai as $p)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$p->npp_dinilai}}</td>
-                                        <td>{{$p->npp_dinilai}}</td>
+                                        <td>{{$p->identitas_dinilai->npp_karyawan}}</td>
+                                        <td>{{$p->identitas_dinilai->nama_karyawan}}</td>
                                         <td>{{$p->jabatan_dinilai}}</td>
                                         <td>{{round($p->sum_k1 * 100,3)}}</td>
                                         <td>{{round($p->sum_k2 * 100,3)}}</td>
@@ -111,17 +111,17 @@
                                         <td>
                                             <div class="btn-toolbar d-flex justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
                                                 <div class="btn-group mr-2" role="group" aria-label="First group">
-                                                    <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=self" target="_blank" class="btn btn-sm btn-info">
+                                                    <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=self&penilai={{$p->identitas_penilai->id}}" target="_blank" class="btn btn-sm btn-info">
                                                         <i class="far fa-eye px-1"></i>Self
                                                     </a>
                                                 </div>
                                                 <div class="btn-group mr-2" role="group" aria-label="Second group">
-                                                <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=atasan" target="_blank" class="btn btn-sm btn-primary">
+                                                <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=atasan&penilai={{$p->identitas_penilai->id}}" target="_blank" class="btn btn-sm btn-primary">
                                                     <i class="far fa-eye px-1"></i>Atasan
                                                 </a>
                                                 </div>
                                                 <div class="btn-group mr-2" role="group" aria-label="Third group">
-                                                    <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=rekanan" target="_blank" class="btn btn-sm btn-success">
+                                                    <a href="/penilai-rekap/detail?dinilai={{$p->npp_dinilai}}&relasi=rekanan&penilai={{$p->identitas_penilai->id}}" target="_blank" class="btn btn-sm btn-success">
                                                         <i class="far fa-eye px-1"></i>Rekanan
                                                     </a>
                                                 </div>
@@ -129,7 +129,14 @@
                                                     <i class="far fa-eye px-1"></i>
                                                 </a> -->
                                                 <div class="btn-group mr-2" role="group" aria-label="Third group">
-                                                    <button type="button" class="btn btn-warning btn-sm btnInfoStaff" data-toggle="modal" data-target="#staffModal" data-npp-dinilai='{{$p->npp_dinilai}}' data-rekap-id="{{$p->id}}">
+                                                    <button 
+                                                        type="button" 
+                                                        class="btn btn-warning btn-sm btnInfoStaff" 
+                                                        data-toggle="modal" 
+                                                        data-target="#staffModal" 
+                                                        data-id-dinilai='{{$p->identitas_dinilai->id}}' 
+                                                        data-npp-dinilai='{{$p->identitas_dinilai->npp_karyawan}}' 
+                                                        data-rekap-id="{{$p->id}}">
                                                         <i class="far fa-eye px-1"></i>Staff
                                                     </button>
                                                 </div>
@@ -162,8 +169,10 @@
       <div class="modal-header">
         <h5 class="modal-title" id="staffModalLabel">List Staff</h5>
       </div>
-      <div class="modal-body staffModalBody">
-        <p class="text-center"><em>tunggu...</em></p>
+      <div class="modal-body">
+        <div class="staffModalBody">
+            <p class="text-center"><em>tunggu...</em></p>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -180,52 +189,110 @@
 @push('scripts')
 <script>
 var request_staff = null;
-$('.btnInfoStaff').on('click', function()
+var request_follow_up_staff = null;
+$('.btnInfoStaff').on('click', function(e)
 {
+    e.preventDefault();
     // alert('ok hooked');
     let id = $(this).attr('data-npp-dinilai')
     let rekapId = $(this).attr('data-rekap-id')
+    let npp_penilai = $(this).attr('data-id-penilai')
     // console.log(id);
     const uri = `/penilai-rekap/detail/staff?dinilai=${id}`
-    if(request_staff && request_staff.readyState != 2){
-        request_staff.abort();
-    }
-    request_staff = $.ajax({
-        url : uri,
-        type : 'get',
-        dataType: 'json',
-        success : function (response){
-            const local_uri = `/penilai-rekap/detail/staff/detail?dinilai=`;
-            var len = 0;
-            if(response['data'] != null){
-                len = response['data'].length;
-            }
-            var head = `<div class="list-group">`;
-                $('.staffModalBody').empty();
-                $('.staffModalBody').prepend(head);
-            if(len > 0){
-                for(var i=0; i<len;i++){
-                    var id = response['data'][i].id;
-                    var identitasNamaStaff = response['data'][i].identitas_staff.nama_karyawan;
-                    var identitasNppStaff = response['data'][i].identitas_staff.npp_karyawan;
-                    var identitaIdStaff = response['data'][i].identitas_staff.id;
-                    var parentStaff = response['data'][i].parent_staff.npp_karyawan;
-                    // var nppStaff = response['data'][i].npp_staff;
-                    var option = `<a href="${local_uri+parentStaff+'&penilai='+identitaIdStaff+'&relasi=staff'}" 
-                        class="list-group-item list-group-item-action" 
-                        target="_blank"
-                        data-parent-npp=${parentStaff}
-                        data-staff-id=${identitaIdStaff}>${identitasNppStaff} - ${identitasNamaStaff}
-                        <i class="fas fa-hand-point-left px-2"></i>
-                        </a>`;
-                    $('.staffModalBody').append(option);
-                }
-            }else{
-                let content = `<p class="text-center"><em>tidak memiliki staff</em></p>`;
-                $('.staffModalBody').html(content);
-            }
-            var tail = `</div>`;
+    // const urlFollowUp = '/rekap/hasil-personal/follow-up?dinilai='+sd.identitas_dinilai.npp_karyawan+'&penilai='+sdp.npp_karyawan;
+    $('#staffModal').on('shown.bs.modal', function(e){
+        e.preventDefault();
+        if(request_staff && request_staff.readyState != 2){
+            request_staff.abort();
         }
+        request_staff = $.ajax({
+            url : uri,
+            type : 'get',
+            dataType: 'json',
+            success : function (response){
+                const local_uri = `/penilai-rekap/detail/staff/detail?dinilai=`;
+                var len = 0;
+                if(response['data'] != null){
+                    len = response['data'].length;
+                }
+                var head = `<ul class="list-group list-group-horizontal listStaff">`;
+                    $('.staffModalBody').empty();
+                    $('.staffModalBody').prepend(head);
+                if(len > 0){
+                    for(var i=0; i<len;i++){
+                        var ids = response['data'][i].id;
+                        var identitasNamaStaff = response['data'][i].identitas_staff.nama_karyawan;
+                        var identitasNppStaff = response['data'][i].identitas_staff.npp_karyawan;
+                        var identitaIdStaff = response['data'][i].identitas_staff.id;
+                        var parentStaff = response['data'][i].parent_staff.npp_karyawan;
+                        // var nppStaff = response['data'][i].npp_staff;
+                        var option = `
+                            <li class="list-group-item listStaffWa data-id-penilai="${identitaIdStaff}">
+                                <a href="${local_uri+parentStaff+'&penilai='+identitaIdStaff+'&relasi=staff'}" 
+                                    class="list-group-item list-group-item-action listFollowUpStaff" 
+                                    target="_blank"
+                                    data-parent-npp=${parentStaff}
+                                    data-staff-id=${identitaIdStaff}>${identitasNppStaff} - ${identitasNamaStaff}
+                                    <i class="fas fa-hand-point-left px-2"></i>
+                                </a>
+                            </li>`;
+                        $('.listStaff').append(option);
+                    }
+                }else{
+                    let content = `<p class="text-center"><em>tidak memiliki staff</em></p>`;
+                    $('.staffModalBody').html(content);
+                }
+                var tail = `</ul>`;
+            }
+        })
+        $('.staffModalBody').on('change', function(e){
+            e.preventDefault()
+            alert('changed')
+        })
+        // $('.staffModalBody').each(function(index, value){
+        //     // console.log(this.href);
+        //     console.log(value);
+        // });
+        // if(request_follow_up_staff && request_follow_up_staff.readyState != 2){
+        //     request_follow_up_staff.abort();
+        // }
+        // request_follow_up_staff = $.ajax({
+        //     url : uri,
+        //     type : 'get',
+        //     dataType: 'json',
+        //     success : function (response){
+        //         const status = '/rekap/hasil-personal/status?dinilai='+id+'&penilai='+;
+        //         const local_uri = `/penilai-rekap/detail/staff/followup?dinilai=`;
+        //         var len = 0;
+        //         if(response['data'] != null){
+        //             len = response['data'].length;
+        //         }
+        //         if(len > 0){
+        //             for(var i=0; i<len;i++){
+        //                 var id = response['data'][i].id;
+        //                 var identitasNamaStaff = response['data'][i].identitas_staff.nama_karyawan;
+        //                 var identitasNppStaff = response['data'][i].identitas_staff.npp_karyawan;
+        //                 var identitaIdStaff = response['data'][i].identitas_staff.id;
+        //                 var parentStaff = response['data'][i].parent_staff.npp_karyawan;
+        //                 // var nppStaff = response['data'][i].npp_staff;
+        //                 var option = `
+        //                     <li class="list-group-item listStaffWa${id}">
+        //                     <a href="${local_uri+parentStaff+'&penilai='+identitaIdStaff+'&relasi=staff'}" 
+        //                     class="list-group-item list-group-item-action" 
+        //                     target="_blank"
+        //                     data-parent-npp=${parentStaff}
+        //                     data-staff-id=${identitaIdStaff}>${identitasNppStaff} - ${identitasNamaStaff}
+        //                     <i class="fas fa-hand-point-left px-2"></i>
+        //                     </a>
+        //                     </li>`;
+        //                 $(`.listStaffWa${id}`).append(option);
+        //             }
+        //         }else{
+        //             let content = `<p class="text-center">sudah follow up</em></p>`;
+        //             // $(`.listStaffWa${id}`).html(content);
+        //         }
+        //     }
+        // })
     })
 })
 
@@ -307,7 +374,7 @@ $(document).ready(function(e){
         ev.preventDefault();
         alertswal(
             'anda yakin',
-            'anda melakukan rekap semua penilai',
+            'anda melakukan rekap semua nilai',
             'warning',
             'Iya'
         );

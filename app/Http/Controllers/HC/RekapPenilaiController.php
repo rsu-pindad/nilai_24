@@ -7,6 +7,7 @@ use App\Models\FinalDp3;
 use App\Models\PoolRespon;
 use App\Models\RelasiKaryawan;
 use App\Models\RelasiStaff;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\RekapPenilai;
@@ -23,14 +24,61 @@ class RekapPenilaiController extends Controller
 
     public function index()
     {
-        $penilai = RekapPenilai::select()
+        $dinilai = RekapPenilai::with([
+            'identitas_dinilai',
+        ])
+        ->select()
         ->selectRaw('AVG(sum_nilai_k_bobot_aspek) as sum_k1')
         ->selectRaw('AVG(sum_nilai_s_bobot_aspek) as sum_k2')
         ->selectRaw('AVG(sum_nilai_p_bobot_aspek) as sum_k3')
         ->groupBy('npp_dinilai')->get();
         return view('hc.rekap.penilai.index')->with([
-            'data_penilai' => $penilai,
+            'data_dinilai' => $dinilai,
         ]);
+    }
+    
+    private function sendWhatsapp($npp_dinilai, $npp_penilai, $phone)
+    {
+        $nama_penilai = $npp_penilai['nama_karyawan'];
+        $nama_dinilai = $npp_dinilai['nama_karyawan'];
+
+        // dd($phone);
+        $pesan = 
+        "Yth $nama_penilai
+        mohon untuk melakukan penilaian sdr 
+        $nama_dinilai
+        Terimakasih";
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://api.fonnte.com/send',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => 'UTF-8',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array(
+        'target' => $phone, // No telepon penilai
+        'message' => $pesan, 
+        'countryCode' => '62', //optional
+        ),
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: '.env('FONNTE_TOKEN', '') //change TOKEN to your actual token
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        if (curl_errno($curl)) {
+        $error_msg = curl_error($curl);
+        }
+        curl_close($curl);
+
+        if (isset($error_msg)) {
+        echo $error_msg;
+        }
+        echo $response;
     }
 
     public function exportRawXlsx()
@@ -121,7 +169,31 @@ class RekapPenilaiController extends Controller
                 'data_penilai' => $penilai
             ]);
         }else{
-            return abort(404);
+            // return abort(404);
+            $penilai = $request->penilai;
+            $dinilai = $request->dinilai;
+            $karyawan_penilai = RelasiKaryawan::where('id',$penilai)->first();
+            $karyawan_dinilai = RelasiKaryawan::where('npp_karyawan',$dinilai)->first();
+            if($karyawan_penilai){
+                $kp = $karyawan_penilai->toArray();
+                $users = User::where('npp',$kp['npp_karyawan'])->first();
+                if($users){
+                    $user = $users->toArray();
+                    $phone = $user['no_hp'];
+                }
+            }
+            if($karyawan_dinilai){
+                $kd = $karyawan_dinilai->toArray();
+            }
+
+            if($karyawan_dinilai && $karyawan_penilai){
+                $this->sendWhatsapp($kd,$kp, $phone);
+                return redirect()->back()->withInfo($request->relasi.' belum melakukan penilaian, follow up dilakukan');
+            }else{
+                return redirect()->back()->withInfo($penilai.' belum mendaftar, follow up tidak dilakukan');
+            }
+            // dd($kd['nama_karyawan']);
+
         }
     }
 
@@ -198,7 +270,30 @@ class RekapPenilaiController extends Controller
                     'avg_penilai' => $penilais
                 ]);
             }else{
-                return abort(404);
+                // return abort(404);
+                // echo 'null';
+                $penilai = $request->penilai;
+                $dinilai = $request->dinilai;
+                $karyawan_penilai = RelasiKaryawan::where('id',$penilai)->first();
+                $karyawan_dinilai = RelasiKaryawan::where('npp_karyawan',$dinilai)->first();
+                if($karyawan_penilai){
+                    $kp = $karyawan_penilai->toArray();
+                    $users = User::where('npp',$kp['npp_karyawan'])->first();
+                    if($users){
+                        $user = $users->toArray();
+                        $phone = $user['no_hp'];
+                    }
+                }
+                if($karyawan_dinilai){
+                    $kd = $karyawan_dinilai->toArray();
+                }
+
+                if($karyawan_dinilai && $karyawan_penilai){
+                    $this->sendWhatsapp($kd,$kp,$phone);
+                    return redirect()->back()->withInfo($request->relasi.' belum melakukan penilaian, follow up dilakukan');
+                }else{
+                    return redirect()->back()->withInfo($penilai.' belum mendaftar, follow up tidak dilakukan');
+                }
             }
         } catch (\Throwable $th) {
             return abort(404);

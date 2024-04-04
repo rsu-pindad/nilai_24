@@ -61,16 +61,14 @@
                                     <thead> 
                                         <tr>
                                             <th></th>
-                                            <th colspan="2">Penilai</th>
-                                            <th colspan="3">Dinilai</th>
+                                            <th>Penilai</th>
+                                            <th colspan="2">Dinilai</th>
                                             <th colspan="18"></th>
                                         </tr>
                                         <tr>
                                             <th>No</th>
                                             <th>Npp</th>
-                                            <th>Nama</th>
                                             <th>Npp</th>
-                                            <th>Nama</th>
                                             <th>Jabatan</th>
                                             <th>K1</th>
                                             <th>K2</th>
@@ -97,9 +95,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $pool->karyawan->npp_karyawan }}</td>
-                                            <td class="text-break">{{ $pool->karyawan->nama_karyawan }}</td>
                                             <td>{{ $pool->karyawan_dinilai->npp_karyawan }}</td>
-                                            <td class="text-break">{{ $pool->karyawan_dinilai->nama_karyawan }}</td>
                                             <td>{{ $pool['jabatan_dinilai'] }}</td>
                                             <td>{{ $pool['strategi_perencanaan'] }}</td>
                                             <td>{{ $pool['strategi_pengawasan'] }}</td>
