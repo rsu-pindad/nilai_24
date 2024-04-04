@@ -35,7 +35,7 @@ class RelasiKaryawan extends Controller
 
     public function resetPasswordUser(Request $request)
     {
-        // $password = Str::random(10);
+        $password = Str::random(10);
         // $password = 123456;
         $user = User::where('id', $request->id)->first();
         if ($user) {
