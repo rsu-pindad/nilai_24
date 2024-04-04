@@ -635,9 +635,9 @@ class HasilPersonalController extends Controller
         $nama_dinilai = $npp_dinilai['nama'];
         $pesan = 
         "Yth $nama_penilai
-mohon untuk melakukan penilaian sdr 
-$nama_dinilai
-Terimakasih";
+        mohon untuk melakukan penilaian sdr 
+        $nama_dinilai
+        Terimakasih";
         // dd($npp_dinilai,$npp_penilai);
 
         $curl = curl_init();

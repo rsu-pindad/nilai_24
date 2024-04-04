@@ -35,7 +35,8 @@ class RelasiKaryawan extends Controller
 
     public function resetPasswordUser(Request $request)
     {
-        $password = Str::random(10);
+        // $password = Str::random(10);
+        // $password = 123456;
         $user = User::where('id', $request->id)->first();
         if ($user) {
             $users = $user->toArray();
@@ -67,10 +68,62 @@ class RelasiKaryawan extends Controller
             curl_close($curl);
             echo $response;
 
-            return back()->withSuccess('password berhasil di reset!');
+            return redirect()->route('relasi-user')->withSuccess('password berhasil di reset!');
         }else{
-            return back()->withErrors('terjadi kesalahan!');
+            return redirect()->route('relasi-user')->withErrors('terjadi kesalahan!');
         }
+    }
+
+    public function resetPasswordUserCustom(Request $request)
+    {
+        $tempData = [];
+        // $password = Str::random(10);
+        $password = $request->password;
+        // dd($password);
+        $user = User::where('id', $request->id)->first();
+        if ($user) {
+            $users = $user->toArray();
+            $user->update(['password' => Hash::make($password)]);
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.fonnte.com/send',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array(
+                    'target' => $users['no_hp'],
+                    'message' => "Password anda telah diubah oleh SDM, Password baru : $password
+
+                    https://assessment.pindadmedika.com/2024",
+                    'countryCode' => '62', //optional
+                ),
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: '.env('FONNTE_TOKEN', '') //change TOKEN to your actual token
+                ),
+            ));
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+            // echo $response;
+
+            $tempData['data'] = [
+                'title' => "success",
+                'html' => "berhasil reset password <b></b>",
+                'icon' => "success",
+            ];
+        }else{
+            $tempData['data'] = [
+                'title' => "gagal",
+                'html' => "gagal edit data <b></b>",
+                'icon' => "error",
+            ];
+        }
+        return response()->json($tempData);
     }
 
     public function index_user()

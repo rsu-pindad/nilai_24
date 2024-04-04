@@ -59,9 +59,18 @@
                                                         @method('PUT')
                                                         <button type="submit" class="btn btn-outline-warning btn-sm"
                                                             onclick="return confirm('anda yakin password akan di reset?')">
-                                                            <i class="fas fa-trash-alt p-1"></i>Reset Password
+                                                            <i class="fas fa-sync-alt p-1"></i>Reset Password
                                                         </button>
                                                     </form>
+                                                    <button 
+                                                        type="button"
+                                                        class="btn btn-outline-info btn-sm resetUser"
+                                                        data-id="{{ $user->id }}"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#resetUser"
+                                                        >
+                                                        <i class="fas fa-redo-alt p-1"></i>reset password
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -87,7 +96,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <p class="modal-title fs-5" id="editSkorLabel">Edit User</h1>
+                <p class="modal-title fs-5" id="editUserModalLabel">Edit User</h1>
             </div>
             <div class="modal-body">
                 <form>
@@ -117,6 +126,34 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeLihatEdit">tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endpush
+
+@push('modals')
+<!-- Modal -->
+<div class="modal fade" id="resetUserModal" tabindex="-1" aria-labelledby="editListLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="modal-title fs-5" id="resetUserLabel">Reset Password User</h1>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <!-- method('PATCH') -->
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="input_password">Password</label>
+                            <input type="text" class="form-control input_password" id="input_password" name="input_password" placeholder="masukan password" required>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger" id="btnResetUser" type="submit"><i class="fas fa-redo-alt p-1"></i>Reset</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeLihatReset">tutup</button>
             </div>
         </div>
     </div>
@@ -157,9 +194,15 @@ async function alertSwal(Title = null, Html = null, Icon = null)
 var request_aspek = null;
 var request_indikator = null;
 var request_edit = null;
+var request_edit_password = null;
 $('#closeLihatEdit').on('click', function(e){
     e.preventDefault();
     $('#editUserModal').modal('hide');
+})
+
+$('#closeLihatReset').on('click', function(e){
+    e.preventDefault();
+    $('#resetUserModal').modal('hide');
 })
 
 $('.editUser').on('click', function(ev){
@@ -226,6 +269,64 @@ $('.editUser').on('click', function(ev){
     });
 
     $('#editUserModal').on('hidden.bs.modal', function(e){
+        $(this).data('bs.modal', null);
+    });
+
+});
+
+$('.resetUser').on('click', function(ev){
+    ev.preventDefault();
+    let id = $(this).attr('data-id');
+    const idUser = $(this).attr('data-id');
+    $('#resetUserModal').modal('show');
+    $('#resetUserModal').on('shown.bs.modal', function(e){
+        e.preventDefault();
+        // $('.edit_select_aspek').children('option').text(aspek).val(aspek_id);
+        $('#btnResetUser').on('click', function(ev){
+            //alert('ok');
+            ev.preventDefault();
+            $('#resetUserModal').modal('hide');
+            let timerInterval;
+            if(request_edit_password && request_edit_password.readyState != 2){
+                request_edit_password.abort();
+            }
+            request_edit_password = $.ajax({
+                url : '/relasi-karyawan/reset-password-user-custom/' + idUser,
+                type : 'post',
+                data : {
+                    password : $('#input_password').val(),
+                    _method: 'PUT',
+                    _token: '{{ csrf_token() }}',
+                },
+                dataType: 'json',
+                success : function(response){
+                    alertSwal(
+                        response.data.title,
+                        response.data.html,
+                        response.data.icon
+                    );
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2100);
+                },
+                error : function(response){
+                    //console.log(response.data);
+                    alertSwal(
+                        'error',
+                        'terjadi kesalahan',
+                        'warning'
+                    );
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2100);
+                    
+                }
+            });
+            // $('#dataTablesSkor').DataTable().ajax.reload();
+        });
+    });
+
+    $('#resetUserModal').on('hidden.bs.modal', function(e){
         $(this).data('bs.modal', null);
     });
 
