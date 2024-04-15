@@ -55,9 +55,9 @@
                             </div>
                         </div>
                         @error('npp')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
                     <div class="input-group mb-3">
@@ -69,9 +69,9 @@
                             </div>
                         </div>
                         @error('password')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Masuk</button>

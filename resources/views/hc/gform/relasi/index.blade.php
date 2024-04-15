@@ -22,7 +22,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <button type="button" class="btn btn-secondary" id="btnPullRelasiKaryawan">
-                                <i class="fas fa-arrow-down px-2"></i>Tarik Relasi Karyawan
+                                    <i class="fas fa-arrow-down px-2"></i>Tarik Relasi Karyawan
                                 </button>
                             </div>
                             <div class="card-body">
@@ -37,29 +37,29 @@
                                         <th>Staff</th>
                                     </thead>
                                     <tbody>
-                                        @foreach($karyawan_data as $karyawan)
+                                        @foreach ($karyawan_data as $karyawan)
                                             <tr>
-                                                <td>{{$loop->iteration}}</td>
-                                                <td>{{$karyawan->npp_karyawan}}</td>
-                                                <td>{{$karyawan->nama_karyawan}}</td>
-                                                <td>{{$karyawan->level_jabatan}}</td>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $karyawan->npp_karyawan }}</td>
+                                                <td>{{ $karyawan->nama_karyawan }}</td>
+                                                <td>{{ $karyawan->level_jabatan }}</td>
                                                 <td>
                                                     @forelse($karyawan->karyawan_atasan as $k_atasan)
-                                                        {{$k_atasan->npp_atasan}}
+                                                        {{ $k_atasan->npp_atasan }}
                                                     @empty
                                                         -
                                                     @endforelse
                                                 </td>
                                                 <td>
                                                     @forelse($karyawan->karyawan_selevel as $k_selevel)
-                                                        {{$k_selevel->npp_selevel}}
+                                                        {{ $k_selevel->npp_selevel }}
                                                     @empty
                                                         -
                                                     @endforelse
                                                 </td>
                                                 <td>
                                                     @forelse($karyawan->karyawan_staff as $k_staff)
-                                                        {{$loop->iteration}}.{{$k_staff->npp_staff}}<br>
+                                                        {{ $loop->iteration }}.{{ $k_staff->npp_staff }}<br>
                                                     @empty
                                                         -
                                                     @endforelse
@@ -95,88 +95,85 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush
 
 @push('scripts')
-<script>
-var table = $('#tabelKaryawan').DataTable({
-    responsive: true,
-    ordering: false,
-    scrollX: false,
-    scrollY: '50vh',
-    searching : true,
-});
-</script>
+    <script>
+        var table = $('#tabelKaryawan').DataTable({
+            responsive: true,
+            ordering: false,
+            scrollX: false,
+            scrollY: '50vh',
+            searching: true,
+        });
+    </script>
 @endpush
 
 @push('scripts')
-<script>
-$(document).ready(function(e){
+    <script>
+        $(document).ready(function(e) {
 
-    async function swalAjax()
-    {
-        const uri = '/relasi-karyawan/pull-level';
-        return await $.ajax({
-            url : uri,
-            type : 'get',
-            dataType: 'json',
-            success : function (response){
-                swalOk(response.title, response.text, 'success');
-                setTimeout(() => {
-                    location.reload()
-                }, 3100);
-            },
-            error: function(response){
-                swalOk(response.title, response.text, 'danger');
-                setTimeout(() => {
-                    location.reload()
-                }, 10000)
+            async function swalAjax() {
+                const uri = '/relasi-karyawan/pull-level';
+                return await $.ajax({
+                    url: uri,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(response) {
+                        swalOk(response.title, response.text, 'success');
+                        setTimeout(() => {
+                            location.reload()
+                        }, 3100);
+                    },
+                    error: function(response) {
+                        swalOk(response.title, response.text, 'danger');
+                        setTimeout(() => {
+                            location.reload()
+                        }, 10000)
+                    }
+                });
             }
-        });
-    }
 
-    async function swalOk(title, text, icon)
-    {
-        Swal.fire({
-            title: title,
-            text: text,
-            icon: icon
-        });
-    }
-
-    async function alertswal(title, text, icon, confirmButtonText)
-    {
-        Swal.fire({
-        title: title,
-        text: text,
-        icon: icon,
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: confirmButtonText,
-        cancelButtonText: "batal"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                swalAjax();
-            }else{
-                $('#btnPullRelasiKaryawan').prop("disabled",false);
+            async function swalOk(title, text, icon) {
+                Swal.fire({
+                    title: title,
+                    text: text,
+                    icon: icon
+                });
             }
-        }).catch((result) => {
-            console.log(result);
-        });
-    }
 
-    $('#btnPullRelasiKaryawan').on('click', function(ev){
-        ev.preventDefault();
-        $(this).prop("disabled",true);
-        alertswal(
-            'anda yakin',
-            'anda melakukan penarikan data pada sheet karyawan',
-            'info',
-            'Iya'
-        );
-    });
-});
-</script>
+            async function alertswal(title, text, icon, confirmButtonText) {
+                Swal.fire({
+                    title: title,
+                    text: text,
+                    icon: icon,
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: confirmButtonText,
+                    cancelButtonText: "batal"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        swalAjax();
+                    } else {
+                        $('#btnPullRelasiKaryawan').prop("disabled", false);
+                    }
+                }).catch((result) => {
+                    console.log(result);
+                });
+            }
+
+            $('#btnPullRelasiKaryawan').on('click', function(ev) {
+                ev.preventDefault();
+                $(this).prop("disabled", true);
+                alertswal(
+                    'anda yakin',
+                    'anda melakukan penarikan data pada sheet karyawan',
+                    'info',
+                    'Iya'
+                );
+            });
+        });
+    </script>
 @endpush

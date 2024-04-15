@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class ForgotPasswordController extends Controller
 {
@@ -22,7 +22,6 @@ class ForgotPasswordController extends Controller
 
         if ($user) {
             if ($user->no_hp == $request->no_hp) {
-
                 $user->update(['password' => Hash::make($password)]);
 
                 $curl = curl_init();
@@ -41,10 +40,10 @@ class ForgotPasswordController extends Controller
                         'message' => "Password baru : $password
 
                         https://assessment.pindadmedika.com/2024",
-                        'countryCode' => '62', //optional
+                        'countryCode' => '62',  // optional
                     ),
                     CURLOPT_HTTPHEADER => array(
-                        'Authorization: '.env('FONNTE_TOKEN', '') //change TOKEN to your actual token
+                        'Authorization: ' . env('FONNTE_TOKEN', '')  // change TOKEN to your actual token
                     ),
                 ));
 

@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use App\Models\PoolRespon;
-use \Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
+use \Illuminate\Contracts\View\View;
 
-class SkorAllExport implements FromView   
+class SkorAllExport implements FromView
 {
     public function view(): View
     {

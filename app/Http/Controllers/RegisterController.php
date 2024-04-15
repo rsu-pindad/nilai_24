@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
+use App\Models\Employee;
 use App\Models\RelasiKaryawan;
 use App\Models\User;
-use App\Models\Employee;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\View;
-use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -52,10 +52,10 @@ class RegisterController extends Controller
 
         $path = '';
 
-        if($request->file('foto')){
+        if ($request->file('foto')) {
             $path = $request->file('foto')->store('foto');
         }
-        
+
         $newUser['foto'] = $path;
 
         // User::create($newUser);
@@ -71,7 +71,7 @@ class RegisterController extends Controller
         $wa = $this->sendMessage($request->no_hp, $text);
         // dd($wa->getData()->status);
         // if($wa->getData()->status == true){
-        if($wa){
+        if ($wa) {
             User::create($newUser);
             $request->session()->flush();
             return redirect()->route('login')->with('toast_success', 'Berhasil melakukan registrasi');
@@ -94,10 +94,10 @@ class RegisterController extends Controller
             CURLOPT_POSTFIELDS => array(
                 'target' => $phone,
                 'message' => $text,
-                'countryCode' => '62', //optional
+                'countryCode' => '62',  // optional
             ),
             CURLOPT_HTTPHEADER => array(
-                'Authorization: '.env('FONNTE_TOKEN', '') //change TOKEN to your actual token
+                'Authorization: ' . env('FONNTE_TOKEN', '')  // change TOKEN to your actual token
             ),
         ));
 
@@ -106,7 +106,7 @@ class RegisterController extends Controller
         curl_close($curl);
         // echo $response;
         $res = json_decode($response);
-        return response()->json($res,200);
+        return response()->json($res, 200);
     }
 
     public function check(Request $request)
@@ -121,7 +121,7 @@ class RegisterController extends Controller
 
         // session()->put(['npp' => $employee->npp, 'nama' => $employee->nama]);
         session()->put(['npp' => $employee->npp_karyawan, 'nama' => $employee->nama_karyawan]);
-        
+
         return redirect()->route('register');
     }
 }

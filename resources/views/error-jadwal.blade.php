@@ -4,8 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PT PINDAD MEDIKA UTAMA | {{ $title ?? '
-    '}}</title>
+    <title>PT PINDAD MEDIKA UTAMA | {{ $title ??
+        '
+        ' }}</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -17,7 +18,7 @@
 
     <link rel="icon" href="dist/img/logo.png" type="image/x-icon">
     <link rel="shortcut icon" href="dist/img/logo.png" type="image/x-icon">
-    
+
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
     <script src="../../plugins/jquery/jquery.min.js"></script>
@@ -32,17 +33,19 @@
     <div class="wrapper">
         <section class="content">
             <div class="error-page">
-            <h2 class="headline text-warning">201</h2>
+                <h2 class="headline text-warning">201</h2>
                 <div class="error-content">
                     <h3><i class="fas fa-exclamation-triangle text-warning"></i> Maaf Penilaian Belum di mulai</h3>
                     <p>
-                    silahkan hubungi admin untuk memulai jadwal<br>
-                    <a href="{{ route('logout') }}" class="text-muted"><p>Logout</p>
-                    </a>
+                        silahkan hubungi admin untuk memulai jadwal<br>
+                        <a href="{{ route('logout') }}" class="text-muted">
+                            <p>Logout</p>
+                        </a>
                     </p>
                 </div>
             </div>
         </section>
     </div>
 </body>
+
 </html>

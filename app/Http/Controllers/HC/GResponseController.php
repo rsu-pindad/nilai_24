@@ -3,29 +3,28 @@
 namespace App\Http\Controllers\HC;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Revolution\Google\Sheets\Facades\Sheets;
 use App\Models\GResponse;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Revolution\Google\Sheets\Facades\Sheets;
 
 class GResponseController extends Controller
 {
-
     public function index()
     {
         // $form_data = Cache::remember('pull_data', now()->addMinutes(5), function(){
-            // return GResponse::get();
+        // return GResponse::get();
         // });
 
         $form_data = GResponse::with(['relasi_penilai', 'relasi_dinilai'])
-                    ->select('id','npp_penilai','nama_penilai','npp_dinilai','nama_dinilai','timestamp')
-                    // ->orderBy('npp_penilai', 'ASC')
-                    ->orderBy('created_at', 'ASC')
-                    ->get();
+            ->select('id', 'npp_penilai', 'nama_penilai', 'npp_dinilai', 'nama_dinilai', 'timestamp')
+            // ->orderBy('npp_penilai', 'ASC')
+            ->orderBy('created_at', 'ASC')
+            ->get();
 
         return view('hc.gform.index')->with([
             'grespon_data' => $form_data,
@@ -37,14 +36,14 @@ class GResponseController extends Controller
         $response = GResponse::find($id);
         $response->delete();
 
-        if($response){
+        if ($response) {
             return redirect()->back()->withSuccess('berhasil menghapus data');
         }
     }
 
     public function getDetailAjax(Request $request)
     {
-        $data = GResponse::where('id',$request->id)->first();
+        $data = GResponse::where('id', $request->id)->first();
 
         return response()->json(['data' => $data]);
     }
@@ -69,7 +68,7 @@ class GResponseController extends Controller
         try {
             $sheetId = env('GOOGLE_SHEET_RESPONSE_ID', '');
             $sheetName = env('GOOGLE_SHEET_RESPONSE_NAME', '');
-            $values = Sheets::spreadsheet($sheetId)->sheet($sheetName)->get(); // YANG BARU
+            $values = Sheets::spreadsheet($sheetId)->sheet($sheetName)->get();  // YANG BARU
             $values = array_filter($values->toArray());
             unset($values[0]);
             $message = [];
@@ -81,18 +80,15 @@ class GResponseController extends Controller
             $message['data_baru'] = $newData;
             $mesaage['data_gagal'] = $failureData;
 
-            foreach($values as $key => $val){
+            foreach ($values as $key => $val) {
                 $timesValue = Carbon::createFromFormat('d/m/Y H:i:s', $val[0])->format('Y-m-d H:i:s');
                 $findTime = GResponse::where('timestamp', $timesValue)->first();
-                if($findTime)
-                {
-                    if(isset($findTime->timestamp) == $timesValue){
+                if ($findTime) {
+                    if (isset($findTime->timestamp) == $timesValue) {
                         $sameData += 1;
                         $message['data_sama'] = $sameData;
                     }
-                }
-                else
-                {
+                } else {
                     $store = GResponse::updateOrCreate(
                         [
                             // 'timestamp' => Carbon::createFromFormat('d/m/Y H:i:s',$val[0])->format('Y-m-d H:i:s'),
@@ -120,19 +116,19 @@ class GResponseController extends Controller
                             'proses_polapikir' => $val[21],
                         ]
                     );
-                    if($store){
+                    if ($store) {
                         $newData += 1;
                         $message['data_baru'] = $newData;
-                    }else{
+                    } else {
                         $failureData += 1;
                         $message['data_gagal'] = $failureData;
                     }
                 }
             }
-            return response()->json($message,200);
+            return response()->json($message, 200);
         } catch (\Illuminate\Database\QueryException $exception) {
             $message['info'] = $exception->getMessage();
-            return response()->json($message,501);
+            return response()->json($message, 501);
         }
         // return response()->json($message,200);
     }

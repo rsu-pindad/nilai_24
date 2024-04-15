@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AturJadwal;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,7 +12,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
-use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -20,13 +20,13 @@ class ProfileController extends Controller
         $data = ['title' => 'Halaman Profil'];
         $jadwal = AturJadwal::get()->last();
         $nows = Carbon::now();
-        if($jadwal){
-            if( $nows <= $jadwal['jadwal'] AND Auth::user()->level != 1){
+        if ($jadwal) {
+            if ($nows <= $jadwal['jadwal'] AND Auth::user()->level != 1) {
                 return View::make('error-jadwal');
-            }else{
+            } else {
                 return View::make('profile', $data);
             }
-        }else{
+        } else {
             return View::make('profile', $data);
         }
     }
