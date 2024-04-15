@@ -3,13 +3,13 @@
 namespace App\Providers;
 
 use App\Models\LinkNilai;
-use App\Models\RelasiKaryawan;
 use App\Models\RelasiAtasan;
+use App\Models\RelasiKaryawan;
 use App\Models\RelasiSelevel;
 use App\Models\RelasiStaff;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View as FacadesView;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Revolution\Google\Sheets\Facades\Sheets;
@@ -41,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
             $relasi_staff = [];
             $custom_data = [];
             $sheet_id = env('GOOGLE_SHEET_ID', '');
-            $googleFormLink = env('GOOGLE_SHEET_RESPONSE_LINK','');
+            $googleFormLink = env('GOOGLE_SHEET_RESPONSE_LINK', '');
             if ($user) {
                 if ($user->level != 1) {
                     // $sheet = Sheets::spreadsheet($sheet_id)->sheet('link')->range('A:I')->get() ?? [];
@@ -73,7 +73,7 @@ class AppServiceProvider extends ServiceProvider
                     //         if($findAtasan['karyawan_atasan'] != ''){
                     //             $daftarStaff[$key]['NPP_STAFF'] = $findAtasan['npp_karyawan'];
                     //             $daftarStaff[$key]['LINK_MENILAI_STAFF'] = $items['LINK_MENILAI_STAFF'];
-                    //         }    
+                    //         }
                     //     }
                     // }
                     // $page = request()->input('page');
@@ -83,107 +83,119 @@ class AppServiceProvider extends ServiceProvider
                     // dd($chunk);
 
                     // NEW LINK BASED ON DATABASE
-                    
+
                     // $form_link = LinkNilai::where('active', 1)->first();
                     $relasi_karyawan = RelasiKaryawan::where('npp_karyawan', Auth::user()->npp)->first();
                     $relasi_atasan = RelasiAtasan::where('relasi_karyawan_id', $relasi_karyawan->id);
                     $relasi_selevel = RelasiSelevel::where('relasi_karyawan_id', $relasi_karyawan->id);
                     $relasi_staff = RelasiStaff::with(['relasi_karyawan'])->where('relasi_karyawan_id', $relasi_karyawan->id)->get();
-                    
+
                     // if($form_link){
-                        // $form_data = $form_link->toArray();
-                        $form_data = [];
-                        // $form_data['form_start'] = 'https://docs.google.com/forms/d/e/1FAIpQLSfTQ2DyudZ-cGmfqWjS1Gz4fPJK33jJXIa7nOi4vVm-LYwnfA/viewform?usp=pp_url';
-                        $form_data['form_start'] = $googleFormLink;
-                        $form_data['form_1'] = 'entry.309041911=';
-                        $form_data['form_2'] = 'entry.2024238832=';
-                        $form_data['form_3'] = 'entry.1845465427=';
-                        $form_data['form_4'] = 'entry.825413986=';
-                        $form_data['form_5'] = 'entry.1491559044=';
-                        $self = $relasi_karyawan->toArray();
+                    // $form_data = $form_link->toArray();
+                    $form_data = [];
+                    // $form_data['form_start'] = 'https://docs.google.com/forms/d/e/1FAIpQLSfTQ2DyudZ-cGmfqWjS1Gz4fPJK33jJXIa7nOi4vVm-LYwnfA/viewform?usp=pp_url';
+                    $form_data['form_start'] = $googleFormLink;
+                    $form_data['form_1'] = 'entry.309041911=';
+                    $form_data['form_2'] = 'entry.2024238832=';
+                    $form_data['form_3'] = 'entry.1845465427=';
+                    $form_data['form_4'] = 'entry.825413986=';
+                    $form_data['form_5'] = 'entry.1491559044=';
+                    $self = $relasi_karyawan->toArray();
 
-                        // if($self['level_jabatan'])
-                        $form_self = $form_data['form_start'].
-                        '&'.$form_data['form_1'].Auth::user()->npp.
-                        '&'.$form_data['form_2'].$self['nama_karyawan'].
-                        '&'.$form_data['form_3'].Auth::user()->npp.
-                        '&'.$form_data['form_4'].$self['nama_karyawan'].
-                        '&'.$form_data['form_5'].$self['level_jabatan'];
-                        
-                        $atasan = $relasi_atasan->first();
-                        if($atasan){
-                            $atasan->toArray();
-                            $data_atasan = RelasiKaryawan::where('npp_karyawan', $atasan['npp_atasan'])->first();
-                            if($data_atasan)
-                            {
-                                $data_atasan->toArray();
-                                // $full_form = $form_data['form_start'].'&'.$form_data['form_1'].'&'.$form_data['form_2'].'&'.$form_data['form_3'].'&'.$form_data['form_4'].'&'.$form_data['form_5'];
-                                $atasan = json_decode($relasi_atasan->pluck('npp_atasan')->toJson());
-                                $form_atasan = $form_data['form_start'].
-                                '&'.$form_data['form_1'].Auth::user()->npp.
-                                '&'.$form_data['form_2'].$self['nama_karyawan'].
-                                '&'.$form_data['form_3'].$data_atasan['npp_karyawan'].
-                                '&'.$form_data['form_4'].$data_atasan['nama_karyawan'].
-                                '&'.$form_data['form_5'].$data_atasan['level_jabatan'];
-                            }else{
-                                $atasan = '#N/A';
-                                $form_atasan = '#N/A';
-                            }
+                    // if($self['level_jabatan'])
+                    $form_self = $form_data['form_start']
+                        . '&' . $form_data['form_1'] . Auth::user()->npp
+                        . '&' . $form_data['form_2'] . $self['nama_karyawan']
+                        . '&' . $form_data['form_3'] . Auth::user()->npp
+                        . '&' . $form_data['form_4'] . $self['nama_karyawan']
+                        . '&' . $form_data['form_5'] . $self['level_jabatan'];
+
+                    $atasan = $relasi_atasan->first();
+                    if ($atasan) {
+                        $atasan->toArray();
+                        $data_atasan = RelasiKaryawan::where('npp_karyawan', $atasan['npp_atasan'])->first();
+                        if ($data_atasan) {
+                            $data_atasan->toArray();
+                            // $full_form = $form_data['form_start'].'&'.$form_data['form_1'].'&'.$form_data['form_2'].'&'.$form_data['form_3'].'&'.$form_data['form_4'].'&'.$form_data['form_5'];
+                            $atasan = json_decode($relasi_atasan->pluck('npp_atasan')->toJson());
+                            $form_atasan = $form_data['form_start']
+                                . '&' . $form_data['form_1'] . Auth::user()->npp
+                                . '&' . $form_data['form_2'] . $self['nama_karyawan']
+                                . '&' . $form_data['form_3'] . $data_atasan['npp_karyawan']
+                                . '&' . $form_data['form_4'] . $data_atasan['nama_karyawan']
+                                . '&' . $form_data['form_5'] . $data_atasan['level_jabatan'];
+                        } else {
+                            $atasan = '';
+                            $form_atasan = '#N/A';
                         }
-                        
-                        
-                        $form_selevel = '#N/A';
-                        $selevel = $relasi_selevel->first();
-                        if($selevel){
-                            $selevel->toArray();
-                            $data_selevel = RelasiKaryawan::where('npp_karyawan', $selevel['npp_selevel'])->first();
-                            if($data_selevel){
-                                $data_selevel->toArray();
-                                $selevel = json_decode($relasi_selevel->pluck('npp_selevel')->toJson());
+                    }
 
-                                $form_selevel = $form_data['form_start'].
-                                '&'.$form_data['form_1'].Auth::user()->npp.
-                                '&'.$form_data['form_2'].$self['nama_karyawan'].
-                                '&'.$form_data['form_3'].$data_selevel['npp_karyawan'].
-                                '&'.$form_data['form_4'].$data_selevel['nama_karyawan'].
-                                '&'.$form_data['form_5'].$data_selevel['level_jabatan'];
-                            }else{
-                                $selevel = '#N/A';
-                            }
-                            
+                    $form_selevel = '#N/A';
+                    $selevel = $relasi_selevel->first();
+                    if ($selevel) {
+                        $selevel->toArray();
+                        $data_selevel = RelasiKaryawan::where('npp_karyawan', $selevel['npp_selevel'])->first();
+                        if ($data_selevel) {
+                            $data_selevel->toArray();
+                            $selevel = json_decode($relasi_selevel->pluck('npp_selevel')->toJson());
+
+                            $form_selevel = $form_data['form_start']
+                                . '&' . $form_data['form_1'] . Auth::user()->npp
+                                . '&' . $form_data['form_2'] . $self['nama_karyawan']
+                                . '&' . $form_data['form_3'] . $data_selevel['npp_karyawan']
+                                . '&' . $form_data['form_4'] . $data_selevel['nama_karyawan']
+                                . '&' . $form_data['form_5'] . $data_selevel['level_jabatan'];
+                        } else {
+                            $selevel = '';
                         }
+                    }
 
-                        $daftarStaff = [];
-                        foreach($relasi_staff as $key => $items){
-                            $data_staff = RelasiKaryawan::where('npp_karyawan', $items['npp_staff'])->first();
-                            if($data_staff){
-                                $data_staff->toArray();
-                                $form_staff = $form_data['form_start'].
-                                '&'.$form_data['form_1'].Auth::user()->npp.
-                                '&'.$form_data['form_2'].$self['nama_karyawan'].
-                                '&'.$form_data['form_3'].$data_staff['npp_karyawan'].
-                                '&'.$form_data['form_4'].$data_staff['nama_karyawan'].
-                                '&'.$form_data['form_5'].$data_staff['level_jabatan'];
+                    $daftarStaff = [];
+                    foreach ($relasi_staff as $key => $items) {
+                        $data_staff = RelasiKaryawan::where('npp_karyawan', $items['npp_staff'])->first();
+                        if ($data_staff) {
+                            $data_staff->toArray();
+                            $form_staff = $form_data['form_start']
+                                . '&' . $form_data['form_1'] . Auth::user()->npp
+                                . '&' . $form_data['form_2'] . $self['nama_karyawan']
+                                . '&' . $form_data['form_3'] . $data_staff['npp_karyawan']
+                                . '&' . $form_data['form_4'] . $data_staff['nama_karyawan']
+                                . '&' . $form_data['form_5'] . $data_staff['level_jabatan'];
 
-                                $daftarStaff[$key]['NPP_STAFF'] = $data_staff['npp_karyawan'];
-                                $daftarStaff[$key]['LINK_STAFF'] = $form_staff;
-                            }
+                            $daftarStaff[$key]['NPP_STAFF'] = $data_staff['npp_karyawan'];
+                            $daftarStaff[$key]['LINK_STAFF'] = $form_staff;
                         }
+                    }
                     // }else{
                     //     $form_data = $form_link;
                     // }
 
                     $custom_data = [
                         'NPP' => Auth::user()->npp,
-                        'NPP_ATASAN' => $atasan[0] ?? [],
-                        'NPP_SELEVEL' => $selevel[0] ?? [],
-                        'LINK_SELF' => $form_self ?? [],
-                        'LINK_ATASAN' => $form_atasan ?? [],
-                        'LINK_SELEVEL' => $form_selevel ?? [],
+                        'LINK_SELF' => $form_self ?? '',
                     ];
-                    
+
+                    if ($atasan != '') {
+                        $data =
+                            [
+                                'NPP_ATASAN' => $atasan[0],
+                                'LINK_ATASAN' => $form_atasan
+                            ];
+                        $custom_data = $custom_data + $data;
+                    }
+                    if ($selevel != '') {
+                        $data =
+                            [
+                                'NPP_SELEVEL' => $selevel[0],
+                                'LINK_SELEVEL' => $form_selevel
+                            ];
+                        $custom_data = $custom_data + $data;
+                    }
+
                     $page = request()->input('page');
                     $link = request()->input('link');
+
+                    // dd($custom_data);
                 }
             }
             $view->with(['page' => $page, 'sheet' => $custom_data, 'link' => $link, 'staff_data' => $daftarStaff ?? []]);
