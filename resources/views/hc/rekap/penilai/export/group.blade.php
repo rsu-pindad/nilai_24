@@ -4,9 +4,9 @@
             <th>No</th>
             <th>Npp</th>
             <th>Jabatan</th>
-            <th>B-A</th>
-            <th>B-A</th>
-            <th>B-A</th>
+            <th>Kepemimpinan</th>
+            <th>Sasaran</th>
+            <th>Perilaku</th>
         </tr>
     </thead>
     <tbody>

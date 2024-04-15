@@ -30,6 +30,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Npp Dinilai</th>
+                                            <th>Nama Dinilai</th>
                                             <th>Jabatan Dinilai</th>
                                             <th>Rata-rata Skor DP3</th>
                                             <th>Aksi</th>
@@ -40,6 +41,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $p->relasi_karyawan->npp_karyawan }}</td>
+                                                <td>{{ $p->relasi_karyawan->nama_karyawan }}</td>
                                                 <td>{{ $p->relasi_karyawan->level_jabatan }}</td>
                                                 <td>{{ round($p->total, 2) }}</td>
                                                 <td class="px-2">
@@ -97,15 +99,20 @@
                     dataType: 'json',
                     success: function(response) {
                         // console.log(response)
-                        let text = JSON.stringify(response.text.message)
-                        swalOk(response.title, text, response.icon);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 3100);
+                        // let text = JSON.stringify(response.text)
+                        let text = response.text;
+                        var lastText = text[text.length - 1]
+                        console.log(lastText);
+                        swalOk(response.title, lastText, response.icon);
+                        // setTimeout(() => {
+                        //     location.reload();
+                        // }, 3100);
                     },
                     error: function(response) {
-                        let text = JSON.stringify(response.text.message)
-                        swalOk(response.title, text, response.icon)
+                        // let text = JSON.stringify(response.text)
+                        let text = response.text;
+                        var lastText = text[text.length - 1]
+                        swalOk(response.title, lastText, response.icon)
                         setTimeout(() => {
                             location.reload()
                         }, 10000);
@@ -145,9 +152,9 @@
                 ev.preventDefault();
                 alertswal(
                     'anda yakin',
-                    'anda melakukan rekap perilaku tanpa bobot data pada database',
+                    'anda melakukan rekap penilaian akhir',
                     'warning',
-                    'Pool saja'
+                    'iya'
                 );
             });
         });

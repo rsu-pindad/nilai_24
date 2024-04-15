@@ -3,30 +3,29 @@
 namespace App\Http\Controllers\HC;
 
 use App\Http\Controllers\Controller;
+use App\Models\RelasiAtasan as RA;
+use App\Models\RelasiKaryawan as RK;
+use App\Models\RelasiSelevel as RL;
+use App\Models\RelasiStaff as RS;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Revolution\Google\Sheets\Facades\Sheets;
-use App\Models\RelasiKaryawan as RK;
-use App\Models\RelasiStaff as RS;
-use App\Models\RelasiSelevel as RL;
-use App\Models\RelasiAtasan as RA;
-use App\Models\User;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Revolution\Google\Sheets\Facades\Sheets;
 
 class RelasiKaryawan extends Controller
 {
-
     public function index()
     {
         // $rk_cache = Cache::remember('rk_data',now()->addMinutes(5), function () {
-            // return RK::select('id','npp_karyawan','level_jabatan','unit_jabatan','nama_karyawan')->with([
-            $rk_cache = RK::select('id','npp_karyawan','level_jabatan','unit_jabatan','nama_karyawan')->with([
-                'karyawan_atasan:id,relasi_karyawan_id,npp_atasan',
-                'karyawan_selevel:id,relasi_karyawan_id,npp_selevel',
-                'karyawan_staff:id,relasi_karyawan_id,npp_staff'
-                ])->get();
+        // return RK::select('id','npp_karyawan','level_jabatan','unit_jabatan','nama_karyawan')->with([
+        $rk_cache = RK::select('id', 'npp_karyawan', 'level_jabatan', 'unit_jabatan', 'nama_karyawan')->with([
+            'karyawan_atasan:id,relasi_karyawan_id,npp_atasan',
+            'karyawan_selevel:id,relasi_karyawan_id,npp_selevel',
+            'karyawan_staff:id,relasi_karyawan_id,npp_staff'
+        ])->get();
         // });
         return view('hc.gform.relasi.index')->with([
             'karyawan_data' => $rk_cache,
@@ -56,10 +55,10 @@ class RelasiKaryawan extends Controller
                     'message' => "Password baru : $password
 
                     https://assessment.pindadmedika.com/2024",
-                    'countryCode' => '62', //optional
+                    'countryCode' => '62',  // optional
                 ),
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: '.env('FONNTE_TOKEN', '') //change TOKEN to your actual token
+                    'Authorization: ' . env('FONNTE_TOKEN', '')  // change TOKEN to your actual token
                 ),
             ));
 
@@ -69,7 +68,7 @@ class RelasiKaryawan extends Controller
             echo $response;
 
             return redirect()->route('relasi-user')->withSuccess('password berhasil di reset!');
-        }else{
+        } else {
             return redirect()->route('relasi-user')->withErrors('terjadi kesalahan!');
         }
     }
@@ -99,10 +98,10 @@ class RelasiKaryawan extends Controller
                     'message' => "Password anda telah diubah oleh SDM, Password baru : $password
 
                     https://assessment.pindadmedika.com/2024",
-                    'countryCode' => '62', //optional
+                    'countryCode' => '62',  // optional
                 ),
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: '.env('FONNTE_TOKEN', '') //change TOKEN to your actual token
+                    'Authorization: ' . env('FONNTE_TOKEN', '')  // change TOKEN to your actual token
                 ),
             ));
 
@@ -112,15 +111,15 @@ class RelasiKaryawan extends Controller
             // echo $response;
 
             $tempData['data'] = [
-                'title' => "success",
-                'html' => "berhasil reset password <b></b>",
-                'icon' => "success",
+                'title' => 'success',
+                'html' => 'berhasil reset password <b></b>',
+                'icon' => 'success',
             ];
-        }else{
+        } else {
             $tempData['data'] = [
-                'title' => "gagal",
-                'html' => "gagal edit data <b></b>",
-                'icon' => "error",
+                'title' => 'gagal',
+                'html' => 'gagal edit data <b></b>',
+                'icon' => 'error',
             ];
         }
         return response()->json($tempData);
@@ -145,7 +144,7 @@ class RelasiKaryawan extends Controller
                 'no_hp' => 'required',
             ]);
 
-            if($validated){
+            if ($validated) {
                 $data = [
                     'npp' => $request->npp,
                     'nama' => $request->nama,
@@ -154,27 +153,27 @@ class RelasiKaryawan extends Controller
                 ];
                 // dd($data);
                 $store = User::find($id)->update($data);
-                if($store){
+                if ($store) {
                     $tempData['data'] = [
-                        'title' => "berhasil",
-                        'html' => "berhasil edit data <b></b>",
-                        'icon' => "success",
+                        'title' => 'berhasil',
+                        'html' => 'berhasil edit data <b></b>',
+                        'icon' => 'success',
                     ];
                     return response()->json($tempData);
-                }else{
+                } else {
                     $tempData['data'] = [
-                        'title' => "gagal",
-                        'html' => "gagal edit data <b></b>",
-                        'icon' => "error",
+                        'title' => 'gagal',
+                        'html' => 'gagal edit data <b></b>',
+                        'icon' => 'error',
                     ];
                     return response()->json($tempData);
                 }
             }
         } catch (\Illuminate\Database\QueryException $exception) {
             $tempData['data'] = [
-                'title' => "gagal",
-                'html' => $exception->getMessage()." <b></b>",
-                'icon' => "error",
+                'title' => 'gagal',
+                'html' => $exception->getMessage() . ' <b></b>',
+                'icon' => 'error',
             ];
             return response()->json($tempData);
         }
@@ -193,72 +192,66 @@ class RelasiKaryawan extends Controller
             $lastNppKaryawan = '';
             $rkid = '';
             $findIdRk = '';
-            foreach($values as $key => $val){
-                if($val[0] != '' && $val[0] != '-')
-                {
+            foreach ($values as $key => $val) {
+                if ($val[0] != '' && $val[0] != '-') {
                     // $val[0] = $lastNppKaryawan;
-                    $checkTable = RK::where('npp_karyawan',$val[0])->first() ?? '';
-                    if($checkTable == ''){
+                    $checkTable = RK::where('npp_karyawan', $val[0])->first() ?? '';
+                    if ($checkTable == '') {
                         $storeRk = RK::updateOrCreate(
                             [
-                            'npp_karyawan' => $val[0],
+                                'npp_karyawan' => $val[0],
                             ]
-                        ); // Insert
+                        );  // Insert
                         $rkid = $storeRk->id;
-                    }else{
-                        $findIdRk = RK::where('npp_karyawan', $val[0])->first(); // dapatkan id rk
+                    } else {
+                        $findIdRk = RK::where('npp_karyawan', $val[0])->first();  // dapatkan id rk
                         $rkid = $findIdRk->id;
                         // Dapatkan Id
                     }
                     $lastNppKaryawan = $val[0];
-                }
-                else
-                {
+                } else {
                     $val[0] = $lastNppKaryawan;
-                    $checkTable = RK::where('npp_karyawan',$val[0])->first() ?? '';
-                    if($checkTable == ''){
+                    $checkTable = RK::where('npp_karyawan', $val[0])->first() ?? '';
+                    if ($checkTable == '') {
                         $storeRk = RK::create(
                             [
-                            'npp_karyawan' => $val[0],
+                                'npp_karyawan' => $val[0],
                             ]
-                        ); // Insert
+                        );  // Insert
                         $rkid = $storeRk->id;
-                    }else{
-                        $findIdRk = RK::where('npp_karyawan', $val[0])->first(); // dapatkan id rk
+                    } else {
+                        $findIdRk = RK::where('npp_karyawan', $val[0])->first();  // dapatkan id rk
                         $rkid = $findIdRk->id;
                         // Dapatkan Id
                     }
                 }
                 // Dapatkan Id
                 // Insert ke tabel relasi staff
-                if(!empty($val[3])){
-                    $staff = preg_replace("/[^a-zA-Z 0-9]+/", "", $val[3]);
-                    if($staff != ''){
+                if (!empty($val[3])) {
+                    $staff = preg_replace('/[^a-zA-Z 0-9]+/', '', $val[3]);
+                    if ($staff != '') {
                         RS::updateOrCreate([
                             'relasi_karyawan_id' => $rkid,
                             'npp_staff' => $staff,
-                            ]
-                        );
+                        ]);
                     }
                 }
                 // Insert ke tabel relasi selevel
-                if(!empty($val[2])){
-                    if($val[2] != ''){
+                if (!empty($val[2])) {
+                    if ($val[2] != '') {
                         RL::updateOrCreate([
                             'relasi_karyawan_id' => $rkid,
                             'npp_selevel' => $val[2],
-                            ]
-                        );
+                        ]);
                     }
                 }
                 // Insert ke tabel atasan
-                if(!empty($val[1])){
-                    if($val[3] != ''){
+                if (!empty($val[1])) {
+                    if ($val[3] != '') {
                         RA::updateOrCreate([
                             'relasi_karyawan_id' => $rkid,
                             'npp_atasan' => $val[1],
-                            ]
-                        );
+                        ]);
                     }
                 }
             }
@@ -285,17 +278,14 @@ class RelasiKaryawan extends Controller
             $rows = Sheets::spreadsheet($sheetId)->sheet($sheetName)->range('C$3:I')->get();
             // $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2023')->range('C$5:I')->get();
             $values = $rows->filter();
-
-            // dd($values);
-
+            // dd($values->toArray());
             $lastNppKaryawan = '';
             $rkid = '';
             $findIdRk = '';
-            foreach($values as $key => $val){
-                if($val[3] != '' && $val[3] != '-')
-                {
-                    $checkTable = RK::where('npp_karyawan',$val[3])->first() ?? '';
-                    if($checkTable == ''){
+            foreach ($values as $key => $val) {
+                if ($val[3] != '' && $val[3] != '-') {
+                    $checkTable = RK::where('npp_karyawan', $val[3])->first() ?? '';
+                    if ($checkTable == '') {
                         $storeRk = RK::updateOrCreate(
                             [
                                 'npp_karyawan' => $val[3],
@@ -305,21 +295,19 @@ class RelasiKaryawan extends Controller
                                 'unit_jabatan' => $val[2],
                                 'nama_karyawan' => $val[0],
                             ]
-                        ); 
+                        );
                         // Insert
                         $rkid = $storeRk->id;
-                    }else{
-                        $findIdRk = RK::where('npp_karyawan', $val[3])->first(); // dapatkan id rk
+                    } else {
+                        $findIdRk = RK::where('npp_karyawan', $val[3])->first();  // dapatkan id rk
                         $rkid = $findIdRk->id;
                         // Dapatkan Id
                     }
                     $lastNppKaryawan = $val[3];
-                }
-                else
-                {
+                } else {
                     $val[3] = $lastNppKaryawan;
-                    $checkTable = RK::where('npp_karyawan',$val[3])->first() ?? '';
-                    if($checkTable == ''){
+                    $checkTable = RK::where('npp_karyawan', $val[3])->first() ?? '';
+                    if ($checkTable == '') {
                         $storeRk = RK::create(
                             [
                                 'npp_karyawan' => $val[3],
@@ -327,46 +315,19 @@ class RelasiKaryawan extends Controller
                                 'unit_jabatan' => $val[2],
                                 'nama_karyawan' => $val[0],
                             ]
-                        ); // Insert
+                        );  // Insert
                         $rkid = $storeRk->id;
-                    }else{
-                        $findIdRk = RK::where('npp_karyawan', $val[3])->first(); // dapatkan id rk
+                    } else {
+                        $findIdRk = RK::where('npp_karyawan', $val[3])->first();  // dapatkan id rk
                         $rkid = $findIdRk->id;
                         // Dapatkan Id
                     }
                 }
                 // Dapatkan Id
-                // Insert ke tabel relasi staff
-                if(!empty($val[6]))
-                {
-                    $staff = preg_replace("/[^a-zA-Z 0-9]+/", "", $val[6]);
-                    if($staff != ''){
-                        RS::updateOrCreate(
-                            [
-                                'relasi_karyawan_id' => $rkid,
-                                'npp_staff' => $staff,
-                            ]
-                        );
-                    }
-                }
-                // Insert ke tabel relasi selevel
-                if(!empty($val[5]))
-                {
-                    if($val[5] != ''){
-                        RL::updateOrCreate(
-                            [
-                                'relasi_karyawan_id' => $rkid,
-                            ],
-                            [
-                                'npp_selevel' => $val[5],
-                            ]
-                        );
-                    }
-                }
-                // Insert ke tabel atasan
-                if(!empty($val[4]))
-                {
-                    if($val[4] != ''){
+                
+                // Insert ke tabel relasi atasan
+                if (!empty($val[4])) {
+                    if ($val[4] != '') {
                         RA::updateOrCreate(
                             [
                                 'relasi_karyawan_id' => $rkid,
@@ -377,19 +338,44 @@ class RelasiKaryawan extends Controller
                         );
                     }
                 }
+                // Insert ke tabel relasi selevel
+                if (!empty($val[5])) {
+                    if ($val[5] != '') {
+                        RL::updateOrCreate(
+                            [
+                                'relasi_karyawan_id' => $rkid,
+                            ],
+                            [
+                                'npp_selevel' => $val[5],
+                            ]
+                        );
+                    }
+                }
+                // Insert ke tabel relasi staff
+                if (!empty($val[6])) {
+                    $staff = preg_replace('/[^a-zA-Z 0-9]+/', '', $val[6]);
+                    if ($staff != '') {
+                        RS::updateOrCreate(
+                            [
+                                'relasi_karyawan_id' => $rkid,
+                                'npp_staff' => $staff,
+                            ]
+                        );
+                    }
+                }
             }
-            unset($values);
+            // unset($values);
             return response()->json([
                 'status' => true,
                 'title' => 'berhasil',
                 'text' => 'data karyawan telah di simpan'
-            ],200);
+            ], 200);
         } catch (\Illuminate\Database\QueryException $exception) {
             return response()->json([
                 'status' => false,
                 'title' => 'gagal',
                 'text' => $exception->getMessage()
-            ],501);
+            ], 501);
         }
     }
 }

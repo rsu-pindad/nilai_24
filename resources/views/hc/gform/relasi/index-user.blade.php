@@ -20,8 +20,8 @@
                 <div class="row">
                     <div class="col">
                         <div class="card">
-                            <div class="card-header">
-                            </div>
+                            {{-- <div class="card-header">
+                            </div> --}}
                             <div class="card-body">
                                 <table class="table table-striped table-bordered" id="tabelUser">
                                     <thead>

@@ -121,10 +121,18 @@
                                                             </a>
                                                         </div>
                                                         <div class="btn-group mr-2" role="group" aria-label="Third group">
-                                                            <a href="/penilai-rekap/detail?dinilai={{ $p->npp_dinilai }}&relasi=rekanan&penilai={{ $p->identitas_penilai->id }}"
+                                                            {{-- <a href="/penilai-rekap/detail?dinilai={{ $p->npp_dinilai }}&relasi=rekanan&penilai={{ $p->identitas_penilai->id }}"
                                                                 target="_blank" class="btn btn-sm btn-success">
                                                                 <i class="far fa-eye px-1"></i>Rekanan
-                                                            </a>
+                                                            </a> --}}
+                                                            <button type="button"
+                                                                class="btn btn-success btn-sm btnInfoRekanan"
+                                                                data-toggle="modal" data-target="#rekananModal"
+                                                                data-id-dinilai='{{ $p->identitas_dinilai->id }}'
+                                                                data-npp-dinilai='{{ $p->identitas_dinilai->npp_karyawan }}'
+                                                                data-rekap-id="{{ $p->id }}">
+                                                                <i class="far fa-eye px-1"></i>Rekanan
+                                                            </button>
                                                         </div>
                                                         <!-- <a href="/penilai-rekap/detail/staff?dinilai={{ $p->npp_dinilai }}" target="_blank" class="btn btn-sm btn-warning">
                                                             <i class="far fa-eye px-1"></i>
@@ -180,6 +188,27 @@
     </div>
 @endpush
 
+@push('modals')
+    <!-- Modal -->
+    <div class="modal fade" id="rekananModal" tabindex="-1" aria-labelledby="rekananModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rekananModalLabel">List Rekanan</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="rekananModalBody">
+                        <p class="text-center"><em>tunggu...</em></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endpush
+
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush
@@ -188,6 +217,9 @@
     <script>
         var request_staff = null;
         var request_follow_up_staff = null;
+
+        var request_rekanan = null;
+        var request_follow_up_rekanan = null;
         $('.btnInfoStaff').on('click', function(e) {
             e.preventDefault();
             // alert('ok hooked');
@@ -222,16 +254,16 @@
                                     .nama_karyawan;
                                 var identitasNppStaff = response['data'][i].identitas_staff
                                     .npp_karyawan;
-                                var identitaIdStaff = response['data'][i].identitas_staff.id;
+                                var identitasIdStaff = response['data'][i].identitas_staff.id;
                                 var parentStaff = response['data'][i].parent_staff.npp_karyawan;
                                 // var nppStaff = response['data'][i].npp_staff;
                                 var option = `
-                            <li class="list-group-item listStaffWa data-id-penilai="${identitaIdStaff}">
-                                <a href="${local_uri+parentStaff+'&penilai='+identitaIdStaff+'&relasi=staff'}" 
+                            <li class="list-group-item listStaffWa" data-id-penilai="${identitasIdStaff}">
+                                <a href="${local_uri+parentStaff+'&penilai='+identitasIdStaff+'&relasi=staff'}" 
                                     class="list-group-item list-group-item-action listFollowUpStaff" 
                                     target="_blank"
                                     data-parent-npp=${parentStaff}
-                                    data-staff-id=${identitaIdStaff}>${identitasNppStaff} - ${identitasNamaStaff}
+                                    data-staff-id=${identitasIdStaff}>${identitasNppStaff} - ${identitasNamaStaff}
                                     <i class="fas fa-hand-point-left px-2"></i>
                                 </a>
                             </li>`;
@@ -296,12 +328,85 @@
             })
         })
 
+        $('.btnInfoRekanan').on('click', function(e) {
+            e.preventDefault();
+            // alert('ok hooked');
+            let id = $(this).attr('data-npp-dinilai')
+            let rekapId = $(this).attr('data-rekap-id')
+            let npp_penilai = $(this).attr('data-id-penilai')
+            // console.log(id);
+            const uri = `/penilai-rekap/detail/rekanan?dinilai=${id}`
+            // const urlFollowUp = '/rekap/hasil-personal/follow-up?dinilai='+sd.identitas_dinilai.npp_karyawan+'&penilai='+sdp.npp_karyawan;
+            $('#rekananModal').on('shown.bs.modal', function(e) {
+                e.preventDefault();
+                if (request_rekanan && request_rekanan.readyState != 2) {
+                    request_rekanan.abort();
+                }
+                request_rekanan = $.ajax({
+                    url: uri,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(response) {
+                        const local_uri = `/penilai-rekap/detail/rekanan/detail?dinilai=`;
+                        var len = 0;
+                        if (response['data'] != null) {
+                            len = response['data'].length;
+                        }
+                        console.log(response);
+                        var head = `<ul class="list-group listRekanan">`;
+                        $('.rekananModalBody').empty();
+                        $('.rekananModalBody').prepend(head);
+                        if (len > 0) {
+                            for (var i = 0; i < len; i++) {
+                                var ids = response['data'][i].id;
+                                var identitasNamaRekanan = response['data'][i].parent_selevel
+                                    .nama_karyawan;
+                                var identitasNppRekanan = response['data'][i].parent_selevel
+                                    .npp_karyawan;
+                                var identitasIdRekanan = response['data'][i].parent_selevel.id;
+                                var parentRekanan = response['data'][i].identitas_selevel.npp_karyawan;
+                                // var nppStaff = response['data'][i].npp_staff;
+                                var option = `
+                            <li class="list-group-item listRekananWa" data-id-penilai="${identitasIdRekanan}">
+                                <a href="${local_uri+parentRekanan+'&penilai='+identitasIdRekanan+'&relasi=rekanan'}" 
+                                    class="list-group-item list-group-item-action listFollowUpRekanan" 
+                                    target="_blank"
+                                    data-parent-npp=${parentRekanan}
+                                    data-selevel-id=${identitasIdRekanan}>${identitasNppRekanan} - ${identitasNamaRekanan}
+                                    <i class="fas fa-hand-point-left px-2"></i>
+                                </a>
+                            </li>`;
+                                $('.listRekanan').append(option);
+                            }
+                        } else {
+                            let content =
+                                `<p class="text-center"><em>tidak memiliki rekanan</em></p>`;
+                            $('.rekananModalBody').html(content);
+                        }
+                        var tail = `</ul>`;
+                    }
+                })
+                $('.rekananModalBody').on('change', function(e) {
+                    e.preventDefault()
+                    alert('changed')
+                })
+            })
+        })
+
         $('#staffModal').on('hidden.bs.modal', function(e) {
             e.preventDefault();
             // alert('modal closed')
             let content = `<p class="text-center"><em>tunggu...</em></p>`;
             $('.staffModalBody').empty();
             $('.staffModalBody').html(content);
+        })
+
+        $('#rekananModal').on('hidden.bs.modal', function(e) {
+            e.preventDefault();
+            // alert('modal closed')
+            let content = `<p class="text-center"><em>tunggu...</em></p>`;
+            $('.rekananModalBody').empty();
+            $('.rekananModalBody').html(content);
         })
 
         var table = $("#dataTablesRekap2").DataTable({
@@ -318,21 +423,24 @@
     <script>
         $(document).ready(function(e) {
             async function swalAjax() {
-                const uri = '/penilai-rekap/calculate?relasi=all';
+                const uri = '/penilai-rekap/calculate-new?relasi=all';
                 $.ajax({
                     url: uri,
                     type: 'get',
                     dataType: 'json',
                     success: function(response) {
                         // console.log(response);
-                        let msg = JSON.stringify(response.text.message);
-                        swalOk(response.title, msg, response.icon);
+                        let msg = response.text;
+                        var messages = msg.success;
+                        swalOk(response.title, messages, response.icon);
                         setTimeout(() => {
                             location.reload()
                         }, 10000);
                     },
                     error: function(response) {
-                        swalOk(response.title, JSON.stringify(response.text.message), response
+                        let msg = response.text;
+                        var messages = msg.error;
+                        swalOk(response.title, messages, response
                             .icon);
                         setTimeout(() => {
                             location.reload()

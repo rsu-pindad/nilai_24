@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RelasiStaff extends Model
 {
     use HasFactory;
+
     protected $table = 'populate_relasi_staff';
 
     protected $guard = 'id';
@@ -16,7 +17,9 @@ class RelasiStaff extends Model
         'relasi_karyawan_id',
         'npp_staff'
     ];
-    public function relasi_karyawan(){
+
+    public function relasi_karyawan()
+    {
         return $this->belongsTo(RelasiKaryawan::class, 'relasi_karyawan_id');
     }
 
@@ -27,6 +30,6 @@ class RelasiStaff extends Model
 
     public function identitas_staff()
     {
-        return $this->hasOne(RelasiKaryawan::class, 'npp_karyawan','npp_staff');
+        return $this->hasOne(RelasiKaryawan::class, 'npp_karyawan', 'npp_staff');
     }
 }

@@ -779,7 +779,13 @@ class HasilPersonalController extends Controller
             $kali_k = 0;
             $kali_p = 0;
             $kali_s = 0;
-            if (Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IA' || Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IC') {
+            if (
+                    Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'DIREKSI' ||
+                    Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IA' ||
+                    Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IB' ||
+                    Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IC' ||
+                    Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IANS'
+                ) {
                 // Bobot Dinilai Level
                 $dinilai_atasan = 0.6;
                 $dinilai_rekan = 0.2;
@@ -791,7 +797,10 @@ class HasilPersonalController extends Controller
                 $kali_p = 0.25;  // Perilaku
                 $kali_s = 0.35;  // Sasaran
                 // End Bobot Aspek Level
-            } elseif (Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'II' || Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IINS') {
+            } elseif (
+                Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'II' || 
+                Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IINS'
+                ) {
                 // Bobot Dinilai Level
                 $dinilai_atasan = 0.6;
                 $dinilai_rekan = 0.2;
@@ -801,7 +810,11 @@ class HasilPersonalController extends Controller
                 $kali_k = 0.35;
                 $kali_p = 0.25;
                 $kali_s = 0.4;
-            } elseif (Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'III') {
+            } elseif (
+                Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'III' ||
+                Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IIINS' ||
+                Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IIII'
+                ) {
                 // Bobot Dinilai Level
                 $dinilai_atasan = 0.6;
                 $dinilai_rekan = 0.2;
@@ -811,7 +824,12 @@ class HasilPersonalController extends Controller
                 $kali_k = 0.3;
                 $kali_p = 0.25;
                 $kali_s = 0.45;
-            } elseif (Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IV' || Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IVA') {
+            } elseif (
+                Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IV' ||
+                Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IVA(III)' ||
+                Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IVA(IIINS)' ||
+                Str::remove(' ', $find_jabatan_dinilai['level_jabatan']) == 'IVA'
+                ) {
                 // Bobot Dinilai Level
                 $dinilai_atasan = 0.6;
                 $dinilai_rekan = 0.2;

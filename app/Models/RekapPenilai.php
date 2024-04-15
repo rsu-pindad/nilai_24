@@ -59,6 +59,7 @@ class RekapPenilai extends Model
         // 'sum_nilai_p_bobot_penilai',
         'sum_nilai_dp3',
         'relasi',
+        'npp_penilai_dinilai'
     ];
 
     public function relasi_karyawan()
@@ -80,5 +81,4 @@ class RekapPenilai extends Model
     {
         return $this->hasOne(RelasiKaryawan::class, 'id', 'npp_penilai');
     }
-
 }

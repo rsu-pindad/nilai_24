@@ -89,47 +89,54 @@ class GResponseController extends Controller
                         $message['data_sama'] = $sameData;
                     }
                 } else {
-                    $store = GResponse::updateOrCreate(
-                        [
-                            // 'timestamp' => Carbon::createFromFormat('d/m/Y H:i:s',$val[0])->format('Y-m-d H:i:s'),
-                            'timestamp' => $timesValue,
-                            'npp_penilai' => $val[1],
-                            'nama_penilai' => $val[2],
-                            'npp_dinilai' => $val[3],
-                            'nama_dinilai' => $val[4],
-                            'jabatan_dinilai' => $val[5],
-                            'strategi_perencanaan' => $val[6],
-                            'strategi_pengawasan' => $val[7],
-                            'strategi_inovasi' => $val[8],
-                            'kepemimpinan' => $val[9],
-                            'membimbing_membangun' => $val[10],
-                            'pengambilan_keputusan' => $val[11],
-                            'kerjasama' => $val[12],
-                            'komunikasi' => $val[13],
-                            'absensi' => $val[14],
-                            'integritas' => $val[15],
-                            'etika' => $val[16],
-                            'goal_kinerja' => $val[17],
-                            'error_kinerja' => $val[18],
-                            'proses_dokumen' => $val[19],
-                            'proses_inisiatif' => $val[20],
-                            'proses_polapikir' => $val[21],
-                        ]
-                    );
-                    if ($store) {
-                        $newData += 1;
-                        $message['data_baru'] = $newData;
-                    } else {
+                    try {
+                        $store = GResponse::updateOrCreate(
+                            [
+                                'timestamp' => $timesValue,
+                            ],
+                            [
+                                // 'timestamp' => Carbon::createFromFormat('d/m/Y H:i:s',$val[0])->format('Y-m-d H:i:s'),
+                                // 'timestamp' => $timesValue,
+                                'npp_penilai' => $val[1],
+                                'nama_penilai' => $val[2],
+                                'npp_dinilai' => $val[3],
+                                'nama_dinilai' => $val[4],
+                                'jabatan_dinilai' => $val[5],
+                                'strategi_perencanaan' => $val[6],
+                                'strategi_pengawasan' => $val[7],
+                                'strategi_inovasi' => $val[8],
+                                'kepemimpinan' => $val[9],
+                                'membimbing_membangun' => $val[10],
+                                'pengambilan_keputusan' => $val[11],
+                                'kerjasama' => $val[12],
+                                'komunikasi' => $val[13],
+                                'absensi' => $val[14],
+                                'integritas' => $val[15],
+                                'etika' => $val[16],
+                                'goal_kinerja' => $val[17],
+                                'error_kinerja' => $val[18],
+                                'proses_dokumen' => $val[19],
+                                'proses_inisiatif' => $val[20],
+                                'proses_polapikir' => $val[21],
+                            ]
+                        );
+                        if ($store) {
+                            $newData += 1;
+                            $message['data_baru'] = $newData;
+                        }
+                    } catch (\Throwable $th) {
+                        //throw $th;
                         $failureData += 1;
-                        $message['data_gagal'] = $failureData;
+                        $message['data_gagal'] = $th->getMessage();
+                        continue;
                     }
                 }
             }
-            return response()->json($message, 200);
+            // return response()->json($message, 200);
         } catch (\Illuminate\Database\QueryException $exception) {
             $message['info'] = $exception->getMessage();
             return response()->json($message, 501);
         }
-        // return response()->json($message,200);
+        return response()->json($message,200);
     }
 }

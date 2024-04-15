@@ -35,15 +35,16 @@ class PoolRespon extends Model
         'proses_polapikir',
         'sum_nilai',
         'relasi',
+        'npp_penilai_dinilai'
     ];
 
     public function karyawan()
     {
-        return $this->belongsTo(RelasiKaryawan::class,'npp_penilai');
+        return $this->belongsTo(RelasiKaryawan::class, 'npp_penilai');
     }
 
     public function karyawan_dinilai()
     {
-        return $this->belongsTo(RelasiKaryawan::class, 'npp_dinilai','npp_karyawan');
+        return $this->belongsTo(RelasiKaryawan::class, 'npp_dinilai', 'npp_karyawan');
     }
 }
