@@ -34,17 +34,29 @@
                                             <i class="fas fa-file-export px-1"></i>Export
                                         </button>
                                         <div class="dropdown-menu">
-                                            <form action="{{ route('skor-export') }}" method="post"
+                                            <form action="{{ route('skor-export',['sort'=>'penilai']) }}" method="post"
                                                 class="dropdown-item btn btn-outline-info" enctype="multipart/form-data" target="_blank">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm">format (.xlsx)
+                                                <button type="submit" class="btn btn-sm">format (.xlsx) sort by penilai
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('skor-export',['sort'=>'dinilai']) }}" method="post"
+                                                class="dropdown-item btn btn-outline-info" enctype="multipart/form-data" target="_blank">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm">format (.xlsx) sort by dinilai
                                                 </button>
                                             </form>
                                             <div class="dropdown-divider"></div>
-                                            <form action="{{ route('skor-export-csv') }}" method="post"
+                                            <form action="{{ route('skor-export-csv', ['sort'=>'penilai']) }}" method="post"
                                                 class="dropdown-item btn btn-outline-info" enctype="multipart/form-data" target="_blank">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm">format (.csv)
+                                                <button type="submit" class="btn btn-sm">format (.csv) sort by penilai
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('skor-export-csv', ['sort'=>'dinilai']) }}" method="post"
+                                                class="dropdown-item btn btn-outline-info" enctype="multipart/form-data" target="_blank">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm">format (.csv) sort by dinilai
                                                 </button>
                                             </form>
                                         </div>
@@ -56,20 +68,20 @@
                                     <table class="table table-striped table-hover table-bordered table-responsive"
                                         id="dataTablesPoolSkor">
                                         <thead>
-                                            <tr>
+                                            {{-- <tr>
                                                 <th></th>
                                                 <th colspan="3">Penilai</th>
                                                 <th colspan="5">Dinilai</th>
                                                 <th colspan="16"></th>
-                                            </tr>
+                                            </tr> --}}
                                             <tr>
                                                 <th>No</th>
-                                                <th>Npp</th>
-                                                <th>Nama</th>
-                                                <th>Jabatan</th>
-                                                <th>Npp</th>
-                                                <th>Nama</th>
-                                                <th>Jabatan</th>
+                                                <th>Npp Penilai</th>
+                                                <th>Nama Penilai</th>
+                                                <th>Jabatan Penilai</th>
+                                                <th>Npp Dinilai</th>
+                                                <th>Nama Dinilai</th>
+                                                <th>Jabatan Dinilai</th>
                                                 <th>Relasi</th>
                                                 <th>Jumlah</th>
                                                 <th>K1</th>
@@ -151,6 +163,35 @@
                                                 </tr>
                                             @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Npp Penilai</th>
+                                                <th>Nama Penilai</th>
+                                                <th>Jabatan Penilai</th>
+                                                <th>Npp Dinilai</th>
+                                                <th>Nama Dinilai</th>
+                                                <th>Jabatan Dinilai</th>
+                                                <th>Relasi</th>
+                                                <th>Jumlah</th>
+                                                <th>K1</th>
+                                                <th>K2</th>
+                                                <th>K3</th>
+                                                <th>K4</th>
+                                                <th>K5</th>
+                                                <th>K6</th>
+                                                <th>P1</th>
+                                                <th>P2</th>
+                                                <th>P3</th>
+                                                <th>P4</th>
+                                                <th>P5</th>
+                                                <th>S1</th>
+                                                <th>S2</th>
+                                                <th>S3</th>
+                                                <th>S4</th>
+                                                <th>S5</th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div><!-- /.card-body -->
@@ -177,19 +218,38 @@
             ordering: false,
             scrollCollapse: false,
             responsive: true,
-            // searching: true,
+            searching: true,
             // scrollX: false,
             scrollY: '60vh',
-            searchable: false,
-            columnDefs: [
-                // { searchable: false, targets: '_all' },
-                { searchable: true, targets: 2 },
-                { searchable: false, targets: 1 },
-            ],
+            // searchable: false,
+            language: {
+                // searchPlaceholder: 'CARI PENILAI...'
+                searchPlaceholder: 'Cari Global'
+            },
+            // columnDefs: [
+            //     // { searchable: true, targets: 5 },
+            //     // { searchable: false, targets: '_all' },
+            //     { searchable: false, targets: [0,1,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] },
+            // ],
             order: [
                 [7, 'asc'],
                 [8, 'desc'],
-            ]
+            ],
+            initComplete: function () {
+            this.api()
+                .columns([2,4,7])
+                .every(function () {
+                    var column = this;
+                    var title = column.footer().textContent;
+                    $('<input type="text" placeholder="Cari ' + title + '" />')
+                        .appendTo($(column.footer()).empty())
+                        .on('keyup change clear', function () {
+                            if (column.search() !== this.value) {
+                                column.search(this.value).draw();
+                            }
+                        });
+                });
+        }
         });
     </script>
 @endpush

@@ -8,10 +8,22 @@ use \Illuminate\Contracts\View\View;
 
 class SkorAllExport implements FromView
 {
+    public function __construct($request)
+    {
+        $this->request = $request;
+    }
+
     public function view(): View
     {
-        return view('hc.skor.pool.export')->with([
-            'pool_skor' => PoolRespon::all()
-        ]);
+        // dd($this->request);
+        if($this->request == 'penilai'){
+            return view('hc.skor.pool.export')->with([
+                'pool_skor' => PoolRespon::orderBy('npp_penilai')->get()
+            ]);
+        }else{
+            return view('hc.skor.pool.export')->with([
+                'pool_skor' => PoolRespon::orderBy('npp_dinilai')->get()
+            ]);
+        }
     }
 }

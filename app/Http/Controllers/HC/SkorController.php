@@ -151,16 +151,27 @@ class SkorController extends Controller
         }
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        $nows = Carbon::now()->toDateTimeString() . '.xlsx';
-        return Excel::download(new SkorAllExport, 'PoolRespon_' . $nows, ExcelExt::XLSX);
+        // dd($request->sort);
+        if($request->sort == 'penilai'){
+            $nows = Carbon::now()->toDateTimeString() . '.xlsx';
+            return Excel::download(new SkorAllExport('penilai'), 'PoolRespon_orderBy_penilai' . $nows, ExcelExt::XLSX);
+        }else{
+            $nows = Carbon::now()->toDateTimeString() . '.xlsx';
+            return Excel::download(new SkorAllExport('dinilai'), 'PoolRespon_orderBy_dinilai' . $nows, ExcelExt::XLSX);
+        }
     }
 
-    public function exportCsv()
+    public function exportCsv(Request $request)
     {
-        $nows = Carbon::now()->toDateTimeString() . '.csv';
-        return Excel::download(new SkorAllExport, 'PoolRespon_' . $nows, ExcelExt::CSV);
+        if($request->sort == 'penilai'){
+            $nows = Carbon::now()->toDateTimeString() . '.csv';
+            return Excel::download(new SkorAllExport('penilai'), 'PoolRespon_orderBy_penilai' . $nows, ExcelExt::CSV);
+        }else{
+            $nows = Carbon::now()->toDateTimeString() . '.csv';
+            return Excel::download(new SkorAllExport('dinilai'), 'PoolRespon_orderBy_dinilai' . $nows, ExcelExt::CSV);
+        }
     }
 
     public function index_pool_all()
