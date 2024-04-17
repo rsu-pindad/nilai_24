@@ -37,6 +37,7 @@
 <body class="layout-boxed">
     @php
         use Carbon\Carbon;
+        use Illuminate\Support\Str;
     @endphp
     <div class="wrapper">
         <div class="container">
@@ -56,7 +57,13 @@
                     @php
                         $jabatan = $data_penilai->jabatan_dinilai;
                         $relasi = $data_penilai->relasi;
-                        if ($jabatan == 'IA' || $jabatan == 'IC' || $jabatan == 'I A' || $jabatan == 'I C') {
+                        if (
+                            Str::remove(' ', $jabatan) == 'DIREKSI' ||
+                            Str::remove(' ', $jabatan) == 'IA' ||
+                            Str::remove(' ', $jabatan) == 'IB' ||
+                            Str::remove(' ', $jabatan) == 'IC' ||
+                            Str::remove(' ', $jabatan) == 'IANS'
+                            ) {
                             $ket1 = '25%';
                             $ket2 = '25%';
                             $ket3 = '50%';
@@ -65,7 +72,10 @@
                             $penilai_rekanan = '20%';
                             $penilai_staff = '15%';
                             $penilai_self = '5%';
-                        } elseif ($jabatan == 'II' || $jabatan == 'IINS' || $jabatan == 'II NS') {
+                        } elseif (
+                            Str::remove(' ', $jabatan) == 'II' ||
+                            Str::remove(' ', $jabatan) == 'IINS'
+                            ) {
                             $ket1 = '25%';
                             $ket2 = '30%';
                             $ket3 = '45%';
@@ -74,7 +84,11 @@
                             $penilai_rekanan = '20%';
                             $penilai_staff = '15%';
                             $penilai_self = '5%';
-                        } elseif ($jabatan == 'III') {
+                        } elseif (
+                            Str::remove(' ', $jabatan) == 'III' ||
+                            Str::remove(' ', $jabatan) == 'IIINS' ||
+                            Str::remove(' ', $jabatan) == 'IIII'
+                            ) {
                             $ket1 = '25%';
                             $ket2 = '35%';
                             $ket3 = '45%';
@@ -83,7 +97,12 @@
                             $penilai_rekanan = '20%';
                             $penilai_staff = '15%';
                             $penilai_self = '5%';
-                        } elseif ($jabatan == 'IVA' || $jabatan == 'IV A') {
+                        } elseif (
+                            Str::remove(' ', $jabatan) == 'IV' ||
+                            Str::remove(' ', $jabatan) == 'IVA(III)' ||
+                            Str::remove(' ', $jabatan) == 'IVA(IIINS)' ||
+                            Str::remove(' ', $jabatan) == 'IVA'
+                            ) {
                             $ket1 = '30%';
                             $ket2 = '60%';
                             $ket3 = '10%';

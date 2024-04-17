@@ -12,11 +12,20 @@ use App\Models\RelasiKaryawan;
 use App\Models\RelasiSelevel;
 use App\Models\RelasiStaff;
 use App\Models\ScoreJawaban as Skor;
+use App\Models\FinalDp3;
+use App\Models\RekapPenilai;
+// use App\Models\RekapBobotKepemimpinan;
+// use App\Models\RekapBobotPerilaku;
+// use App\Models\RekapBobotSasaran;
+// use App\Models\RekapNonBobot;
+// use App\Models\RekapNonBobotPerilaku;
+// use App\Models\RekapNonBobotSasaran;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Excel as ExcelExt;
+use DB;
 
 class SkorController extends Controller
 {
@@ -53,8 +62,25 @@ class SkorController extends Controller
     public function reset()
     {
         try {
+            // $final = FinalDp3::truncate();
+            // $rekapPenilai = RekapPenilai::truncate();
+            // $pool = PoolRespon::truncate();
+            $final = FinalDp3::truncate();
+            $rekapPenilai = RekapPenilai::truncate();
+
+            // $rnbk = RekapNonBobot::truncate();
+            // $rnbp = RekapNonBobotPerilaku::truncate();
+            // $rnbs = RekapNonBobotSasaran::truncate();
+
+            // $rbk = RekapBobotKepemimpinan::truncate();
+            // $rbp = RekapBobotPerilaku::truncate();
+            // $rbs = RekapBobotSasaran::truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             $pool = PoolRespon::truncate();
-            if ($pool) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+            $grespon = GResponse::truncate();
+            if ($grespon) {
                 return redirect()->back()->withSuccess('tabel di kosongkan');
             }
         } catch (\Throwable $th) {
@@ -142,6 +168,7 @@ class SkorController extends Controller
         $skor_pool_data = PoolRespon::with(['karyawan', 'karyawan_dinilai'])
             ->orderBy('npp_dinilai')
             ->orderByDesc('sum_nilai')
+            // ->whereNull('deleted_at')
             ->get();
         // ->limit(10)
 
@@ -438,7 +465,8 @@ class SkorController extends Controller
                     $tempData = [
                         'npp_penilai' => $karyawan['id'],
                         'npp_dinilai' => $self[$key]['npp_dinilai'],
-                        'jabatan_dinilai' => $self[$key]['jabatan_dinilai'],
+                        // 'jabatan_dinilai' => $self[$key]['jabatan_dinilai'],
+                        'jabatan_dinilai' => $karyawan['level_jabatan'],
                         'strategi_perencanaan' => $nilai_skor_1,
                         'strategi_pengawasan' => $nilai_skor_2,
                         'strategi_inovasi' => $nilai_skor_3,
@@ -459,7 +487,13 @@ class SkorController extends Controller
                         'relasi' => $slugs_relasi,
                         'npp_penilai_dinilai' => $self[$key]['npp_penilai'] . $self[$key]['npp_dinilai']
                     ];
-                    $store = PoolRespon::updateOrCreate($tempData);
+                    // $store = PoolRespon::updateOrCreate($tempData);
+                    $store = PoolRespon::updateOrCreate(
+                        [
+                            'npp_penilai_dinilai' => $self[$key]['npp_penilai'] . $self[$key]['npp_dinilai']
+                        ],
+                        $tempData
+                    );
                     // dd($tempData);
                 }
                 $tempData = [];
@@ -675,7 +709,13 @@ class SkorController extends Controller
                     'relasi' => 'staff',
                     'npp_penilai_dinilai' => $atasan[$key]['npp_penilai'] . $atasan[$key]['npp_dinilai']
                 ];
-                $store = PoolRespon::updateOrCreate($tempData);
+                // $store = PoolRespon::updateOrCreate($tempData);
+                $store = PoolRespon::updateOrCreate(
+                    [
+                        'npp_penilai_dinilai' => $atasan[$key]['npp_penilai'] . $atasan[$key]['npp_dinilai']
+                    ],
+                    $tempData
+                );
                 $tempData = [];
             }
             return response()->json([
@@ -892,7 +932,13 @@ class SkorController extends Controller
                     'npp_penilai_dinilai' => $rekanan[$key]['npp_penilai'] . $rekanan[$key]['npp_dinilai']
                 ];
                 // dd($tempData);
-                $store = PoolRespon::updateOrCreate($tempData);
+                // $store = PoolRespon::updateOrCreate($tempData);
+                $store = PoolRespon::updateOrCreate(
+                    [
+                        'npp_penilai_dinilai' => $rekanan[$key]['npp_penilai'] . $rekanan[$key]['npp_dinilai']
+                    ],
+                    $tempData
+                );
                 $tempData = [];
             }
             return response()->json([
@@ -1110,7 +1156,13 @@ class SkorController extends Controller
                     'relasi' => 'atasan',
                     'npp_penilai_dinilai' => $staff[$key]['npp_penilai'] . $staff[$key]['npp_dinilai']
                 ];
-                $store = PoolRespon::updateOrCreate($tempData);
+                // $store = PoolRespon::updateOrCreate($tempData);
+                $store = PoolRespon::updateOrCreate(
+                    [
+                        'npp_penilai_dinilai' => $staff[$key]['npp_penilai'] . $staff[$key]['npp_dinilai']
+                    ],
+                    $tempData
+                );
                 $tempData = [];
             }
             return response()->json([

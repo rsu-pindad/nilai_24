@@ -70,7 +70,8 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::put('/skor/update-ajax/{id}', 'updateAjax')->name('skor-update-ajax');
         Route::delete('/skor/destroy/{id}', 'destroy')->name('skor-destroy');
 
-        Route::patch('/skor/reset', 'reset')->name('skor-reset');
+        // Route::patch('/skor/reset', 'reset')->name('skor-reset');
+        Route::post('/skor/reset', 'reset')->name('skor-reset');
 
         Route::post('/skor/export', 'export')->name('skor-export');
         Route::post('/skor/export-csv', 'exportCsv')->name('skor-export-csv');
@@ -152,6 +153,12 @@ Route::middleware(['auth', 'hc'])->group(function () {
 
         Route::post('/penilai-rekap/export-xlsx', 'exportXlsx')->name('penilai-rekap-export-xlsx');
         Route::post('/penilai-rekap/export-csv', 'exportCsv')->name('penilai-rekap-export-csv');
+
+        Route::post('/penilai-rekap/personal/export-raw-xlsx', 'exportPersonalRawXlsx')->name('penilai-rekap-personal-export-raw-xlsx');
+        Route::post('/penilai-rekap/personal/export-raw-csv', 'exportPersonalRawCsv')->name('penilai-rekap-personal-export-raw-csv');
+
+        Route::post('/penilai-rekap/personal/export-xlsx', 'exportPersonalXlsx')->name('penilai-rekap-personal-export-xlsx');
+        Route::post('/penilai-rekap/personal/export-csv', 'exportPersonalCsv')->name('penilai-rekap-personal-export-csv');
     });
 
     Route::controller(HasilPersonalController::class)->group(function () {

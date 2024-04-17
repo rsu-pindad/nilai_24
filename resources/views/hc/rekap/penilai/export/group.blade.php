@@ -3,6 +3,7 @@
         <tr>
             <th>No</th>
             <th>Npp</th>
+            <th>Nama</th>
             <th>Jabatan</th>
             <th>Kepemimpinan</th>
             <th>Sasaran</th>
@@ -13,8 +14,9 @@
         @foreach ($data as $p)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $p->npp_dinilai }}</td>
-                <td>{{ $p->jabatan_dinilai }}</td>
+                <td>{{ $p->identitas_dinilai->npp_karyawan }}</td>
+                <td>{{ $p->identitas_dinilai->nama_karyawan }}</td>
+                <td>{{ $p->identitas_dinilai->level_jabatan }}</td>
                 <td>{{ round($p->sum_k1 * 100, 3) }}</td>
                 <td>{{ round($p->sum_k2 * 100, 3) }}</td>
                 <td>{{ round($p->sum_k3 * 100, 3) }}</td>

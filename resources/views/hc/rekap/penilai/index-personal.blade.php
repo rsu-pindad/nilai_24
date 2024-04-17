@@ -20,9 +20,58 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button type="button" class="btn btn-secondary mb-4" id="btnRekapPerilakuModal">
-                                    <i class="far fa-plus-square"></i> Hitung Skor Akhir DP3
-                                </button>
+                                <div class="d-flex flex-row bd-highlight">
+                                    <div class="px-2 bd-highlight">
+                                        <button type="button" class="btn btn-secondary mb-4" id="btnRekapPerilakuModal">
+                                            <i class="far fa-plus-square"></i> Hitung Skor Akhir DP3
+                                        </button>
+                                    </div>
+                                    <div class="px-2 bd-highlight">
+                                        <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle"
+                                                data-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-file-export px-1"></i>Export
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <span class="dropdown-item-text">Raw Skor Akhir DP3</span>
+                                                <form action="{{ route('penilai-rekap-personal-export-raw-xlsx') }}" method="post"
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">format (.xlsx)
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('penilai-rekap-personal-export-raw-csv') }}" method="post"
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">format (.csv)
+                                                    </button>
+                                                </form>
+                                                <div class="dropdown-divider"></div>
+                                                <span class="dropdown-item-text">Group DP3</span>
+                                                <form action="{{ route('penilai-rekap-personal-export-xlsx') }}" method="post"
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">format (.xlsx)
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('penilai-rekap-personal-export-csv') }}" method="post"
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">format (.csv)
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <table class="table table-striped table-hover table-bordered" id="dataTablesRekap2">
@@ -142,14 +191,17 @@
                     if (result.isConfirmed) {
                         setTimeout(() => {
                             swalAjax();
-                        }, 1000);
+                        }, 3000);
                         // swalOk();
+                    }else {
+                        $('#btnRekapPerilakuModal').prop("disabled", false);
                     }
                 });
             }
 
             $('#btnRekapPerilakuModal').on('click', function(ev) {
                 ev.preventDefault();
+                $(this).prop("disabled", true);
                 alertswal(
                     'anda yakin',
                     'anda melakukan rekap penilaian akhir',

@@ -28,12 +28,11 @@
                                         </button>
                                     </div>
                                     <div class="p-2 bd-highlight">
-                                        <form action="{{ route('skor-reset') }}" method="Post">
+                                        <form action="{{ route('skor-reset') }}" method="POST">
                                             @csrf
-                                            @method('PATCH')
                                             <button type="submit" class="btn btn-danger"
-                                                onclick="return confirm('ANDA YAKIN INGIN MENGKOSONGKAN TABEL')">
-                                                <i class="fas fa-trash-alt px-2"></i>Kosongkan Table
+                                                onclick="return confirm('ANDA YAKIN INGIN MENGKOSONGKAN TABEL ? Tabel Lain akan dikosongkan')">
+                                                <i class="fas fa-trash-alt px-2"></i>Kosongkan Tabel
                                             </button>
                                         </form>
                                     </div>
@@ -44,8 +43,8 @@
                                     <thead>
                                         <tr>
                                             <th></th>
-                                            <th colspan="2">Penilai</th>
-                                            <th colspan="2">Dinilai</th>
+                                            <th colspan="3">Penilai</th>
+                                            <th colspan="3">Dinilai</th>
                                             <th>Hari</th>
                                             <th></th>
                                         </tr>
@@ -53,8 +52,10 @@
                                             <th>No</th>
                                             <th>NPP</th>
                                             <th>Nama</th>
+                                            <th>Jabatan</th>
                                             <th>NPP</th>
                                             <th>Nama</th>
+                                            <th>Jabatan</th>
                                             <th>Data Masuk</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -75,6 +76,7 @@
                                                     </a>
                                                 </td>
                                                 <td>{{ $gres->nama_penilai }}</td>
+                                                <td>{{ $gres->relasi_penilai->level_jabatan }}</td>
                                                 <td><a href="javascript:void(0)"
                                                         class="text-decoration-none lihatProfileDinilai"
                                                         data-penilai-id="{{ $gres->relasi_dinilai->id ?? '' }}"
@@ -86,18 +88,19 @@
                                                     </a>
                                                 </td>
                                                 <td>{{ $gres->nama_dinilai }}</td>
+                                                <td>{{ $gres->jabatan_dinilai }}</td>
                                                 <td>{{ $gres->timestamp }}</td>
                                                 <td class="px-2">
                                                     <div class="btn-toolbar d-flex justify-content-center" role="toolbar"
                                                         aria-label="group aksi">
-                                                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                                                        <div class="btn-group p-2" role="group" aria-label="First group">
                                                             <button type="button"
                                                                 class="btn btn-outline-secondary btn-sm lihatResponse"
                                                                 data-id="{{ $gres->id }}">
                                                                 <i class="fas fa-eye p-1"></i>Lihat
                                                             </button>
                                                         </div>
-                                                        <div class="btn-group mr-2" role="group"
+                                                        <div class="btn-group p-2" role="group"
                                                             aria-label="Second group">
                                                             <form action="{{ route('gform-destroy', $gres->id) }}"
                                                                 method="Post">
@@ -109,8 +112,8 @@
                                                                     <i class="fas fa-trash-alt p-1"></i>Hapus
                                                                 </button>
                                                             </form>
-                                                </td>
-                                                </td>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach

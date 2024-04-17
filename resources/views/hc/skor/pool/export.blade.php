@@ -2,9 +2,13 @@
     <thead>
         <tr>
             <th>No</th>
-            <th>Penilai</th>
-            <th>Dinilai</th>
-            <th>Jabatan Dinilai</th>
+            <th>Npp_Penilai</th>
+            <th>Nama_Penilai</th>
+            <th>Jabatan_Penilai</th>
+            <th>Npp_Dinilai</th>
+            <th>Nama_Dinilai</th>
+            <th>Jabatan_Dinilai</th>
+            <th>Relasi</th>
             <th>K1</th>
             <th>K2</th>
             <th>K3</th>
@@ -21,8 +25,7 @@
             <th>S3</th>
             <th>S4</th>
             <th>S5</th>
-            <th>Sum</th>
-            <th>Relasi</th>
+            <th>Jumlah</th>
         </tr>
     </thead>
     <tbody>
@@ -30,8 +33,12 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $pool->karyawan->npp_karyawan }}</td>
+                <td>{{ $pool->karyawan->nama_karyawan }}</td>
+                <td>{{ $pool->karyawan->level_jabatan }}</td>
                 <td>{{ $pool['npp_dinilai'] }}</td>
+                <td>{{ $pool->karyawan_dinilai->nama_karyawan }}</td>
                 <td>{{ $pool['jabatan_dinilai'] }}</td>
+                <td>{{ $pool['relasi'] }}</td>
                 <td>{{ $pool['strategi_perencanaan'] }}</td>
                 <td>{{ $pool['strategi_pengawasan'] }}</td>
                 <td>{{ $pool['strategi_inovasi'] }}</td>
@@ -49,7 +56,6 @@
                 <td>{{ $pool['proses_inisiatif'] }}</td>
                 <td>{{ $pool['proses_polapikir'] }}</td>
                 <td>{{ $pool['sum_nilai'] }}</td>
-                <td>{{ $pool['relasi'] }}</td>
             </tr>
         @endforeach
     </tbody>

@@ -8,7 +8,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">{{ $title ?? 'Rekap DP3' }}</h1>
+                        <h1 class="m-0">{{ $title ?? 'Tabel Rekap DP3' }}</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -38,42 +38,46 @@
                                                 <span class="dropdown-item-text">Raw Bobot</span>
                                                 <form action="{{ route('penilai-rekap-export-raw-xlsx') }}" method="post"
                                                     class="dropdown-item btn btn-outline-info"
-                                                    enctype="multipart/form-data">
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-sm">xlsx
+                                                    <button type="submit" class="btn btn-sm">format (.xlsx)
                                                     </button>
                                                 </form>
                                                 <form action="{{ route('penilai-rekap-export-raw-csv') }}" method="post"
                                                     class="dropdown-item btn btn-outline-info"
-                                                    enctype="multipart/form-data">
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-sm">csv
+                                                    <button type="submit" class="btn btn-sm">format (.csv)
                                                     </button>
                                                 </form>
                                                 <div class="dropdown-divider"></div>
                                                 <span class="dropdown-item-text">Group Bobot</span>
                                                 <form action="{{ route('penilai-rekap-export-xlsx') }}" method="post"
                                                     class="dropdown-item btn btn-outline-info"
-                                                    enctype="multipart/form-data">
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-sm">xlsx
+                                                    <button type="submit" class="btn btn-sm">format (.xlsx)
                                                     </button>
                                                 </form>
                                                 <form action="{{ route('penilai-rekap-export-csv') }}" method="post"
                                                     class="dropdown-item btn btn-outline-info"
-                                                    enctype="multipart/form-data">
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-sm">csv
+                                                    <button type="submit" class="btn btn-sm">format (.csv)
                                                     </button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="p-2 bd-highlight">
+                                    {{-- <div class="p-2 bd-highlight">
                                         <ul class="list-inline">
                                             <li class="list-inline-item">B-A (Bobot Aspek)</li>
                                         </ul>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="card-body">
@@ -100,7 +104,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $p->identitas_dinilai->npp_karyawan }}</td>
                                                 <td>{{ $p->identitas_dinilai->nama_karyawan }}</td>
-                                                <td>{{ $p->jabatan_dinilai }}</td>
+                                                <td>{{ $p->identitas_dinilai->level_jabatan }}</td>
                                                 <td>{{ round($p->sum_k1 * 100, 3) }}</td>
                                                 <td>{{ round($p->sum_k2 * 100, 3) }}</td>
                                                 <td>{{ round($p->sum_k3 * 100, 3) }}</td>
@@ -432,16 +436,16 @@
                         // console.log(response);
                         let msg = response.text;
                         var messages = msg.success;
-                        swalOk(response.title, messages, response.icon);
+                        swalOk(response.title, messages+' data berhasil dihitung', response.icon);
                         setTimeout(() => {
                             location.reload()
                         }, 10000);
                     },
                     error: function(response) {
+                        // console.log(response);
                         let msg = response.text;
                         var messages = msg.error;
-                        swalOk(response.title, messages, response
-                            .icon);
+                        swalOk(response.title, messages+' data gagal dihitung', response.icon);
                         setTimeout(() => {
                             location.reload()
                         }, 10000);
@@ -472,15 +476,18 @@
                         setTimeout(() => {
                             swalAjax();
                         }, 1000);
+                    } else {
+                        $('#btnRekapPenilaiModal').prop("disabled", false);
                     }
                 });
             }
 
             $('#btnRekapPenilaiModal').on('click', function(ev) {
                 ev.preventDefault();
+                $(this).prop("disabled", true);
                 alertswal(
                     'anda yakin',
-                    'anda melakukan rekap semua nilai',
+                    'anda melakukan rekap semua nilai dp3',
                     'warning',
                     'Iya'
                 );

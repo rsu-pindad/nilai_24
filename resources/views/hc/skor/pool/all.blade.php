@@ -35,16 +35,16 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             <form action="{{ route('skor-export') }}" method="post"
-                                                class="dropdown-item btn btn-outline-info" enctype="multipart/form-data">
+                                                class="dropdown-item btn btn-outline-info" enctype="multipart/form-data" target="_blank">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm">xlsx
+                                                <button type="submit" class="btn btn-sm">format (.xlsx)
                                                 </button>
                                             </form>
                                             <div class="dropdown-divider"></div>
                                             <form action="{{ route('skor-export-csv') }}" method="post"
-                                                class="dropdown-item btn btn-outline-info" enctype="multipart/form-data">
+                                                class="dropdown-item btn btn-outline-info" enctype="multipart/form-data" target="_blank">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm">csv
+                                                <button type="submit" class="btn btn-sm">format (.csv)
                                                 </button>
                                             </form>
                                         </div>
@@ -58,15 +58,20 @@
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th>Penilai</th>
-                                                <th colspan="2">Dinilai</th>
-                                                <th colspan="18"></th>
+                                                <th colspan="3">Penilai</th>
+                                                <th colspan="5">Dinilai</th>
+                                                <th colspan="16"></th>
                                             </tr>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Npp</th>
-                                                <th>Npp</th>
+                                                <th>Nama</th>
                                                 <th>Jabatan</th>
+                                                <th>Npp</th>
+                                                <th>Nama</th>
+                                                <th>Jabatan</th>
+                                                <th>Relasi</th>
+                                                <th>Jumlah</th>
                                                 <th>K1</th>
                                                 <th>K2</th>
                                                 <th>K3</th>
@@ -83,8 +88,6 @@
                                                 <th>S3</th>
                                                 <th>S4</th>
                                                 <th>S5</th>
-                                                <th>Sum</th>
-                                                <th>Relasi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -92,26 +95,15 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $pool->karyawan->npp_karyawan }}</td>
-                                                    <td>{{ $pool->karyawan_dinilai->npp_karyawan ?? 'mohon tarik relasi karyawan' }}
+                                                    <td>{{ $pool->karyawan->nama_karyawan }}</td>
+                                                    <td>{{ $pool->karyawan->level_jabatan}}</td>
+                                                    <td>
+                                                        {{ $pool->karyawan_dinilai->nama_karyawan ?? 'mohon tarik relasi karyawan' }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $pool->karyawan_dinilai->npp_karyawan ?? 'mohon tarik relasi karyawan' }}
                                                     </td>
                                                     <td>{{ $pool['jabatan_dinilai'] }}</td>
-                                                    <td>{{ $pool['strategi_perencanaan'] }}</td>
-                                                    <td>{{ $pool['strategi_pengawasan'] }}</td>
-                                                    <td>{{ $pool['strategi_inovasi'] }}</td>
-                                                    <td>{{ $pool['kepemimpinan'] }}</td>
-                                                    <td>{{ $pool['membimbing_membangun'] }}</td>
-                                                    <td>{{ $pool['pengambilan_keputusan'] }}</td>
-                                                    <td>{{ $pool['kerjasama'] }}</td>
-                                                    <td>{{ $pool['komunikasi'] }}</td>
-                                                    <td>{{ $pool['absensi'] }}</td>
-                                                    <td>{{ $pool['integritas'] }}</td>
-                                                    <td>{{ $pool['etika'] }}</td>
-                                                    <td>{{ $pool['goal_kinerja'] }}</td>
-                                                    <td>{{ $pool['error_kinerja'] }}</td>
-                                                    <td>{{ $pool['proses_dokumen'] }}</td>
-                                                    <td>{{ $pool['proses_inisiatif'] }}</td>
-                                                    <td>{{ $pool['proses_polapikir'] }}</td>
-                                                    <td>{{ $pool['sum_nilai'] }}</td>
                                                     <td>
                                                         @if ($pool['relasi'] == 'self')
                                                             <p>
@@ -139,6 +131,23 @@
                                                             </p>
                                                         @endif
                                                     </td>
+                                                    <td>{{ $pool['sum_nilai'] }}</td>
+                                                    <td>{{ $pool['strategi_perencanaan'] }}</td>
+                                                    <td>{{ $pool['strategi_pengawasan'] }}</td>
+                                                    <td>{{ $pool['strategi_inovasi'] }}</td>
+                                                    <td>{{ $pool['kepemimpinan'] }}</td>
+                                                    <td>{{ $pool['membimbing_membangun'] }}</td>
+                                                    <td>{{ $pool['pengambilan_keputusan'] }}</td>
+                                                    <td>{{ $pool['kerjasama'] }}</td>
+                                                    <td>{{ $pool['komunikasi'] }}</td>
+                                                    <td>{{ $pool['absensi'] }}</td>
+                                                    <td>{{ $pool['integritas'] }}</td>
+                                                    <td>{{ $pool['etika'] }}</td>
+                                                    <td>{{ $pool['goal_kinerja'] }}</td>
+                                                    <td>{{ $pool['error_kinerja'] }}</td>
+                                                    <td>{{ $pool['proses_dokumen'] }}</td>
+                                                    <td>{{ $pool['proses_inisiatif'] }}</td>
+                                                    <td>{{ $pool['proses_polapikir'] }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -168,9 +177,9 @@
             ordering: false,
             scrollCollapse: false,
             responsive: true,
-            searching: true,
+            // searching: true,
             // scrollX: false,
-            scrollY: '50vh',
+            scrollY: '60vh',
             searchable: false,
             columnDefs: [
                 // { searchable: false, targets: '_all' },
@@ -178,8 +187,8 @@
                 { searchable: false, targets: 1 },
             ],
             order: [
-                [21, 'asc'],
-                [20, 'desc'],
+                [7, 'asc'],
+                [8, 'desc'],
             ]
         });
     </script>
@@ -234,7 +243,7 @@
                     if (result.isConfirmed) {
                         setTimeout(() => {
                             swalAjax();
-                        }, 1000);
+                        }, 3000);
                     } else {
                         $('#btnSkorPoolModal').prop("disabled", false);
                     }
