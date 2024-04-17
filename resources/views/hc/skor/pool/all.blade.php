@@ -110,10 +110,10 @@
                                                     <td>{{ $pool->karyawan->nama_karyawan }}</td>
                                                     <td>{{ $pool->karyawan->level_jabatan}}</td>
                                                     <td>
-                                                        {{ $pool->karyawan_dinilai->nama_karyawan ?? 'mohon tarik relasi karyawan' }}
+                                                        {{ $pool->karyawan_dinilai->npp_karyawan ?? 'mohon tarik relasi karyawan' }}
                                                     </td>
                                                     <td>
-                                                        {{ $pool->karyawan_dinilai->npp_karyawan ?? 'mohon tarik relasi karyawan' }}
+                                                        {{ $pool->karyawan_dinilai->nama_karyawan ?? 'mohon tarik relasi karyawan' }}
                                                     </td>
                                                     <td>{{ $pool['jabatan_dinilai'] }}</td>
                                                     <td>
@@ -237,7 +237,7 @@
             ],
             initComplete: function () {
             this.api()
-                .columns([2,4,7])
+                .columns([2,5,7])
                 .every(function () {
                     var column = this;
                     var title = column.footer().textContent;
