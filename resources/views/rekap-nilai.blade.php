@@ -24,7 +24,7 @@
                                 <table class="table table-border">
                                     <thead>
                                         <tr>
-                                            <th>&sum; Nilai masuk skor akhir DP3</th>
+                                            <th>&sum; Nilai yang sudah masuk skor akhir DP3 (sementara)</th>
                                             <th>Dokumen</th>
                                         </tr>
                                     </thead>
