@@ -24,7 +24,7 @@
                                 <table class="table table-border">
                                     <thead>
                                         <tr>
-                                            <th>&sum; Skor Akhir DP3</th>
+                                            <th>&sum; Nilai masuk skor akhir DP3</th>
                                             <th>Dokumen</th>
                                         </tr>
                                     </thead>
@@ -32,17 +32,7 @@
                                         @forelse($nilai as $n)
                                             <tr>
                                                 <td>{{ round($n->total) }}</td>
-                                                <td class="px-2">
-                                                    <div class="btn-toolbar d-flex justify-content-around" role="toolbar"
-                                                        arua-label="grup satu">
-                                                        <div class="btn-group mr-2" role="group" aria-label="group aksi">
-                                                            <a href="/nilai-rekap/documen/report?id={{ $n->relasi_karyawan->id }}&npp={{ $n->relasi_karyawan->npp_karyawan }}"
-                                                                target="_blank" class="btn btn-sm btn-danger">
-                                                                <i class="far fa-file-pdf"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                <td>sedang dihitung..</td>
                                             </tr>
                                         @empty
                                             <tr>
