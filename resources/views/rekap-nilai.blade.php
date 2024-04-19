@@ -32,7 +32,7 @@
                                         @forelse($nilai as $n)
                                             <tr>
                                                 <td>{{ round($n->total) }}</td>
-                                                <td>sedang dihitung..</td>
+                                                <td>belum tersedia</td>
                                             </tr>
                                         @empty
                                             <tr>
