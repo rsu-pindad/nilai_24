@@ -18,27 +18,32 @@
             <div class="container-fluid">
                 <div class="row">
                     <!-- /.col -->
-                    <div class="col-12">
+                    <div class="col-4">
                         <div class="card">
                             <div class="card-body">
                                 <table class="table table-border">
                                     <thead>
                                         <tr>
-                                            <th>&sum; Nilai yang sudah masuk skor akhir DP3 (sementara)</th>
+                                            <th>Nilai masuk</br> skor akhir </br>DP3</th>
                                             <th>Dokumen</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($nilai as $n)
                                             <tr>
-                                                <td>{{ round($n->total) }}</td>
-                                                <td>belum tersedia</td>
+                                                <td>{{ $nilai }}</td>
+                                                {{-- <td>belum tersedia</td> --}}
+                                                <td class="px-2">
+                                                    <div class="btn-toolbar d-flex justify-content-around" role="toolbar"
+                                                        arua-label="grup satu">
+                                                        <div class="btn-group mr-2" role="group" aria-label="group aksi">
+                                                            <a href="/nilai-rekap/documen/report?id={{ $id }}&npp={{ $npp_karyawan }}"
+                                                                target="_blank" class="btn btn-sm btn-danger">
+                                                                <i class="far fa-file-pdf"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </td>
                                             </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="2">maaf blm ada nilai masuk</td>
-                                            </tr>
-                                        @endforelse
                                     </tbody>
                                 </table>
                             </div><!-- /.card-body -->
