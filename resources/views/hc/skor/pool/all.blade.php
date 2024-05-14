@@ -66,7 +66,7 @@
                             <div class="card-body">
                                 <div class="px-4">
                                     <table class="table table-striped table-hover table-bordered table-responsive"
-                                        id="dataTablesPoolSkor">
+                                        id="dataTablesPoolSkor" style="width:100%">
                                         <thead>
                                             {{-- <tr>
                                                 <th></th>
@@ -75,13 +75,13 @@
                                                 <th colspan="16"></th>
                                             </tr> --}}
                                             <tr>
-                                                <th>No</th>
-                                                <th>Npp Penilai</th>
-                                                <th>Nama Penilai</th>
-                                                <th>Jabatan Penilai</th>
-                                                <th>Npp Dinilai</th>
-                                                <th>Nama Dinilai</th>
-                                                <th>Jabatan Dinilai</th>
+                                                <th style="width:1%">No</th>
+                                                <th>Npp </br>Penilai</th>
+                                                <th>Nama </br>Penilai</th>
+                                                <th>Jabatan </br>Penilai</th>
+                                                <th>Npp </br>Dinilai</th>
+                                                <th>Nama </br>Dinilai</th>
+                                                <th>Jabatan </br>Dinilai</th>
                                                 <th>Relasi</th>
                                                 <th>Jumlah</th>
                                                 <th>K1</th>
@@ -106,7 +106,24 @@
                                             @foreach ($data_pool_skor as $pool)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $pool->karyawan->npp_karyawan }}</td>
+                                                    <td>{{ $pool->karyawan->npp_karyawan }}</br>
+                                                    <button 
+                                                        data-id="{{ $pool->id }}"
+                                                        data-npp-penilai="{{ $pool->karyawan->npp_karyawan }}"
+                                                        data-npp-dinilai="{{ $pool->karyawan_dinilai->npp_karyawan }}"
+                                                        type="button" 
+                                                        class="btn btn-sm btn-primary btnFollowUp">
+                                                        <i class="fab fa-whatsapp-square"></i>
+                                                        Follow Up
+                                                    </button>
+                                                    <button 
+                                                        data-id="{{ $pool->id }}"
+                                                        type="button" 
+                                                        class="btn btn-sm btn-danger btnDeleteNilai">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                        Hapus
+                                                    </button>
+                                                    </td>
                                                     <td>{{ $pool->karyawan->nama_karyawan }}</td>
                                                     <td>{{ $pool->karyawan->level_jabatan}}</td>
                                                     <td>
@@ -166,12 +183,12 @@
                                         <tfoot>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Npp Penilai</th>
-                                                <th>Nama Penilai</th>
-                                                <th>Jabatan Penilai</th>
-                                                <th>Npp Dinilai</th>
-                                                <th>Nama Dinilai</th>
-                                                <th>Jabatan Dinilai</th>
+                                                <th>Npp</th>
+                                                <th>Nama</th>
+                                                <th>Jabatan</th>
+                                                <th>Npp</th>
+                                                <th>Nama</th>
+                                                <th>Jabatan</th>
                                                 <th>Relasi</th>
                                                 <th>Jumlah</th>
                                                 <th>K1</th>
@@ -214,6 +231,149 @@
 
 @push('scripts')
     <script>
+
+        async function swalAjax() {
+            const uri = '/gform/pull';
+            await $.ajax({
+                url: uri,
+                type: 'get',
+                dataType: 'json',
+                success: function(response) {
+                    // return response;
+                    swalOk(response.info, response.data_sama, 'data baru ' + response.data_baru,
+                        'success');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3100);
+                },
+                error: function(response) {
+                    swalOk(response.info, response.data_sama, 'data gagal ' + response
+                        .data_gagal, 'warning');
+                    // setTimeout(() => {
+                    // location.reload();
+                    // }, 3100);
+                }
+            });
+        }
+
+        $('.btnDeleteNilai').on('click', function(e){
+            e.preventDefault();
+            var id = $(this).attr('data-id');
+            const uri = '/skor/delete-nilai';
+            Swal.fire({
+                title: 'anda yakin',
+                text: 'hapus data ini',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: "#cc0000",
+                cancelButtonColor: "#21ff00",
+                confirmButtonText: 'Iya',
+                cancelButtonText: "batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: uri,
+                        type: 'delete',
+                        dataType: 'json',
+                        data: { 
+                                _token: "{{ csrf_token() }}",
+                                id: id,
+                            },
+                        success: function(response) {
+                            // console.log(response)
+                            if(response.status == true){
+                                Swal.fire({
+                                    title: "success",
+                                    text: "berhasil menghapus data",
+                                    icon: "success"
+                                });
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1500);
+                            }else{
+                                Swal.fire({
+                                    title: "warning",
+                                    text: `gagal menghapus data ${response.detail}`,
+                                    icon: "warning"
+                                });
+                            }
+                        },
+                        error: function(response) {
+                            console.log(response);
+                        }
+                    });
+                } else {
+                    $(this).prop("disabled", false);
+                }
+            });
+        });
+
+        $('.btnFollowUp').on('click', function(e){
+            e.preventDefault();
+            // alert('ok');
+            
+            var id = $(this).attr('data-id');
+            var npp_penilai = $(this).attr('data-npp-penilai');
+            var npp_dinilai = $(this).attr('data-npp-dinilai');
+            const uri = '/skor/follow-up-nilai';
+
+            Swal.fire({
+                title: 'anda yakin',
+                text: 'melakukan follow up',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: 'Iya',
+                cancelButtonText: "batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: uri,
+                        type: 'post',
+                        dataType: 'json',
+                        data: { 
+                                _token: "{{ csrf_token() }}",
+                                id: id,
+                                npp_penilai:npp_penilai,
+                                npp_dinilai:npp_dinilai,
+                            },
+                        success: function(response) {
+                            // console.log(response)
+                            if(response.status == true){
+                                Swal.fire({
+                                    title: "success",
+                                    text: "berhasil melakukan follow up",
+                                    icon: "success"
+                                });
+                            }else{
+                                Swal.fire({
+                                    title: "warning",
+                                    text: `gagal melakukan follow up ${response.detail}`,
+                                    icon: "warning"
+                                });
+                            }
+                            // swalOk(response.title, response.text, response.icon);
+                            // setTimeout(() => {
+                            //     location.reload();
+                            // }, 3100);
+                        },
+                        error: function(response) {
+                            console.log(response);
+                            // swalOk(response.title, response.text, response.icon);
+                            // setTimeout(() => {
+                                // location.reload();
+                            // }, 10000);
+                        }
+                    });
+                } else {
+                    $(this).prop("disabled", false);
+                }
+            });
+            
+            // console.log(id,npp_penilai,npp_dinilai);
+        });
+
         var table = $("#dataTablesPoolSkor").DataTable({
             ordering: false,
             scrollCollapse: false,
@@ -237,7 +397,7 @@
             ],
             initComplete: function () {
             this.api()
-                .columns([2,5,7])
+                .columns([1,2,4,5,7])
                 .every(function () {
                     var column = this;
                     var title = column.footer().textContent;
@@ -249,7 +409,7 @@
                             }
                         });
                 });
-        }
+            }
         });
     </script>
 @endpush
