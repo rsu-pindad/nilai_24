@@ -63,8 +63,8 @@ class RekapPenilaiPersonalExport implements FromQuery, WithMapping, WithHeadings
     {
         return [
             'id',
-            'nama_dinilai',
             'npp_dinilai',
+            'nama_dinilai',
             'skor_dp3',
             'point',
             'kriteria',
