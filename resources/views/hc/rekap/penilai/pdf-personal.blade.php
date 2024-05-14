@@ -227,31 +227,31 @@
             <tr>
                 <td style="text-align:right;">1</td>
                 <td colspan="2">Kerjasama</td>
-                <td style="text-align:right;">{{ round($p1 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($p1 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">2</td>
                 <td colspan="2">Komunikasi</td>
-                <td style="text-align:right;">{{ round($p2 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($p2 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">3</td>
                 <td colspan="2">Kedisiplinan</td>
-                <td style="text-align:right;">{{ round($p3 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($p3 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">4</td>
                 <td colspan="2">Dedikasi dan Integritas</td>
-                <td style="text-align:right;">{{ round($p4 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($p4 * 100), 2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">5</td>
                 <td colspan="2">Etika</td>
-                <td style="text-align:right;">{{ round($p5 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($p5 * 100),2) }}</td>
             </tr>
             <tr class="semiBoldText">
                 <td colspan="3" class="text-right">Jumlah A</td>
-                <td style="text-align:right;">{{ round($raspek_p * 100) }}</td>
+                <td style="text-align:right;">{{ round(($raspek_p * 100),2) }}</td>
             </tr>
             <tr class="boldText">
                 <td class="text-right">B</td>
@@ -260,77 +260,77 @@
             <tr>
                 <td style="text-align:right;">1</td>
                 <td colspan="2">Goal</td>
-                <td style="text-align:right;">{{ round($s1 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($s1 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">2</td>
                 <td colspan="2">Error</td>
-                <td style="text-align:right;">{{ round($s2 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($s2 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">3</td>
                 <td colspan="2">Dokumentasi</td>
-                <td style="text-align:right;">{{ round($s3 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($s3 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">4</td>
                 <td colspan="2">Inisiatif</td>
-                <td style="text-align:right;">{{ round($s4 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($s4 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">5</td>
                 <td colspan="2">Pola Pikir</td>
-                <td style="text-align:right;">{{ round($s5 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($s5 * 100),2) }}</td>
             </tr>
             <tr class="semiBoldText">
                 <td colspan="3" class="text-right">Jumlah B</td>
-                <td style="text-align:right;">{{ round($raspek_s * 100) }}</td>
+                <td style="text-align:right;">{{ round(($raspek_s * 100),2) }}</td>
             </tr>
             <tr class="boldText">
-                <td class="text-right">B</td>
+                <td class="text-right">C</td>
                 <td colspan="3" class="text-left">LEADERSHIP</td>
             </tr>
             <tr>
                 <td style="text-align:right;">1</td>
                 <td colspan="2">Strategi - Perencanaan</td>
-                <td style="text-align:right;">{{ round($k1 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($k1 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">2</td>
                 <td colspan="2">Strategi – Pengawasan</td>
-                <td style="text-align:right;">{{ round($k2 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($k2 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">3</td>
                 <td colspan="2">Strategi - Inovasi</td>
-                <td style="text-align:right;">{{ round($k3 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($k3 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">4</td>
                 <td colspan="2">Kepemimpinan</td>
-                <td style="text-align:right;">{{ round($k4 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($k4 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">5</td>
                 <td colspan="2">Membimbingan dan Membangun</td>
-                <td style="text-align:right;">{{ round($k5 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($k5 * 100),2) }}</td>
             </tr>
             <tr>
                 <td style="text-align:right;">6</td>
                 <td colspan="2">Pengambilan keputusan</td>
-                <td style="text-align:right;">{{ round($k6 * 100) }}</td>
+                <td style="text-align:right;">{{ round(($k6 * 100),2) }}</td>
             </tr>
             <tr class="semiBoldText">
                 <td colspan="3" class="text-right">Jumlah C</td>
-                <td style="text-align:right;">{{ round($raspek_k * 100) }}</td>
+                <td style="text-align:right;">{{ round(($raspek_k * 100),2) }}</td>
             </tr>
-            <!-- <tr class="semiBoldText">
+            {{-- <tr class="semiBoldText">
             <td colspan="3" class="text-right">Jumlah A+B+C</td>
-            <td>{{ round(($raspek_k + $raspek_s + $raspek_p) * 100, 2) }}</td>
-        </tr> -->
+                <td style="text-align: right;">{{ round($total_aspek * 100, 2) }}</td>
+            </tr> --}}
             <tr class="boldText">
                 <td colspan="3" class="text-right">Skor Akhir DP3</td>
-                <td style="text-align:right;">{{ round($total_raspek, 1) }}</td>
+                <td style="text-align:right;">{{ round($total_raspek, 2) }}</td>
             </tr>
             <tr style="font-size: 0.9em;background-color: #fff;">
                 <td colspan="2">
@@ -361,7 +361,7 @@
                     <table>
                         <tr>
                             <td>Nilai Kinerja</td>
-                            <td style="text-align:right;">{{ round($total_raspek, 1) }}</td>
+                            <td style="text-align:right;">{{ round($total_raspek, 2) }}</td>
                         </tr>
                         <tr>
                             <td>Kriteria</td>
