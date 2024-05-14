@@ -68,6 +68,15 @@
                                                     <button type="submit" class="btn btn-sm">format (.csv)
                                                     </button>
                                                 </form>
+                                                <span class="dropdown-item-text">Group DP3 + Missed Penilai</span>
+                                                <form action="{{ route('penilai-rekap-personal-complete-export-xlsx') }}" method="post"
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">format (.xlsx)
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -129,7 +138,7 @@
 @push('scripts')
     <script>
         $("#dataTablesRekap2").DataTable({
-            ordering: false,
+            ordering: true,
             scrollCollapse: true,
             searching: true,
             scrollX: false,
@@ -153,9 +162,9 @@
                         var lastText = text[text.length - 1]
                         console.log(lastText);
                         swalOk(response.title, lastText, response.icon);
-                        // setTimeout(() => {
-                        //     location.reload();
-                        // }, 3100);
+                        setTimeout(() => {
+                            location.reload()
+                        }, 10000);
                     },
                     error: function(response) {
                         // let text = JSON.stringify(response.text)
