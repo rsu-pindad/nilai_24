@@ -17,9 +17,9 @@
                 <td>{{ $p->identitas_dinilai->npp_karyawan }}</td>
                 <td>{{ $p->identitas_dinilai->nama_karyawan }}</td>
                 <td>{{ $p->identitas_dinilai->level_jabatan }}</td>
-                <td>{{ round($p->sum_k1 * 100, 3) }}</td>
-                <td>{{ round($p->sum_k2 * 100, 3) }}</td>
-                <td>{{ round($p->sum_k3 * 100, 3) }}</td>
+                <td>{{ round($p->sum_k1 * 100, 2) }}</td>
+                <td>{{ round($p->sum_k2 * 100, 2) }}</td>
+                <td>{{ round($p->sum_k3 * 100, 2) }}</td>
             </tr>
         @endforeach
     </tbody>
