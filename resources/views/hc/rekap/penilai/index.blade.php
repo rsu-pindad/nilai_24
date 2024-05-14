@@ -94,8 +94,8 @@
                                             <th>Nama</th>
                                             <th>Jabatan</th>
                                             <th>Kepemimpinan</th>
-                                            <th>Perilaku</th>
                                             <th>Sasaran</th>
+                                            <th>Perilaku</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -105,9 +105,9 @@
                                                 <td>{{ $p->identitas_dinilai->npp_karyawan }}</td>
                                                 <td>{{ $p->identitas_dinilai->nama_karyawan }}</td>
                                                 <td>{{ $p->identitas_dinilai->level_jabatan }}</td>
-                                                <td>{{ round($p->sum_k1 * 100, 3) }}</td>
-                                                <td>{{ round($p->sum_k2 * 100, 3) }}</td>
-                                                <td>{{ round($p->sum_k3 * 100, 3) }}</td>
+                                                <td>{{ round($p->sum_k1 * 100, 2) }}</td>
+                                                <td>{{ round($p->sum_k2 * 100, 2) }}</td>
+                                                <td>{{ round($p->sum_k3 * 100, 2) }}</td>
                                                 <td>
                                                     <div class="btn-toolbar d-flex justify-content-center" role="toolbar"
                                                         aria-label="Toolbar with button groups">
