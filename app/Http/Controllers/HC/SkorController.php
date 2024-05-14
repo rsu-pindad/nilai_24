@@ -5,15 +5,16 @@ namespace App\Http\Controllers\HC;
 use App\Exports\SkorAllExport;
 use App\Http\Controllers\Controller;
 use App\Models\Aspek;
+use App\Models\FinalDp3;
 use App\Models\GResponse;
 use App\Models\PoolRespon;
+use App\Models\RekapPenilai;
 use App\Models\RelasiAtasan;
 use App\Models\RelasiKaryawan;
 use App\Models\RelasiSelevel;
 use App\Models\RelasiStaff;
 use App\Models\ScoreJawaban as Skor;
-use App\Models\FinalDp3;
-use App\Models\RekapPenilai;
+use App\Models\User;
 // use App\Models\RekapBobotKepemimpinan;
 // use App\Models\RekapBobotPerilaku;
 // use App\Models\RekapBobotSasaran;
@@ -154,10 +155,10 @@ class SkorController extends Controller
     public function export(Request $request)
     {
         // dd($request->sort);
-        if($request->sort == 'penilai'){
+        if ($request->sort == 'penilai') {
             $nows = Carbon::now()->toDateTimeString() . '.xlsx';
             return Excel::download(new SkorAllExport('penilai'), 'PoolRespon_orderBy_penilai' . $nows, ExcelExt::XLSX);
-        }else{
+        } else {
             $nows = Carbon::now()->toDateTimeString() . '.xlsx';
             return Excel::download(new SkorAllExport('dinilai'), 'PoolRespon_orderBy_dinilai' . $nows, ExcelExt::XLSX);
         }
@@ -165,10 +166,10 @@ class SkorController extends Controller
 
     public function exportCsv(Request $request)
     {
-        if($request->sort == 'penilai'){
+        if ($request->sort == 'penilai') {
             $nows = Carbon::now()->toDateTimeString() . '.csv';
             return Excel::download(new SkorAllExport('penilai'), 'PoolRespon_orderBy_penilai' . $nows, ExcelExt::CSV);
-        }else{
+        } else {
             $nows = Carbon::now()->toDateTimeString() . '.csv';
             return Excel::download(new SkorAllExport('dinilai'), 'PoolRespon_orderBy_dinilai' . $nows, ExcelExt::CSV);
         }
@@ -1205,5 +1206,75 @@ class SkorController extends Controller
         //         'icons' => 'success',
         //     ]);
         // }
+    }
+
+    public function followUpNilai(Request $request)
+    {
+        $id = $request->id;
+        $nppPenilai = $request->npp_penilai;
+        $nppDinilai = $request->npp_dinilai;
+
+        $penilai = User::select('no_hp', 'nama')->where('npp', $nppPenilai)->get();
+        $dinilai = User::select('no_hp', 'nama')->where('npp', $nppDinilai)->get();
+
+        $noPenilai = $penilai->toArray();
+        $noDinilai = $dinilai->toArray();
+
+        return $this->followUpWa($noPenilai, $noDinilai);
+    }
+
+    private function followUpWa($penilai = [], $dinilai = [])
+    {
+        $namaPenilai = $penilai[0]['nama'];
+        $noPenilai = $penilai[0]['no_hp'];
+        $namaDinilai = $dinilai[0]['nama'];
+        $noDinilai = $dinilai[0]['no_hp'];
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+                'target' => $noPenilai,
+                'message' => 'Halo, ' . $namaPenilai . '
+                mohon lakukan penilaian ulang terhadap
+                sdr.' . $namaDinilai . '
+                Terimakasih',
+                'countryCode' => '62',  // optional
+            ),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: ' . env('FONNTE_TOKEN', '')  // change TOKEN to your actual token
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        echo $response;
+    }
+
+    public function deleteNilai(Request $request)
+    {
+        $id = $request->id;
+        $pool = PoolRespon::find($id);
+        $pool->delete();
+
+        if($pool){
+            $data = [
+                'status' => true,
+            ];
+            return json_encode($data);
+        }
+        $data = [
+            'status' => false,
+        ];
+        return json_encode($data);
+
     }
 }
