@@ -75,6 +75,8 @@ Route::middleware(['auth', 'hc'])->group(function () {
 
         Route::post('/skor/export', 'export')->name('skor-export');
         Route::post('/skor/export-csv', 'exportCsv')->name('skor-export-csv');
+        Route::post('/skor/follow-up-nilai', 'followUpNilai')->name('follow-up-nilai');
+        Route::delete('/skor/delete-nilai', 'deleteNilai')->name('delete-nilai');
     });
 
     Route::controller(AspekController::class)->group(function () {
@@ -159,6 +161,8 @@ Route::middleware(['auth', 'hc'])->group(function () {
 
         Route::post('/penilai-rekap/personal/export-xlsx', 'exportPersonalXlsx')->name('penilai-rekap-personal-export-xlsx');
         Route::post('/penilai-rekap/personal/export-csv', 'exportPersonalCsv')->name('penilai-rekap-personal-export-csv');
+
+        Route::post('/penilai-rekap/personal/export-complete-xlsx', 'exportPersonalCompleteXlsx')->name('penilai-rekap-personal-complete-export-xlsx');
     });
 
     Route::controller(HasilPersonalController::class)->group(function () {
