@@ -28,6 +28,7 @@
                                         <th>No</th>
                                         <th>NPP</th>
                                         <th>Nama</th>
+                                        <th>Level</th>
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Aksi</th>
@@ -38,12 +39,14 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $user->npp }}</td>
                                                 <td>{{ $user->nama }}</td>
+                                                <td>{{ $user->jabatan ?? 'jabatan blm diisi' }}</td>
                                                 <td>{{ $user->email }}</td>
                                                 <td>{{ $user->no_hp }}</td>
                                                 <td>
                                                     <button type="button" class="btn btn-outline-info btn-sm editUser"
                                                         data-id="{{ $user->id }}" data-npp="{{ $user->npp }}"
                                                         data-nama="{{ $user->nama }}" data-email="{{ $user->email }}"
+                                                        data-jabatan="{{ $user->jabatan }}"
                                                         data-phone="{{ $user->no_hp }}" data-bs-toggle="modal"
                                                         data-bs-target="#editUser">
                                                         <i class="fas fa-edit"></i>Edit
@@ -101,6 +104,13 @@
                             <div class="col-md-6 mb-3">
                                 <label for="input_nama">Nama</label>
                                 <input type="text" class="form-control edit_input_nama" id="input_nama" name="input_nama"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-12">
+                                <label for="input_jabatan">Jabatan</label>
+                                <input type="text" class="form-control edit_input_nama" id="input_jabatan" name="input_jabatan"
                                     required>
                             </div>
                         </div>
@@ -209,6 +219,7 @@
             let id = $(this).attr('data-id');
             let npp = $(this).attr('data-npp');
             let nama = $(this).attr('data-nama');
+            let jabatan = $(this).attr('data-jabatan');
             let email = $(this).attr('data-email');
             let np_hp = $(this).attr('data-phone');
             const idUser = $(this).attr('data-id');
@@ -219,6 +230,7 @@
                 $('#input_npp').val(npp);
                 $('#input_nama').val(nama);
                 $('#input_email').val(email);
+                $('#input_jabatan').val(jabatan);
                 $('#input_phone').val(np_hp);
                 $('#btnEditUser').on('click', function(ev) {
                     //alert('ok');
@@ -235,6 +247,7 @@
                             npp: $('#input_npp').val(),
                             nama: $('#input_nama').val(),
                             email: $('#input_email').val(),
+                            jabatan: $('#input_jabatan').val(),
                             no_hp: $('#input_phone').val(),
                             _method: 'PUT',
                             _token: '{{ csrf_token() }}',
@@ -333,7 +346,7 @@
 
         var table = $('#tabelUser').DataTable({
             responsive: true,
-            ordering: false,
+            ordering: true,
             scrollX: false,
             scrollY: '50vh',
             searching: true,
