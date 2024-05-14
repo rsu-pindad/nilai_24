@@ -140,6 +140,7 @@ class RelasiKaryawan extends Controller
             $validated = $request->validate([
                 'npp' => 'required',
                 'nama' => 'required',
+                'jabatan' => 'required',
                 'email' => 'required',
                 'no_hp' => 'required',
             ]);
@@ -148,12 +149,17 @@ class RelasiKaryawan extends Controller
                 $data = [
                     'npp' => $request->npp,
                     'nama' => $request->nama,
+                    'jabatan' => $request->jabatan,
                     'email' => $request->email,
                     'no_hp' => $request->no_hp
                 ];
                 // dd($data);
                 $store = User::find($id)->update($data);
                 if ($store) {
+                    RK::where('npp_karyawan', $request->npp)
+                    ->update([
+                        'level_jabatan' => $request->jabatan,
+                    ]);
                     $tempData['data'] = [
                         'title' => 'berhasil',
                         'html' => 'berhasil edit data <b></b>',
