@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\HC;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\AturJadwal;
+use Illuminate\Http\Request;
 
 class AturJadwallController extends Controller
 {
@@ -14,18 +14,32 @@ class AturJadwallController extends Controller
             'title' => 'Pengaturan Jadwal Penilaian',
             'jadwalberjalan' => AturJadwal::get()->last(),
         ];
+        // dd($data);
         return view('jadwal', $data);
     }
 
     public function store(Request $request, AturJadwal $jadwal)
     {
-        // dd($request);
+        // dd($request->input());
         $validated = $request->validate([
             'jadwal' => 'required',
         ]);
+        if($request->input('dokumenCheck') == true){
+            // return 'true';
+            $dokumen = true;
+        }
+        if($request->input('nilaiCheck') == true){
+            // return 'true';
+            $skor = true;
+        }
         $jadwal->truncate();
-        $jadwal->create($validated);
+        $jadwal->create(
+            [
+                'jadwal' => $request->input('jadwal'),
+                'lihat_dokumen' => $dokumen ?? false,
+                'lihat_skor' => $skor ?? false,
+            ]
+        );
         return redirect()->back()->withToastSuccess('jadwal diterapkan');
     }
-
 }
