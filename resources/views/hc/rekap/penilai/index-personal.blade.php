@@ -91,22 +91,32 @@
                                             <th>Nama Dinilai</th>
                                             <th>Jabatan Dinilai</th>
                                             <th>Rata-rata Skor DP3</th>
+                                            <th>Max Skor DP3 (Markup)</th>
+                                            <th>Point Skor DP3 (Markup)</th>
+                                            <th>Kriteria Skor DP3 (Markup)</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($personal as $p)
+                                        @php
+                                        $object = (object) $personal;
+                                        // dd($object);
+                                        @endphp
+                                        @forelse ($object as $p)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $p->relasi_karyawan->npp_karyawan }}</td>
-                                                <td>{{ $p->relasi_karyawan->nama_karyawan }}</td>
-                                                <td>{{ $p->relasi_karyawan->level_jabatan }}</td>
-                                                <td>{{ round($p->total, 2) }}</td>
+                                                <td>{{ $p['npp_karyawan'] }}</td>
+                                                <td>{{ $p['nama_karyawan'] }}</td>
+                                                <td>{{ $p['level_jabatan'] }}</td>
+                                                <td>{{ $p['total'] }}</td>
+                                                <td>{{ $p['total_raspek'] }}</td>
+                                                <td>{{ $p['point_dp3'] }}</td>
+                                                <td>{{ $p['kriteria_dp3'] }}</td>
                                                 <td class="px-2">
                                                     <div class="btn-toolbar d-flex justify-content-around" role="toolbar"
                                                         arua-label="grup satu">
                                                         <div class="btn-group mr-2" role="group" aria-label="group aksi">
-                                                            <a href="/penilai-rekap/report?id={{ $p->relasi_karyawan->id }}&npp={{ $p->relasi_karyawan->npp_karyawan }}"
+                                                            <a href="/penilai-rekap/report?id={{ $p['npp_dinilai_id'] }}&npp={{ $p['npp_karyawan'] }}"
                                                                 target="_blank" class="btn btn-sm btn-danger">
                                                                 <i class="far fa-file-pdf"></i>
                                                             </a>
@@ -114,7 +124,8 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div><!-- /.card-body -->
