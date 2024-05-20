@@ -30,8 +30,12 @@
                                     </thead>
                                     <tbody>
                                             <tr>
+                                                @if ($lihatSkor->lihat_skor != false)
                                                 <td>{{ $nilai }}</td>
-                                                {{-- <td>belum tersedia</td> --}}
+                                                @else
+                                                <td>SDM menutup akses...</td>
+                                                @endif
+                                                @if ($lihatDokumen->lihat_dokumen != false)
                                                 <td class="px-2">
                                                     <div class="btn-toolbar d-flex justify-content-around" role="toolbar"
                                                         arua-label="grup satu">
@@ -43,6 +47,9 @@
                                                         </div>
                                                     </div>
                                                 </td>
+                                                @else
+                                                <td>SDM menutup akses...</td>
+                                                @endif
                                             </tr>
                                     </tbody>
                                 </table>

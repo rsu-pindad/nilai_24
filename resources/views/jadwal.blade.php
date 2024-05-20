@@ -63,6 +63,22 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="dokumenCheck" name="dokumenCheck" @if($jadwalberjalan->lihat_dokumen == true) checked @endif>
+                                                        <label class="form-check-label" for="dokumenCheck">
+                                                            Perlihatkan Dokumen
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="nilaiCheck" name="nilaiCheck" @if($jadwalberjalan->lihat_skor == true) checked @endif>
+                                                        <label class="form-check-label" for="nilaiCheck">
+                                                            Perlihatkan Nilai
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
                                                     <div class="offset-10 col-sm-2">
                                                         <button type="submit" class="btn btn-primary"
                                                             onclick="return confirm('Yakin anda menetapkan jadwal?')">Tetapkan</button>

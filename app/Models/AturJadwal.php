@@ -10,7 +10,12 @@ class AturJadwal extends Model
     use HasFactory;
 
     protected $table = 'jadwal_penilaian';
-    protected $fillable = ['jadwal'];
+    protected $fillable = [
+        'jadwal',
+        'akhir_jadwa',
+        'lihat_dokumen',
+        'lihat_skor',
+    ];
 
     protected $guard = 'id';
 }
