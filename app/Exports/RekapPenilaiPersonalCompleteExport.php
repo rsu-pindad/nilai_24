@@ -315,7 +315,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                             + $item['kepemimpinan_bobot_aspek']
                             + $item['membimbing_membangun_bobot_aspek']
                             + $item['pengambilan_keputusan_bobot_aspek'],
-                        1
+                        2
                     );
                     $raspek_s_staff[$keys]['raspek_s'] = round(
                         $item['kerjasama_bobot_aspek']
@@ -323,7 +323,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                             + $item['absensi_bobot_aspek']
                             + $item['integritas_bobot_aspek']
                             + $item['etika_bobot_aspek'],
-                        1
+                        2
                     );
                     $raspek_p_staff[$keys]['raspek_p'] = round(
                         $item['goal_kinerja_bobot_aspek']
@@ -331,7 +331,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                             + $item['proses_dokumen_bobot_aspek']
                             + $item['proses_inisiatif_bobot_aspek']
                             + $item['proses_polapikir_bobot_aspek'],
-                        1
+                        2
                     );
                 } else {
                     $avg_dp3_non_staff[$keys]['sum_nilai_dp3'] = $item['sum_nilai_dp3'];
@@ -361,7 +361,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                             + $item['kepemimpinan_bobot_aspek']
                             + $item['membimbing_membangun_bobot_aspek']
                             + $item['pengambilan_keputusan_bobot_aspek'],
-                        1
+                        2
                     );
                     $raspek_s_non[$keys]['raspek_s'] = round(
                         $item['kerjasama_bobot_aspek']
@@ -369,7 +369,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                             + $item['absensi_bobot_aspek']
                             + $item['integritas_bobot_aspek']
                             + $item['etika_bobot_aspek'],
-                        1
+                        2
                     );
                     $raspek_p_non[$keys]['raspek_p'] = round(
                         $item['goal_kinerja_bobot_aspek']
@@ -377,7 +377,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                             + $item['proses_dokumen_bobot_aspek']
                             + $item['proses_inisiatif_bobot_aspek']
                             + $item['proses_polapikir_bobot_aspek'],
-                        1
+                        2
                     );
                     $divider++;
                 }
@@ -386,54 +386,54 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
             $bil1 = collect($avg_dp3_staff)->avg('sum_nilai_dp3');
             $bil2 = collect($avg_dp3_non_staff)->sum('sum_nilai_dp3');
             // $total_raspek = round(($bil1 + $bil2) * 100, 2);
-            $total_raspek = round($data_karyawan[1],2) + ($total_missing_relasi * 100);
+            $total_raspek = round(($data_karyawan[1]) + ($total_missing_relasi * 100),2);
             // dd($total_raspek);
     
-            $k1_mentah = collect($k1_staff)->avg('k1') + collect($k1_non)->sum('k1');
-            $k2_mentah = collect($k2_staff)->avg('k2') + collect($k2_non)->sum('k2');
-            $k3_mentah = collect($k3_staff)->avg('k3') + collect($k3_non)->sum('k3');
-            $k4_mentah = collect($k4_staff)->avg('k4') + collect($k4_non)->sum('k4');
-            $k5_mentah = collect($k5_staff)->avg('k5') + collect($k5_non)->sum('k5');
-            $k6_mentah = collect($k6_staff)->avg('k6') + collect($k6_non)->sum('k6');
+            $k1_mentah = round(collect($k1_staff)->avg('k1') + collect($k1_non)->sum('k1'),2);
+            $k2_mentah = round(collect($k2_staff)->avg('k2') + collect($k2_non)->sum('k2'),2);
+            $k3_mentah = round(collect($k3_staff)->avg('k3') + collect($k3_non)->sum('k3'),2);
+            $k4_mentah = round(collect($k4_staff)->avg('k4') + collect($k4_non)->sum('k4'),2);
+            $k5_mentah = round(collect($k5_staff)->avg('k5') + collect($k5_non)->sum('k5'),2);
+            $k6_mentah = round(collect($k6_staff)->avg('k6') + collect($k6_non)->sum('k6'),2);
     
-            $p1_mentah = collect($p1_staff)->avg('p1') + collect($p1_non)->sum('p1');
-            $p2_mentah = collect($p2_staff)->avg('p2') + collect($p2_non)->sum('p2');
-            $p3_mentah = collect($p3_staff)->avg('p3') + collect($p3_non)->sum('p3');
-            $p4_mentah = collect($p4_staff)->avg('p4') + collect($p4_non)->sum('p4');
-            $p5_mentah = collect($p5_staff)->avg('p5') + collect($p5_non)->sum('p5');
+            $p1_mentah = round(collect($p1_staff)->avg('p1') + collect($p1_non)->sum('p1'),2);
+            $p2_mentah = round(collect($p2_staff)->avg('p2') + collect($p2_non)->sum('p2'),2);
+            $p3_mentah = round(collect($p3_staff)->avg('p3') + collect($p3_non)->sum('p3'),2);
+            $p4_mentah = round(collect($p4_staff)->avg('p4') + collect($p4_non)->sum('p4'),2);
+            $p5_mentah = round(collect($p5_staff)->avg('p5') + collect($p5_non)->sum('p5'),2);
     
-            $s1_mentah = collect($s1_staff)->avg('s1') + collect($s1_non)->sum('s1');
-            $s2_mentah = collect($s2_staff)->avg('s2') + collect($s2_non)->sum('s2');
-            $s3_mentah = collect($s3_staff)->avg('s3') + collect($s3_non)->sum('s3');
-            $s4_mentah = collect($s4_staff)->avg('s4') + collect($s4_non)->sum('s4');
-            $s5_mentah = collect($s5_staff)->avg('s5') + collect($s5_non)->sum('s5');
+            $s1_mentah = round(collect($s1_staff)->avg('s1') + collect($s1_non)->sum('s1'),2);
+            $s2_mentah = round(collect($s2_staff)->avg('s2') + collect($s2_non)->sum('s2'),2);
+            $s3_mentah = round(collect($s3_staff)->avg('s3') + collect($s3_non)->sum('s3'),2);
+            $s4_mentah = round(collect($s4_staff)->avg('s4') + collect($s4_non)->sum('s4'),2);
+            $s5_mentah = round(collect($s5_staff)->avg('s5') + collect($s5_non)->sum('s5'),2);
     
-            $raspek_k_mentah = collect($raspek_k_staff)->avg('raspek_k') + collect($raspek_k_non)->sum('raspek_k');
-            $raspek_s_mentah = collect($raspek_s_staff)->avg('raspek_s') + collect($raspek_s_non)->sum('raspek_s');
-            $raspek_p_mentah = collect($raspek_p_staff)->avg('raspek_p') + collect($raspek_p_non)->sum('raspek_p');
+            $raspek_k_mentah = round(collect($raspek_k_staff)->avg('raspek_k') + collect($raspek_k_non)->sum('raspek_k'),2);
+            $raspek_s_mentah = round(collect($raspek_s_staff)->avg('raspek_s') + collect($raspek_s_non)->sum('raspek_s'),2);
+            $raspek_p_mentah = round(collect($raspek_p_staff)->avg('raspek_p') + collect($raspek_p_non)->sum('raspek_p'),2);
     
-            $k1 = $k1_mentah / ($divider + 1);
-            $k2 = $k2_mentah / ($divider + 1);
-            $k3 = $k3_mentah / ($divider + 1);
-            $k4 = $k4_mentah / ($divider + 1);
-            $k5 = $k5_mentah / ($divider + 1);
-            $k6 = $k6_mentah / ($divider + 1);
+            $k1 = round($k1_mentah / ($divider + 1), 2);
+            $k2 = round($k2_mentah / ($divider + 1), 2);
+            $k3 = round($k3_mentah / ($divider + 1), 2);
+            $k4 = round($k4_mentah / ($divider + 1), 2);
+            $k5 = round($k5_mentah / ($divider + 1), 2);
+            $k6 = round($k6_mentah / ($divider + 1), 2);
+
+            $p1 = round($p1_mentah / ($divider + 1), 2);
+            $p2 = round($p2_mentah / ($divider + 1), 2);
+            $p3 = round($p3_mentah / ($divider + 1), 2);
+            $p4 = round($p4_mentah / ($divider + 1), 2);
+            $p5 = round($p5_mentah / ($divider + 1), 2);
+
+            $s1 = round($s1_mentah / ($divider + 1), 2);
+            $s2 = round($s2_mentah / ($divider + 1), 2);
+            $s3 = round($s3_mentah / ($divider + 1), 2);
+            $s4 = round($s4_mentah / ($divider + 1), 2);
+            $s5 = round($s5_mentah / ($divider + 1), 2);
     
-            $p1 = $p1_mentah / ($divider + 1);
-            $p2 = $p2_mentah / ($divider + 1);
-            $p3 = $p3_mentah / ($divider + 1);
-            $p4 = $p4_mentah / ($divider + 1);
-            $p5 = $p5_mentah / ($divider + 1);
-    
-            $s1 = $s1_mentah / ($divider + 1);
-            $s2 = $s2_mentah / ($divider + 1);
-            $s3 = $s3_mentah / ($divider + 1);
-            $s4 = $s4_mentah / ($divider + 1);
-            $s5 = $s5_mentah / ($divider + 1);
-    
-            $raspek_k = $raspek_k_mentah / ($divider + 1);
-            $raspek_s = $raspek_s_mentah / ($divider + 1);
-            $raspek_p = $raspek_p_mentah / ($divider + 1);
+            $raspek_k = round($k1 + $k2 + $k3 + $k4 + $k5 + $k6, 2);
+            $raspek_s = round($s1 + $s2 + $s3 + $s4 + $s5, 2);
+            $raspek_p = round($p1 + $p2 + $p3 + $p4 + $p5, 2);
     
             $point_dp3 = 0;
             $kriteria_dp3 = '';
