@@ -2563,4 +2563,25 @@ class RekapPenilaiController extends Controller
         $nows = Carbon::now()->toDateTimeString() . '.xlsx';
         return Excel::download(new RekapPenilaiPersonalCompleteExport, 'FinalSkorDp3-Complete' . $nows, ExcelExt::XLSX);
     }
+
+    public function templatePdf()
+    {
+        $pdf = Pdf::loadView('hc.rekap.penilai.template-pdf');
+        $pdf->getCanvas()->get_cpdf();
+        $pdf->setPaper('A4');
+        return $pdf->download('template_penilaian.pdf');
+    }
+
+    public function templateDoc()
+    {
+        // $headers = array(
+        //     "Content-type"=>"text/html",
+        //     "Content-Disposition"=>"attachment;Filename=template_penilaian_2024.doc"
+        // );
+        $headers = [
+            'Content-type' => 'application/docx',
+        ];
+        $file = public_path().'/template/template_penilaian-2.docx';
+        return response()->download($file,'template_penilaian_2024.docx', $headers);
+    }
 }

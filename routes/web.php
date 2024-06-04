@@ -163,6 +163,9 @@ Route::middleware(['auth', 'hc'])->group(function () {
         Route::post('/penilai-rekap/personal/export-csv', 'exportPersonalCsv')->name('penilai-rekap-personal-export-csv');
 
         Route::post('/penilai-rekap/personal/export-complete-xlsx', 'exportPersonalCompleteXlsx')->name('penilai-rekap-personal-complete-export-xlsx');
+
+        Route::post('/penilai-rekap/personal/template-word-doc', 'templateDoc')->name('penilai-rekap-personal-word-doc');
+        Route::post('/penilai-rekap/personal/template-pdf', 'templatePdf')->name('penilai-rekap-personal-template-pdf');
     });
 
     Route::controller(HasilPersonalController::class)->group(function () {

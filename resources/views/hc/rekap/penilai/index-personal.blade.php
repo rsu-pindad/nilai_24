@@ -21,12 +21,12 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="d-flex flex-row bd-highlight">
-                                    <div class="px-2 bd-highlight">
+                                    <div class="px-2">
                                         <button type="button" class="btn btn-secondary mb-4" id="btnRekapPerilakuModal">
                                             <i class="far fa-plus-square"></i> Hitung Skor Akhir DP3
                                         </button>
                                     </div>
-                                    <div class="px-2 bd-highlight">
+                                    <div class="px-2">
                                         <div class="btn-group mr-2" role="group" aria-label="Second group">
                                             <button type="button" class="btn btn-secondary dropdown-toggle"
                                                 data-toggle="dropdown" aria-expanded="false">
@@ -75,6 +75,35 @@
                                                     target="_blank">
                                                     @csrf
                                                     <button type="submit" class="btn btn-sm">format (.xlsx)
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="px-2">
+                                        <div class="btn-group mr-2" role="group" aria-label="Third group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle"
+                                                data-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-download px-1"></i>Template
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <span class="dropdown-item-text">Format</span>
+                                                <form action="{{ route('penilai-rekap-personal-word-doc') }}" method="post"
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">
+                                                        <i class="fas fa-file-word"></i> Word (.docx)
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('penilai-rekap-personal-template-pdf') }}" method="post"
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">
+                                                        <i class="fas fa-file-pdf"></i> Pdf (.pdf)
                                                     </button>
                                                 </form>
                                             </div>
