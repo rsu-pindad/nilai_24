@@ -77,6 +77,14 @@
                                                     <button type="submit" class="btn btn-sm">format (.xlsx)
                                                     </button>
                                                 </form>
+                                                <form action="{{ route('penilai-rekap-personal-complete-full-col-export-xlsx') }}" method="post"
+                                                    class="dropdown-item btn btn-outline-info"
+                                                    enctype="multipart/form-data"
+                                                    target="_blank">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm">(full) format (.xlsx)
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -137,8 +145,8 @@
                                                 <td>{{ $p['npp_karyawan'] }}</td>
                                                 <td>{{ $p['nama_karyawan'] }}</td>
                                                 <td>{{ $p['level_jabatan'] }}</td>
-                                                <td>{{ $p['total'] }}</td>
-                                                <td>{{ $p['total_raspek'] }}</td>
+                                                <td>{{ round($p['total'],2) }}</td>
+                                                <td>{{ round($p['total_raspek'],2) }}</td>
                                                 <td>{{ $p['point_dp3'] }}</td>
                                                 <td>{{ $p['kriteria_dp3'] }}</td>
                                                 <td class="px-2">

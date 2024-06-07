@@ -4,6 +4,7 @@ namespace App\Http\Controllers\HC;
 
 use App\Exports\RekapPenilaiExport;
 use App\Exports\RekapPenilaiPersonalCompleteExport;
+use App\Exports\RekapPenilaiPersonalCompleteFullColExport;
 use App\Exports\RekapPenilaiPersonalExport;
 use App\Exports\RekapPenilaiPersonalRawExport;
 use App\Exports\RekapPenilaiRawExport;
@@ -2562,6 +2563,12 @@ class RekapPenilaiController extends Controller
     {
         $nows = Carbon::now()->toDateTimeString() . '.xlsx';
         return Excel::download(new RekapPenilaiPersonalCompleteExport, 'FinalSkorDp3-Complete' . $nows, ExcelExt::XLSX);
+    }
+
+    public function exportPersonalCompleteFullColXlsx()
+    {
+        $nows = Carbon::now()->toDateTimeString() . '.xlsx';
+        return Excel::download(new RekapPenilaiPersonalCompleteFullColExport, 'FinalSkorDp3FullCol-Complete' . $nows, ExcelExt::XLSX);
     }
 
     public function templatePdf()
