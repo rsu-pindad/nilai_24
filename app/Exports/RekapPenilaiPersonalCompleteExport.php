@@ -3,17 +3,15 @@
 namespace App\Exports;
 
 use App\Models\FinalDp3;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\RekapPenilai;
 use App\Models\RelasiKaryawan;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, WithHeadings
 {
@@ -65,8 +63,8 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
             'relasi',
             'npp_penilai_dinilai'
         )
-        ->where('npp_dinilai', $row->npp_karyawan)
-        ->get();
+            ->where('npp_dinilai', $row->npp_karyawan)
+            ->get();
 
         $dp3 = FinalDp3::with(['relasi_karyawan'])
             ->select('npp_dinilai_id')
@@ -89,85 +87,85 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
         $data_karyawan = collect($collectionDp3)->unique('npp_dinilai_id');
         // dd(count($data_karyawan));
         $total_raspek = 0;
-        if(count($data_karyawan) > 0 ){
+        if (count($data_karyawan) > 0) {
             $data_karyawan = Arr::flatten($data_karyawan->toArray());
 
             // dd(count($data_karyawan));
-    
+
             $nama = $data_karyawan[6] ?? 'blm ada nama';
             $unit = $data_karyawan[5] ?? 'blm ada unit';
             $level = $data_karyawan[4] ?? 'blm ada level';
             $npp = $data_karyawan[3] ?? 'blm ada npp';
-    
+
             $avg_dp3_staff = [];
             $avg_dp3_non_staff = [];
-    
+
             $k1_staff = [];
             $k2_staff = [];
             $k3_staff = [];
             $k4_staff = [];
             $k5_staff = [];
             $k6_staff = [];
-    
+
             $p1_staff = [];
             $p2_staff = [];
             $p3_staff = [];
             $p4_staff = [];
             $p5_staff = [];
-    
+
             $s1_staff = [];
             $s2_staff = [];
             $s3_staff = [];
             $s4_staff = [];
             $s5_staff = [];
-    
+
             $raspek_k_staff = [];
             $raspek_s_staff = [];
             $raspek_p_staff = [];
-    
+
             $k1_non = [];
             $k2_non = [];
             $k3_non = [];
             $k4_non = [];
             $k5_non = [];
             $k6_non = [];
-    
+
             $p1_non = [];
             $p2_non = [];
             $p3_non = [];
             $p4_non = [];
             $p5_non = [];
-    
+
             $s1_non = [];
             $s2_non = [];
             $s3_non = [];
             $s4_non = [];
             $s5_non = [];
-    
+
             $raspek_k_non = [];
             $raspek_s_non = [];
             $raspek_p_non = [];
             $divider = 0;
-    
+
             $ambang_batas_k = [];
             $ambang_batas_s = [];
             $ambang_batas_p = [];
-    
+
             $relasiExist = ['staff', 'self', 'rekanan', 'atasan'];
-    
+
             // dd($collectionPersonal['relasi']);
             foreach ($collectionPersonal as $keyRelasi => $itemRelasi) {
                 if (in_array($itemRelasi['relasi'], $relasiExist)) {
                     unset($relasiExist[array_search($itemRelasi['relasi'], $relasiExist)]);
                 }
             }
-    
+
             $total_missing_relasi = 0;
-    
+
             // dd($relasiExist);
-    
+
             $missingItem = '';
-    
+
             foreach ($relasiExist as $missingKey => $missingItem) {
                 // dd($level);
                 if (
@@ -194,7 +192,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_rekan, 2);
                     } elseif ($missingItem == 'staff') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_staff, 2);
-                    } elseif($missingItem == 'self'){
+                    } elseif ($missingItem == 'self') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_self, 2);
                     }
                 } elseif (
@@ -216,7 +214,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_rekan, 2);
                     } elseif ($missingItem == 'staff') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_staff, 2);
-                    } elseif($missingItem == 'self'){
+                    } elseif ($missingItem == 'self') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_self, 2);
                     }
                 } elseif (
@@ -239,7 +237,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_rekan, 2);
                     } elseif ($missingItem == 'staff') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_staff, 2);
-                    } elseif($missingItem == 'self'){
+                    } elseif ($missingItem == 'self') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_self, 2);
                     }
                 } elseif (
@@ -263,7 +261,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_rekan, 2);
                     } elseif ($missingItem == 'staff') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_staff, 2);
-                    } elseif($missingItem == 'self'){
+                    } elseif ($missingItem == 'self') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_self, 2);
                     }
                 } else {
@@ -280,12 +278,12 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_atasan, 2);
                     } elseif ($missingItem == 'rekanan') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_rekan, 2);
-                    } elseif($missingItem == 'self'){
+                    } elseif ($missingItem == 'self') {
                         $total_missing_relasi += round(round($kali_k + $kali_p + $kali_s, 2) * $dinilai_self, 2);
                     }
                 }
             }
-    
+
             foreach ($collectionPersonal as $keys => $item) {
                 if ($item['relasi'] == 'staff' || $item['relasi'] == 'rekanan') {
                     $avg_dp3_staff[$keys]['sum_nilai_dp3'] = $item['sum_nilai_dp3'];
@@ -295,19 +293,19 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                     $k4_staff[$keys]['k4'] = $item['kepemimpinan_bobot_aspek'];
                     $k5_staff[$keys]['k5'] = $item['membimbing_membangun_bobot_aspek'];
                     $k6_staff[$keys]['k6'] = $item['pengambilan_keputusan_bobot_aspek'];
-    
+
                     $p1_staff[$keys]['p1'] = $item['kerjasama_bobot_aspek'];
                     $p2_staff[$keys]['p2'] = $item['komunikasi_bobot_aspek'];
                     $p3_staff[$keys]['p3'] = $item['absensi_bobot_aspek'];
                     $p4_staff[$keys]['p4'] = $item['integritas_bobot_aspek'];
                     $p5_staff[$keys]['p5'] = $item['etika_bobot_aspek'];
-    
+
                     $s1_staff[$keys]['s1'] = $item['goal_kinerja_bobot_aspek'];
                     $s2_staff[$keys]['s2'] = $item['error_kinerja_bobot_aspek'];
                     $s3_staff[$keys]['s3'] = $item['proses_dokumen_bobot_aspek'];
                     $s4_staff[$keys]['s4'] = $item['proses_inisiatif_bobot_aspek'];
                     $s5_staff[$keys]['s5'] = $item['proses_polapikir_bobot_aspek'];
-    
+
                     $raspek_k_staff[$keys]['raspek_k'] = round(
                         $item['strategi_perencanaan_bobot_aspek']
                             + $item['strategi_pengawasan_bobot_aspek']
@@ -341,19 +339,19 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                     $k4_non[$keys]['k4'] = $item['kepemimpinan_bobot_aspek'];
                     $k5_non[$keys]['k5'] = $item['membimbing_membangun_bobot_aspek'];
                     $k6_non[$keys]['k6'] = $item['pengambilan_keputusan_bobot_aspek'];
-    
+
                     $p1_non[$keys]['p1'] = $item['kerjasama_bobot_aspek'];
                     $p2_non[$keys]['p2'] = $item['komunikasi_bobot_aspek'];
                     $p3_non[$keys]['p3'] = $item['absensi_bobot_aspek'];
                     $p4_non[$keys]['p4'] = $item['integritas_bobot_aspek'];
                     $p5_non[$keys]['p5'] = $item['etika_bobot_aspek'];
-    
+
                     $s1_non[$keys]['s1'] = $item['goal_kinerja_bobot_aspek'];
                     $s2_non[$keys]['s2'] = $item['error_kinerja_bobot_aspek'];
                     $s3_non[$keys]['s3'] = $item['proses_dokumen_bobot_aspek'];
                     $s4_non[$keys]['s4'] = $item['proses_inisiatif_bobot_aspek'];
                     $s5_non[$keys]['s5'] = $item['proses_polapikir_bobot_aspek'];
-    
+
                     $raspek_k_non[$keys]['raspek_k'] = round(
                         $item['strategi_perencanaan_bobot_aspek']
                             + $item['strategi_pengawasan_bobot_aspek']
@@ -382,36 +380,36 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                     $divider++;
                 }
             }
-    
+
             $bil1 = collect($avg_dp3_staff)->avg('sum_nilai_dp3');
             $bil2 = collect($avg_dp3_non_staff)->sum('sum_nilai_dp3');
             // $total_raspek = round(($bil1 + $bil2) * 100, 2);
-            $total_raspek = round(($data_karyawan[1]) + ($total_missing_relasi * 100),2);
+            $total_raspek = round(($data_karyawan[1]) + ($total_missing_relasi * 100), 2);
             // dd($total_raspek);
-    
-            $k1_mentah = round(collect($k1_staff)->avg('k1') + collect($k1_non)->sum('k1'),2);
-            $k2_mentah = round(collect($k2_staff)->avg('k2') + collect($k2_non)->sum('k2'),2);
-            $k3_mentah = round(collect($k3_staff)->avg('k3') + collect($k3_non)->sum('k3'),2);
-            $k4_mentah = round(collect($k4_staff)->avg('k4') + collect($k4_non)->sum('k4'),2);
-            $k5_mentah = round(collect($k5_staff)->avg('k5') + collect($k5_non)->sum('k5'),2);
-            $k6_mentah = round(collect($k6_staff)->avg('k6') + collect($k6_non)->sum('k6'),2);
-    
-            $p1_mentah = round(collect($p1_staff)->avg('p1') + collect($p1_non)->sum('p1'),2);
-            $p2_mentah = round(collect($p2_staff)->avg('p2') + collect($p2_non)->sum('p2'),2);
-            $p3_mentah = round(collect($p3_staff)->avg('p3') + collect($p3_non)->sum('p3'),2);
-            $p4_mentah = round(collect($p4_staff)->avg('p4') + collect($p4_non)->sum('p4'),2);
-            $p5_mentah = round(collect($p5_staff)->avg('p5') + collect($p5_non)->sum('p5'),2);
-    
-            $s1_mentah = round(collect($s1_staff)->avg('s1') + collect($s1_non)->sum('s1'),2);
-            $s2_mentah = round(collect($s2_staff)->avg('s2') + collect($s2_non)->sum('s2'),2);
-            $s3_mentah = round(collect($s3_staff)->avg('s3') + collect($s3_non)->sum('s3'),2);
-            $s4_mentah = round(collect($s4_staff)->avg('s4') + collect($s4_non)->sum('s4'),2);
-            $s5_mentah = round(collect($s5_staff)->avg('s5') + collect($s5_non)->sum('s5'),2);
-    
-            $raspek_k_mentah = round(collect($raspek_k_staff)->avg('raspek_k') + collect($raspek_k_non)->sum('raspek_k'),2);
-            $raspek_s_mentah = round(collect($raspek_s_staff)->avg('raspek_s') + collect($raspek_s_non)->sum('raspek_s'),2);
-            $raspek_p_mentah = round(collect($raspek_p_staff)->avg('raspek_p') + collect($raspek_p_non)->sum('raspek_p'),2);
-    
+
+            $k1_mentah = round(collect($k1_staff)->avg('k1') + collect($k1_non)->sum('k1'), 2);
+            $k2_mentah = round(collect($k2_staff)->avg('k2') + collect($k2_non)->sum('k2'), 2);
+            $k3_mentah = round(collect($k3_staff)->avg('k3') + collect($k3_non)->sum('k3'), 2);
+            $k4_mentah = round(collect($k4_staff)->avg('k4') + collect($k4_non)->sum('k4'), 2);
+            $k5_mentah = round(collect($k5_staff)->avg('k5') + collect($k5_non)->sum('k5'), 2);
+            $k6_mentah = round(collect($k6_staff)->avg('k6') + collect($k6_non)->sum('k6'), 2);
+
+            $p1_mentah = round(collect($p1_staff)->avg('p1') + collect($p1_non)->sum('p1'), 2);
+            $p2_mentah = round(collect($p2_staff)->avg('p2') + collect($p2_non)->sum('p2'), 2);
+            $p3_mentah = round(collect($p3_staff)->avg('p3') + collect($p3_non)->sum('p3'), 2);
+            $p4_mentah = round(collect($p4_staff)->avg('p4') + collect($p4_non)->sum('p4'), 2);
+            $p5_mentah = round(collect($p5_staff)->avg('p5') + collect($p5_non)->sum('p5'), 2);
+
+            $s1_mentah = round(collect($s1_staff)->avg('s1') + collect($s1_non)->sum('s1'), 2);
+            $s2_mentah = round(collect($s2_staff)->avg('s2') + collect($s2_non)->sum('s2'), 2);
+            $s3_mentah = round(collect($s3_staff)->avg('s3') + collect($s3_non)->sum('s3'), 2);
+            $s4_mentah = round(collect($s4_staff)->avg('s4') + collect($s4_non)->sum('s4'), 2);
+            $s5_mentah = round(collect($s5_staff)->avg('s5') + collect($s5_non)->sum('s5'), 2);
+
+            $raspek_k_mentah = round(collect($raspek_k_staff)->avg('raspek_k') + collect($raspek_k_non)->sum('raspek_k'), 2);
+            $raspek_s_mentah = round(collect($raspek_s_staff)->avg('raspek_s') + collect($raspek_s_non)->sum('raspek_s'), 2);
+            $raspek_p_mentah = round(collect($raspek_p_staff)->avg('raspek_p') + collect($raspek_p_non)->sum('raspek_p'), 2);
+
             $k1 = round($k1_mentah / ($divider + 1), 2);
             $k2 = round($k2_mentah / ($divider + 1), 2);
             $k3 = round($k3_mentah / ($divider + 1), 2);
@@ -430,11 +428,11 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
             $s3 = round($s3_mentah / ($divider + 1), 2);
             $s4 = round($s4_mentah / ($divider + 1), 2);
             $s5 = round($s5_mentah / ($divider + 1), 2);
-    
+
             $raspek_k = round($k1 + $k2 + $k3 + $k4 + $k5 + $k6, 2);
             $raspek_s = round($s1 + $s2 + $s3 + $s4 + $s5, 2);
             $raspek_p = round($p1 + $p2 + $p3 + $p4 + $p5, 2);
-    
+
             $point_dp3 = 0;
             $kriteria_dp3 = '';
             // dd($total_raspek);
@@ -455,7 +453,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
                 $point_dp3 = 0;
             }
         }
-        
+
         setlocale(LC_TIME, 'id_ID');
         // $nows = Carbon::setLocale('id');
         // $nows = Carbon::now()->formatLocalized("%A, %d %B %Y");
@@ -465,7 +463,7 @@ class RekapPenilaiPersonalCompleteExport implements FromQuery, WithMapping, With
         return [
             $npp ?? 'null',
             $nama ?? 'null',
-            round($total_raspek,2) ?? 'null',
+            round($total_raspek, 2) ?? 'null',
             $point_dp3 ?? 'null',
             $kriteria_dp3 ?? 'null',
         ];
