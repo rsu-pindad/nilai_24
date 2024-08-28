@@ -30,7 +30,7 @@
                                                     Dilaksanakan
                                                 </label>
                                                 <div class="col-sm-8">
-                                                    <input type="date" id="jadwalsetting" value="{{ $jadwalberjalan['jadwal'] }}" 
+                                                    <input type="date" id="jadwalsetting" value="{{ $jadwalberjalan['jadwal'] ?? now()}}" 
                                                     class="form-control"
                                                     disabled>
                                                 </div>
