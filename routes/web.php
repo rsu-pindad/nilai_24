@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\DP3\DetailSkorDP3Controller;
 use App\Http\Controllers\HC\AspekController;
 use App\Http\Controllers\HC\AturJadwallController;
 use App\Http\Controllers\HC\BobotPenilaiController;
@@ -22,7 +23,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResultController;
-use App\Http\Controllers\DP3\DetailSkorDP3Controller;
 use Google\Service\Slides\RerouteLineRequest;
 use Illuminate\Support\Facades\Route;
 
