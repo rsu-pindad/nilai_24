@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\DP3\DetailSkorDP3Controller;
 use App\Http\Controllers\HC\AspekController;
 use App\Http\Controllers\HC\AturJadwallController;
-use App\Http\Controllers\HC\BobotPenilaiController;
 use App\Http\Controllers\HC\GResponseController;
 use App\Http\Controllers\HC\HasilPersonalController;
 use App\Http\Controllers\HC\IndikatorController;
@@ -15,15 +14,11 @@ use App\Http\Controllers\HC\RekapNonBobotController;
 use App\Http\Controllers\HC\RekapPenilaiController;
 use App\Http\Controllers\HC\RelasiKaryawan;
 use App\Http\Controllers\HC\ResponseController;
-use App\Http\Controllers\HC\ScoreJawabanController;
-use App\Http\Controllers\HC\ScoresController;
 use App\Http\Controllers\HC\SkorController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\ResultController;
-use Google\Service\Slides\RerouteLineRequest;
 use Illuminate\Support\Facades\Route;
 
 /*
