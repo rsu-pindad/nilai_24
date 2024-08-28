@@ -64,7 +64,7 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="dokumenCheck" name="dokumenCheck" @if($jadwalberjalan->lihat_dokumen == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" id="dokumenCheck" name="dokumenCheck" @if(isset($jadwalberjalan->lihat_dokumen) == true) checked @endif>
                                                         <label class="form-check-label" for="dokumenCheck">
                                                             Perlihatkan Dokumen
                                                         </label>
@@ -72,7 +72,7 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="nilaiCheck" name="nilaiCheck" @if($jadwalberjalan->lihat_skor == true) checked @endif>
+                                                        <input class="form-check-input" type="checkbox" id="nilaiCheck" name="nilaiCheck" @if(isset($jadwalberjalan->lihat_skor) == true) checked @endif>
                                                         <label class="form-check-label" for="nilaiCheck">
                                                             Perlihatkan Nilai
                                                         </label>
