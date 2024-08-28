@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class RekapPenilai extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $table = 'rekap_penilai';
-
     protected $guard = 'id';
 
     protected $fillable = [
@@ -82,4 +83,20 @@ class RekapPenilai extends Model
     {
         return $this->hasOne(RelasiKaryawan::class, 'id', 'npp_penilai');
     }
+
+    // public function google(): HasOne
+    // {
+    //     return $this->hasOne(GResponse::class, 'npp_dinilai', 'npp_dinilai');
+    // }
+
+    // public function google_response($npp_penilai, $npp_dinilai)
+    // {
+    //     return $this->google()
+    //     ->where('npp_penilai', $npp_penilai)
+    //     ->where('npp_dinilai', $npp_dinilai)
+    //     // ->addSelect(
+    //     //     DB::raw("distinch google_form.id")
+    //     // )
+    //     ->latest();
+    // }
 }

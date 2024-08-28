@@ -3,30 +3,29 @@
 namespace App\Http\Controllers\HC;
 
 use App\Http\Controllers\Controller;
-use App\Models\RelasiAtasan as RA;
+use App\Models\RelasiAtasan;
 use App\Models\RelasiKaryawan as RK;
-use App\Models\RelasiSelevel as RL;
+use App\Models\RelasiSelevel;
 use App\Models\RelasiStaff as RS;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Revolution\Google\Sheets\Facades\Sheets;
 
 class RelasiKaryawan extends Controller
 {
     public function index()
     {
-        // $rk_cache = Cache::remember('rk_data',now()->addMinutes(5), function () {
-        // return RK::select('id','npp_karyawan','level_jabatan','unit_jabatan','nama_karyawan')->with([
-        $rk_cache = RK::select('id', 'npp_karyawan', 'level_jabatan', 'unit_jabatan', 'nama_karyawan')->with([
-            'karyawan_atasan:id,relasi_karyawan_id,npp_atasan',
-            'karyawan_selevel:id,relasi_karyawan_id,npp_selevel',
-            'karyawan_staff:id,relasi_karyawan_id,npp_staff'
-        ])->get();
-        // });
+        $rk_cache = Cache::remember('rk_data', now()->addMinutes(60), function () {
+            return RK::select('id', 'npp_karyawan', 'level_jabatan', 'unit_jabatan', 'nama_karyawan')->with([
+                'karyawan_atasan:id,relasi_karyawan_id,npp_atasan',
+                'karyawan_selevel:id,relasi_karyawan_id,npp_selevel',
+                'karyawan_staff:id,relasi_karyawan_id,npp_staff'
+            ])->get();
+        });
+
         return view('hc.gform.relasi.index')->with([
             'karyawan_data' => $rk_cache,
         ]);
@@ -36,10 +35,11 @@ class RelasiKaryawan extends Controller
     {
         $password = Str::random(10);
         // $password = 123456;
-        $user = User::where('id', $request->id)->first();
-        if ($user) {
-            $users = $user->toArray();
-            $user->update(['password' => Hash::make($password)]);
+        try {
+            $user           = User::find($request->id);
+            $users          = $user->toArray();
+            $user->password = Hash::make($password);
+            $user->save();
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -51,11 +51,11 @@ class RelasiKaryawan extends Controller
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => array(
-                    'target' => $users['no_hp'],
-                    'message' => "Password baru : $password
+                    'target'      => $users['no_hp'],
+                    'message'     => "Password baru : $password
 
                     https://assessment.pindadmedika.com/2024",
-                    'countryCode' => '62',  // optional
+                    'countryCode' => '62',                       // optional
                 ),
                 CURLOPT_HTTPHEADER => array(
                     'Authorization: ' . env('FONNTE_TOKEN', '')  // change TOKEN to your actual token
@@ -65,11 +65,12 @@ class RelasiKaryawan extends Controller
             $response = curl_exec($curl);
 
             curl_close($curl);
-            echo $response;
 
+            // echo $response;
             return redirect()->route('relasi-user')->withSuccess('password berhasil di reset!');
-        } else {
-            return redirect()->route('relasi-user')->withErrors('terjadi kesalahan!');
+        } catch (\Throwable $th) {
+            // throw $th;
+            return redirect()->route('relasi-user')->withErrors($th->getMessage());
         }
     }
 
@@ -78,11 +79,11 @@ class RelasiKaryawan extends Controller
         $tempData = [];
         // $password = Str::random(10);
         $password = $request->password;
-        // dd($password);
-        $user = User::where('id', $request->id)->first();
-        if ($user) {
-            $users = $user->toArray();
-            $user->update(['password' => Hash::make($password)]);
+        try {
+            $user           = User::find($request->id);
+            $users          = $user->toArray();
+            $user->password = Hash::make($password);
+            $user->save();
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -94,11 +95,11 @@ class RelasiKaryawan extends Controller
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => array(
-                    'target' => $users['no_hp'],
-                    'message' => "Password anda telah diubah oleh SDM, Password baru : $password
+                    'target'      => $users['no_hp'],
+                    'message'     => "Password anda telah diubah oleh SDM, Password baru : $password
 
                     https://assessment.pindadmedika.com/2024",
-                    'countryCode' => '62',  // optional
+                    'countryCode' => '62',                       // optional
                 ),
                 CURLOPT_HTTPHEADER => array(
                     'Authorization: ' . env('FONNTE_TOKEN', '')  // change TOKEN to your actual token
@@ -108,29 +109,31 @@ class RelasiKaryawan extends Controller
             $response = curl_exec($curl);
 
             curl_close($curl);
-            // echo $response;
-
             $tempData['data'] = [
                 'title' => 'success',
-                'html' => 'berhasil reset password <b></b>',
-                'icon' => 'success',
+                'html'  => 'berhasil reset password <b></b>',
+                'icon'  => 'success',
             ];
-        } else {
+        } catch (\Throwable $th) {
+            // throw $th;
             $tempData['data'] = [
                 'title' => 'gagal',
-                'html' => 'gagal edit data <b></b>',
-                'icon' => 'error',
+                'html'  => $th->getMessage() . ' <b></b>',
+                'icon'  => 'error',
             ];
         }
+
         return response()->json($tempData);
     }
 
     public function index_user()
     {
-        $karyawan = User::get();
+        $user_mgmt = Cache::remember('user_mgmt', now()->addMinutes(60), function () {
+            return User::get();
+        });
 
         return view('hc.gform.relasi.index-user')->with([
-            'user_data' => $karyawan
+            'user_data' => $user_mgmt,
         ]);
     }
 
@@ -138,66 +141,58 @@ class RelasiKaryawan extends Controller
     {
         try {
             $validated = $request->validate([
-                'npp' => 'required',
-                'nama' => 'required',
+                'npp'     => 'required',
+                'nama'    => 'required',
                 'jabatan' => 'required',
-                'email' => 'required',
-                'no_hp' => 'required',
+                'email'   => 'required',
+                'no_hp'   => 'required',
             ]);
 
             if ($validated) {
                 $data = [
-                    'npp' => $request->npp,
-                    'nama' => $request->nama,
+                    'npp'     => $request->npp,
+                    'nama'    => $request->nama,
                     'jabatan' => $request->jabatan,
-                    'email' => $request->email,
-                    'no_hp' => $request->no_hp
+                    'email'   => $request->email,
+                    'no_hp'   => $request->no_hp
                 ];
                 // dd($data);
                 $store = User::find($id)->update($data);
                 if ($store) {
                     RK::where('npp_karyawan', $request->npp)
-                    ->update([
-                        'level_jabatan' => $request->jabatan,
-                    ]);
+                        ->update([
+                            'level_jabatan' => $request->jabatan,
+                        ]);
                     $tempData['data'] = [
                         'title' => 'berhasil',
-                        'html' => 'berhasil edit data <b></b>',
-                        'icon' => 'success',
+                        'html'  => 'berhasil edit data <b></b>',
+                        'icon'  => 'success',
                     ];
-                    return response()->json($tempData);
-                } else {
-                    $tempData['data'] = [
-                        'title' => 'gagal',
-                        'html' => 'gagal edit data <b></b>',
-                        'icon' => 'error',
-                    ];
+
                     return response()->json($tempData);
                 }
             }
         } catch (\Illuminate\Database\QueryException $exception) {
             $tempData['data'] = [
                 'title' => 'gagal',
-                'html' => $exception->getMessage() . ' <b></b>',
-                'icon' => 'error',
+                'html'  => $exception->getMessage() . ' <b></b>',
+                'icon'  => 'error',
             ];
+
             return response()->json($tempData);
         }
     }
 
     public function pull()
     {
-        // $values = Sheets::spreadsheet('1CX4q_BqkCgHr1TEe0_tlRHO9ZcSXqKv46Q-v7H1OykM')->sheet('DP3 2023')->range('F$5:I')->all();
-        $sheetId = env('GOOGLE_SHEET_DP_2023_ID', '');
-        $sheetName = env('GOOGLE_SHEET_DP_2023_NAME', '');
-        $values = Sheets::spreadsheet($sheetId)->sheet($sheetName)->range('F$5:I')->all();
-        // unset($values[0]);
-        // dd($values);
-        $message = [];
+        $sheetId   = config('google.config.sheet_dp_2023_id', '');
+        $sheetName = config('google.config.sheet_dp_2023_name', '');
+        $values    = Sheets::spreadsheet($sheetId)->sheet($sheetName)->range('F$5:I')->all();
+        $message   = [];
         try {
             $lastNppKaryawan = '';
-            $rkid = '';
-            $findIdRk = '';
+            $rkid            = '';
+            $findIdRk        = '';
             foreach ($values as $key => $val) {
                 if ($val[0] != '' && $val[0] != '-') {
                     // $val[0] = $lastNppKaryawan;
@@ -207,27 +202,27 @@ class RelasiKaryawan extends Controller
                             [
                                 'npp_karyawan' => $val[0],
                             ]
-                        );  // Insert
+                        );                                                        // Insert
                         $rkid = $storeRk->id;
                     } else {
                         $findIdRk = RK::where('npp_karyawan', $val[0])->first();  // dapatkan id rk
-                        $rkid = $findIdRk->id;
+                        $rkid     = $findIdRk->id;
                         // Dapatkan Id
                     }
                     $lastNppKaryawan = $val[0];
                 } else {
-                    $val[0] = $lastNppKaryawan;
+                    $val[0]     = $lastNppKaryawan;
                     $checkTable = RK::where('npp_karyawan', $val[0])->first() ?? '';
                     if ($checkTable == '') {
                         $storeRk = RK::create(
                             [
                                 'npp_karyawan' => $val[0],
                             ]
-                        );  // Insert
+                        );                                                        // Insert
                         $rkid = $storeRk->id;
                     } else {
                         $findIdRk = RK::where('npp_karyawan', $val[0])->first();  // dapatkan id rk
-                        $rkid = $findIdRk->id;
+                        $rkid     = $findIdRk->id;
                         // Dapatkan Id
                     }
                 }
@@ -238,37 +233,36 @@ class RelasiKaryawan extends Controller
                     if ($staff != '') {
                         RS::updateOrCreate([
                             'relasi_karyawan_id' => $rkid,
-                            'npp_staff' => $staff,
+                            'npp_staff'          => $staff,
                         ]);
                     }
                 }
                 // Insert ke tabel relasi selevel
                 if (!empty($val[2])) {
                     if ($val[2] != '') {
-                        RL::updateOrCreate([
+                        RelasiSelevel::updateOrCreate([
                             'relasi_karyawan_id' => $rkid,
-                            'npp_selevel' => $val[2],
+                            'npp_selevel'        => $val[2],
                         ]);
                     }
                 }
                 // Insert ke tabel atasan
                 if (!empty($val[1])) {
                     if ($val[3] != '') {
-                        RA::updateOrCreate([
+                        RelasiAtasan::updateOrCreate([
                             'relasi_karyawan_id' => $rkid,
-                            'npp_atasan' => $val[1],
+                            'npp_atasan'         => $val[1],
                         ]);
                     }
                 }
             }
-            unset($values);
+            // unset($values);
+
             return response()->json(['message' => 'Poll inserted']);
         } catch (\Illuminate\Database\QueryException $exception) {
-            return response()->json(
-                [
-                    'message' => $exception->getMessage(),
-                ]
-            );
+            return response()->json([
+                'message' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -279,15 +273,15 @@ class RelasiKaryawan extends Controller
         // $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2023')->range('C$5:I')->get();
 
         try {
-            $sheetId = env('GOOGLE_SHEET_DP_2023_ID', '');
-            $sheetName = env('GOOGLE_SHEET_DP_2023_NAME', '');
-            $rows = Sheets::spreadsheet($sheetId)->sheet($sheetName)->range('C$3:I')->get();
+            $sheetId   = config('google.config.sheet_dp_2023_id', '');
+            $sheetName = config('google.config.sheet_dp_2023_name', '');
+            $rows      = Sheets::spreadsheet($sheetId)->sheet($sheetName)->range('C$3:I')->get();
             // $rows = Sheets::spreadsheet('1ukxirWfh5iWXmXi5Lg2tJt6IeUja-F_Ld93i_i0LbZk')->sheet('DP3 2023')->range('C$5:I')->get();
             $values = $rows->filter();
             // dd($values->toArray());
             $lastNppKaryawan = '';
-            $rkid = '';
-            $findIdRk = '';
+            $rkid            = '';
+            $findIdRk        = '';
             foreach ($values as $key => $val) {
                 if ($val[3] != '' && $val[3] != '-') {
                     $checkTable = RK::where('npp_karyawan', $val[3])->first() ?? '';
@@ -298,7 +292,7 @@ class RelasiKaryawan extends Controller
                             ],
                             [
                                 'level_jabatan' => $val[1],
-                                'unit_jabatan' => $val[2],
+                                'unit_jabatan'  => $val[2],
                                 'nama_karyawan' => $val[0],
                             ]
                         );
@@ -306,35 +300,35 @@ class RelasiKaryawan extends Controller
                         $rkid = $storeRk->id;
                     } else {
                         $findIdRk = RK::where('npp_karyawan', $val[3])->first();  // dapatkan id rk
-                        $rkid = $findIdRk->id;
+                        $rkid     = $findIdRk->id;
                         // Dapatkan Id
                     }
                     $lastNppKaryawan = $val[3];
                 } else {
-                    $val[3] = $lastNppKaryawan;
+                    $val[3]     = $lastNppKaryawan;
                     $checkTable = RK::where('npp_karyawan', $val[3])->first() ?? '';
                     if ($checkTable == '') {
                         $storeRk = RK::create(
                             [
-                                'npp_karyawan' => $val[3],
+                                'npp_karyawan'  => $val[3],
                                 'level_jabatan' => $val[1],
-                                'unit_jabatan' => $val[2],
+                                'unit_jabatan'  => $val[2],
                                 'nama_karyawan' => $val[0],
                             ]
-                        );  // Insert
+                        );                                                        // Insert
                         $rkid = $storeRk->id;
                     } else {
                         $findIdRk = RK::where('npp_karyawan', $val[3])->first();  // dapatkan id rk
-                        $rkid = $findIdRk->id;
+                        $rkid     = $findIdRk->id;
                         // Dapatkan Id
                     }
                 }
                 // Dapatkan Id
-                
+
                 // Insert ke tabel relasi atasan
                 if (!empty($val[4])) {
                     if ($val[4] != '') {
-                        RA::updateOrCreate(
+                        RelasiAtasan::updateOrCreate(
                             [
                                 'relasi_karyawan_id' => $rkid,
                             ],
@@ -347,7 +341,7 @@ class RelasiKaryawan extends Controller
                 // Insert ke tabel relasi selevel
                 if (!empty($val[5])) {
                     if ($val[5] != '') {
-                        RL::updateOrCreate(
+                        RelasiSelevel::updateOrCreate(
                             [
                                 'relasi_karyawan_id' => $rkid,
                             ],
@@ -364,23 +358,24 @@ class RelasiKaryawan extends Controller
                         RS::updateOrCreate(
                             [
                                 'relasi_karyawan_id' => $rkid,
-                                'npp_staff' => $staff,
+                                'npp_staff'          => $staff,
                             ]
                         );
                     }
                 }
             }
+
             // unset($values);
             return response()->json([
                 'status' => true,
-                'title' => 'berhasil',
-                'text' => 'data karyawan telah di simpan'
+                'title'  => 'berhasil',
+                'text'   => 'data karyawan telah di simpan'
             ], 200);
         } catch (\Illuminate\Database\QueryException $exception) {
             return response()->json([
                 'status' => false,
-                'title' => 'gagal',
-                'text' => $exception->getMessage()
+                'title'  => 'gagal',
+                'text'   => $exception->getMessage()
             ], 501);
         }
     }

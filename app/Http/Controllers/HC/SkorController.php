@@ -3,47 +3,46 @@
 namespace App\Http\Controllers\HC;
 
 use App\Exports\SkorAllExport;
-use App\Http\Controllers\Controller;
 use App\Models\Aspek;
 use App\Models\FinalDp3;
 use App\Models\GResponse;
 use App\Models\PoolRespon;
 use App\Models\RekapPenilai;
 use App\Models\RelasiAtasan;
-use App\Models\RelasiKaryawan;
 use App\Models\RelasiSelevel;
 use App\Models\RelasiStaff;
-use App\Models\ScoreJawaban as Skor;
+use App\Models\ScoreJawaban;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 // use App\Models\RekapBobotKepemimpinan;
 // use App\Models\RekapBobotPerilaku;
 // use App\Models\RekapBobotSasaran;
 // use App\Models\RekapNonBobot;
 // use App\Models\RekapNonBobotPerilaku;
 // use App\Models\RekapNonBobotSasaran;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\RelasiKaryawan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Excel as ExcelExt;
-use DB;
 
 class SkorController extends Controller
 {
     public function index()
     {
-        $skor_data = Skor::with('aspek', 'indikator')->get();
-        $aspek_data = Aspek::get();
+        // $skor_data  = ScoreJawaban::with('aspek', 'indikator')->get();
+        // $aspek_data = Aspek::get();
 
-        // $skor_data = Cache::remember('skor_data', now()->addMinutes(5), function(){
-        //     return Skor::with('aspek','indikator')->get();
-        // });
-        // $aspek_data = Cache::remember('aspek_data', now()->addMinutes(5), function(){
-        //     return Aspek::get();
-        // });
+        $skor_data = Cache::remember('skor_data', now()->addMinutes(60), function () {
+            return ScoreJawaban::with(['aspek', 'indikator'])->get();
+        });
+        $aspek_data = Cache::remember('aspek_data', now()->addMinutes(60), function () {
+            return Aspek::get();
+        });
 
         return view('hc.skor.index')->with([
-            'data_skor' => $skor_data,
+            'data_skor'  => $skor_data,
             'data_aspek' => $aspek_data,
         ]);
     }
@@ -51,7 +50,7 @@ class SkorController extends Controller
     public function destroy($id)
     {
         try {
-            $delete = Skor::find($id)->delete();
+            $delete = ScoreJawaban::find($id)->delete();
             if ($delete) {
                 return redirect()->back()->withSuccess('berhasil menghapus data');
             }
@@ -66,7 +65,7 @@ class SkorController extends Controller
             // $final = FinalDp3::truncate();
             // $rekapPenilai = RekapPenilai::truncate();
             // $pool = PoolRespon::truncate();
-            $final = FinalDp3::truncate();
+            $final        = FinalDp3::truncate();
             $rekapPenilai = RekapPenilai::truncate();
 
             // $rnbk = RekapNonBobot::truncate();
@@ -82,6 +81,8 @@ class SkorController extends Controller
 
             $grespon = GResponse::truncate();
             if ($grespon) {
+                Cache::flush();
+
                 return redirect()->back()->withSuccess('tabel di kosongkan');
             }
         } catch (\Throwable $th) {
@@ -94,25 +95,27 @@ class SkorController extends Controller
         $tempData = [];
         try {
             $validated = $request->validate([
-                'aspek_id' => 'required',
+                'aspek_id'     => 'required',
                 'indikator_id' => 'required',
-                'jawaban' => 'required',
-                'skor' => 'required',
+                'jawaban'      => 'required',
+                'skor'         => 'required',
             ]);
-            $store = Skor::updateOrCreate($validated);
+            $store = ScoreJawaban::updateOrCreate($validated);
             if ($store == true) {
                 $tempData['data'] = [
                     'title' => 'berhasil',
-                    'html' => 'berhasil menambahkan data <b></b>',
-                    'icon' => 'success',
+                    'html'  => 'berhasil menambahkan data <b></b>',
+                    'icon'  => 'success',
                 ];
+
                 return response()->json($tempData);
             } else {
                 $tempData['data'] = [
                     'title' => 'gagal',
-                    'html' => 'gagal menambahkan data <b></b>',
-                    'icon' => 'error',
+                    'html'  => 'gagal menambahkan data <b></b>',
+                    'icon'  => 'error',
                 ];
+
                 return response()->json($tempData);
             }
         } catch (\Illuminate\Database\QueryException $exception) {
@@ -124,26 +127,28 @@ class SkorController extends Controller
     {
         try {
             $validated = $request->validate([
-                'aspek_id' => 'required',
+                'aspek_id'     => 'required',
                 'indikator_id' => 'required',
-                'jawaban' => 'required',
-                'skor' => 'required',
+                'jawaban'      => 'required',
+                'skor'         => 'required',
             ]);
             if ($validated) {
-                $store = Skor::find($id)->update($validated);
+                $store = ScoreJawaban::find($id)->update($validated);
                 if ($store) {
                     $tempData['data'] = [
                         'title' => 'berhasil',
-                        'html' => 'berhasil edit data <b></b>',
-                        'icon' => 'success',
+                        'html'  => 'berhasil edit data <b></b>',
+                        'icon'  => 'success',
                     ];
+
                     return response()->json($tempData);
                 } else {
                     $tempData['data'] = [
                         'title' => 'gagal',
-                        'html' => 'gagal edit data <b></b>',
-                        'icon' => 'error',
+                        'html'  => 'gagal edit data <b></b>',
+                        'icon'  => 'error',
                     ];
+
                     return response()->json($tempData);
                 }
             }
@@ -157,10 +162,12 @@ class SkorController extends Controller
         // dd($request->sort);
         if ($request->sort == 'penilai') {
             $nows = Carbon::now()->toDateTimeString() . '.xlsx';
-            return Excel::download(new SkorAllExport('penilai'), 'PoolRespon_orderBy_penilai' . $nows, ExcelExt::XLSX);
+
+            return Excel::download(new SkorAllExport('penilai'), 'PoolRespon_orderBy_penilai' . $nows, \Maatwebsite\Excel\Excel::XLSX);
         } else {
             $nows = Carbon::now()->toDateTimeString() . '.xlsx';
-            return Excel::download(new SkorAllExport('dinilai'), 'PoolRespon_orderBy_dinilai' . $nows, ExcelExt::XLSX);
+
+            return Excel::download(new SkorAllExport('dinilai'), 'PoolRespon_orderBy_dinilai' . $nows, \Maatwebsite\Excel\Excel::XLSX);
         }
     }
 
@@ -168,24 +175,25 @@ class SkorController extends Controller
     {
         if ($request->sort == 'penilai') {
             $nows = Carbon::now()->toDateTimeString() . '.csv';
-            return Excel::download(new SkorAllExport('penilai'), 'PoolRespon_orderBy_penilai' . $nows, ExcelExt::CSV);
+
+            return Excel::download(new SkorAllExport('penilai'), 'PoolRespon_orderBy_penilai' . $nows, \Maatwebsite\Excel\Excel::CSV);
         } else {
             $nows = Carbon::now()->toDateTimeString() . '.csv';
-            return Excel::download(new SkorAllExport('dinilai'), 'PoolRespon_orderBy_dinilai' . $nows, ExcelExt::CSV);
+
+            return Excel::download(new SkorAllExport('dinilai'), 'PoolRespon_orderBy_dinilai' . $nows, \Maatwebsite\Excel\Excel::CSV);
         }
     }
 
     public function index_pool_all()
     {
-        $skor_pool_data = PoolRespon::with(['karyawan', 'karyawan_dinilai'])
-            ->orderBy('npp_dinilai')
-            ->orderByDesc('sum_nilai')
-            // ->whereNull('deleted_at')
-            ->get();
-        // ->limit(10)
-
-        // dd($skor_pool_data->toArray());
-        // return response()->json($skor_pool_data);
+        $skor_pool_data = Cache::remember('skor_pool_data', now()->addMinutes(60), function () {
+            return PoolRespon::with(['karyawan' => function ($karyawan) {
+                return $karyawan->select(['id', 'npp_karyawan', 'nama_karyawan', 'level_jabatan'])->get();
+            }, 'karyawan_dinilai' => function ($karyawanDinilai) {
+                return $karyawanDinilai->select(['id', 'npp_karyawan', 'nama_karyawan'])->get();
+            }])->orderByDesc('sum_nilai')
+               ->get();
+        });
 
         return view('hc.skor.pool.all')->with([
             'data_pool_skor' => $skor_pool_data
@@ -281,16 +289,18 @@ class SkorController extends Controller
             $this->pool_rekanan($request);
             $this->pool_staff($request);
 
+            Cache::forget('skor_pool_data');
+
             return response()->json([
                 'title' => 'success',
-                'text' => 'perhitungan sudah dilakukan, silahkan muat ulang halaman',
-                'icon' => 'success'
+                'text'  => 'perhitungan sudah dilakukan, silahkan muat ulang halaman',
+                'icon'  => 'success'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'title' => 'gagal',
-                'text' => $th->getMessage(),
-                'icon' => 'warning'
+                'text'  => $th->getMessage(),
+                'icon'  => 'warning'
             ]);
         }
     }
@@ -310,9 +320,9 @@ class SkorController extends Controller
             //     Cache::forget('relasi_karyawan_self');
             // }
             // $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
-            // return Skor::get()->groupBy('aspek_id')->toArray();
+            // return ScoreJawaban::get()->groupBy('aspek_id')->toArray();
             // });
-            $skor_jawaban_data = Skor::get()->groupBy('aspek_id')->toArray();
+            $skor_jawaban_data = ScoreJawaban::get()->groupBy('aspek_id')->toArray();
 
             // $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
             //     return GResponse::get()->toArray();
@@ -322,8 +332,8 @@ class SkorController extends Controller
 
             // dd($google_form);
 
-            $temp = [];
-            $self = [];
+            $temp         = [];
+            $self         = [];
             $slugs_relasi = 'self';
             foreach ($google_form as $key => $value) {
                 if ($google_form[$key]['npp_penilai'] == $google_form[$key]['npp_dinilai']) {
@@ -334,10 +344,10 @@ class SkorController extends Controller
             }
             // Pembagian Segment
             $kepemimpinan = $skor_jawaban_data[1];
-            $perilaku = $skor_jawaban_data[2];
-            $sasaran = $skor_jawaban_data[3];
-            $karyawan = [];
-            $tempData = [];
+            $perilaku     = $skor_jawaban_data[2];
+            $sasaran      = $skor_jawaban_data[3];
+            $karyawan     = [];
+            $tempData     = [];
             // $debug1 = [];
 
             // dd($self);
@@ -351,9 +361,9 @@ class SkorController extends Controller
                 $nilai_skor_5 = 0;
                 $nilai_skor_6 = 0;
 
-                $nilai_skor_7 = 0;
-                $nilai_skor_8 = 0;
-                $nilai_skor_9 = 0;
+                $nilai_skor_7  = 0;
+                $nilai_skor_8  = 0;
+                $nilai_skor_9  = 0;
                 $nilai_skor_10 = 0;
                 $nilai_skor_11 = 0;
 
@@ -369,11 +379,13 @@ class SkorController extends Controller
                 $self_4 = '';
                 $self_5 = '';
                 $self_6 = '';
-                $self_7 = '';
-                $self_8 = '';
-                $self_9 = '';
+
+                $self_7  = '';
+                $self_8  = '';
+                $self_9  = '';
                 $self_10 = '';
                 $self_11 = '';
+
                 $self_12 = '';
                 $self_13 = '';
                 $self_14 = '';
@@ -412,9 +424,9 @@ class SkorController extends Controller
                 foreach ($sasaran as $keys => $value) {
                     // $x = str($perilaku[6]['jawaban'])->squish();
                     // Perilaku
-                    $self_7 = str($self[$key]['kerjasama'])->squish();
-                    $self_8 = str($self[$key]['komunikasi'])->squish();
-                    $self_9 = str($self[$key]['absensi'])->squish();
+                    $self_7  = str($self[$key]['kerjasama'])->squish();
+                    $self_8  = str($self[$key]['komunikasi'])->squish();
+                    $self_9  = str($self[$key]['absensi'])->squish();
                     $self_10 = str($self[$key]['integritas'])->squish();
                     $self_11 = str($self[$key]['etika'])->squish();
                     if ($self_7 == str($perilaku[$keys]['jawaban'])->squish()) {
@@ -478,26 +490,26 @@ class SkorController extends Controller
                         'npp_penilai' => $karyawan['id'],
                         'npp_dinilai' => $self[$key]['npp_dinilai'],
                         // 'jabatan_dinilai' => $self[$key]['jabatan_dinilai'],
-                        'jabatan_dinilai' => $karyawan['level_jabatan'],
-                        'strategi_perencanaan' => $nilai_skor_1,
-                        'strategi_pengawasan' => $nilai_skor_2,
-                        'strategi_inovasi' => $nilai_skor_3,
-                        'kepemimpinan' => $nilai_skor_4,
-                        'membimbing_membangun' => $nilai_skor_5,
+                        'jabatan_dinilai'       => $karyawan['level_jabatan'],
+                        'strategi_perencanaan'  => $nilai_skor_1,
+                        'strategi_pengawasan'   => $nilai_skor_2,
+                        'strategi_inovasi'      => $nilai_skor_3,
+                        'kepemimpinan'          => $nilai_skor_4,
+                        'membimbing_membangun'  => $nilai_skor_5,
                         'pengambilan_keputusan' => $nilai_skor_6,
-                        'kerjasama' => $nilai_skor_7,
-                        'komunikasi' => $nilai_skor_8,
-                        'absensi' => $nilai_skor_9,
-                        'integritas' => $nilai_skor_10,
-                        'etika' => $nilai_skor_11,
-                        'goal_kinerja' => $nilai_skor_12,
-                        'error_kinerja' => $nilai_skor_13,
-                        'proses_dokumen' => $nilai_skor_14,
-                        'proses_inisiatif' => $nilai_skor_15,
-                        'proses_polapikir' => $nilai_skor_16,
-                        'sum_nilai' => $temp_nilai,
-                        'relasi' => $slugs_relasi,
-                        'npp_penilai_dinilai' => $self[$key]['npp_penilai'] . $self[$key]['npp_dinilai']
+                        'kerjasama'             => $nilai_skor_7,
+                        'komunikasi'            => $nilai_skor_8,
+                        'absensi'               => $nilai_skor_9,
+                        'integritas'            => $nilai_skor_10,
+                        'etika'                 => $nilai_skor_11,
+                        'goal_kinerja'          => $nilai_skor_12,
+                        'error_kinerja'         => $nilai_skor_13,
+                        'proses_dokumen'        => $nilai_skor_14,
+                        'proses_inisiatif'      => $nilai_skor_15,
+                        'proses_polapikir'      => $nilai_skor_16,
+                        'sum_nilai'             => $temp_nilai,
+                        'relasi'                => $slugs_relasi,
+                        'npp_penilai_dinilai'   => $self[$key]['npp_penilai'] . $self[$key]['npp_dinilai']
                     ];
                     // $store = PoolRespon::updateOrCreate($tempData);
                     $store = PoolRespon::updateOrCreate(
@@ -510,15 +522,16 @@ class SkorController extends Controller
                 }
                 $tempData = [];
             }
+
             return response()->json([
                 'title' => 'berhasil',
-                'html' => 'berhasil menghitung response skor karyawan',
+                'html'  => 'berhasil menghitung response skor karyawan',
                 'icons' => 'success',
             ]);
         } catch (\Throwable $th) {
             return $msg = [
                 'title' => 'gagal',
-                'html' => $th->getMessage(),
+                'html'  => $th->getMessage(),
                 'icons' => 'danger',
             ];
         }
@@ -538,19 +551,19 @@ class SkorController extends Controller
                 Cache::forget('relasi_karyawan_atasan');
             }
             // $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
-            //     return Skor::get()->groupBy('aspek_id')->toArray();
+            //     return ScoreJawaban::get()->groupBy('aspek_id')->toArray();
             // });
 
             // $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
             //     return GResponse::get()->toArray();
             // });
 
-            $skor_jawaban_data = Skor::get()->groupBy('aspek_id')->toArray();
-            $google_form = GResponse::get()->toArray();
+            $skor_jawaban_data = ScoreJawaban::get()->groupBy('aspek_id')->toArray();
+            $google_form       = GResponse::get()->toArray();
 
-            $temp = [];
-            $atasan = [];
-            $findrelasi = [];
+            $temp         = [];
+            $atasan       = [];
+            $findrelasi   = [];
             $npp_karyawan = [];
             $slugs_relasi = 'atasan';
             foreach ($google_form as $key => $value) {
@@ -568,7 +581,7 @@ class SkorController extends Controller
                                 continue;
                             } elseif ($findrelasi['npp_atasan'] == $google_form[$key]['npp_dinilai']) {
                                 $npp_karyawan[] = $idRelasiKaryawan['id'];
-                                $temp = $google_form[$key];
+                                $temp           = $google_form[$key];
                                 array_push($atasan, $temp);
                             }
                         }
@@ -580,20 +593,20 @@ class SkorController extends Controller
             // dd($atasan);
             // Pembagian Segment
             $kepemimpinan = $skor_jawaban_data[1];
-            $perilaku = $skor_jawaban_data[2];
-            $sasaran = $skor_jawaban_data[3];
-            $tempData = [];
+            $perilaku     = $skor_jawaban_data[2];
+            $sasaran      = $skor_jawaban_data[3];
+            $tempData     = [];
 
             foreach ($atasan as $key => $value) {
-                $nilai_skor_1 = 0;
-                $nilai_skor_2 = 0;
-                $nilai_skor_3 = 0;
-                $nilai_skor_4 = 0;
-                $nilai_skor_5 = 0;
-                $nilai_skor_6 = 0;
-                $nilai_skor_7 = 0;
-                $nilai_skor_8 = 0;
-                $nilai_skor_9 = 0;
+                $nilai_skor_1  = 0;
+                $nilai_skor_2  = 0;
+                $nilai_skor_3  = 0;
+                $nilai_skor_4  = 0;
+                $nilai_skor_5  = 0;
+                $nilai_skor_6  = 0;
+                $nilai_skor_7  = 0;
+                $nilai_skor_8  = 0;
+                $nilai_skor_9  = 0;
                 $nilai_skor_10 = 0;
                 $nilai_skor_11 = 0;
                 $nilai_skor_12 = 0;
@@ -602,15 +615,15 @@ class SkorController extends Controller
                 $nilai_skor_15 = 0;
                 $nilai_skor_16 = 0;
 
-                $point_1 = '';
-                $point_2 = '';
-                $point_3 = '';
-                $point_4 = '';
-                $point_5 = '';
-                $point_6 = '';
-                $point_7 = '';
-                $point_8 = '';
-                $point_9 = '';
+                $point_1  = '';
+                $point_2  = '';
+                $point_3  = '';
+                $point_4  = '';
+                $point_5  = '';
+                $point_6  = '';
+                $point_7  = '';
+                $point_8  = '';
+                $point_9  = '';
                 $point_10 = '';
                 $point_11 = '';
                 $point_12 = '';
@@ -650,9 +663,9 @@ class SkorController extends Controller
 
                 foreach ($sasaran as $keys => $value) {
                     // Perilaku
-                    $point_7 = str($atasan[$key]['kerjasama'])->squish();
-                    $point_8 = str($atasan[$key]['komunikasi'])->squish();
-                    $point_9 = str($atasan[$key]['absensi'])->squish();
+                    $point_7  = str($atasan[$key]['kerjasama'])->squish();
+                    $point_8  = str($atasan[$key]['komunikasi'])->squish();
+                    $point_9  = str($atasan[$key]['absensi'])->squish();
                     $point_10 = str($atasan[$key]['integritas'])->squish();
                     $point_11 = str($atasan[$key]['etika'])->squish();
                     if ($point_7 == str($perilaku[$keys]['jawaban'])->squish()) {
@@ -698,28 +711,28 @@ class SkorController extends Controller
                 $temp_nilai = $nilai_skor_1 + $nilai_skor_2 + $nilai_skor_3 + $nilai_skor_4 + $nilai_skor_5 + $nilai_skor_6 + $nilai_skor_7 + $nilai_skor_8 + $nilai_skor_9 + $nilai_skor_10 + $nilai_skor_11 + $nilai_skor_12 + $nilai_skor_13 + $nilai_skor_14 + $nilai_skor_15 + $nilai_skor_16;
                 // dd($npp_karyawan);
                 $tempData = [
-                    'npp_penilai' => $npp_karyawan[$key],
-                    'npp_dinilai' => $atasan[$key]['npp_dinilai'],
-                    'jabatan_dinilai' => $atasan[$key]['jabatan_dinilai'],
-                    'strategi_perencanaan' => $nilai_skor_1,
-                    'strategi_pengawasan' => $nilai_skor_2,
-                    'strategi_inovasi' => $nilai_skor_3,
-                    'kepemimpinan' => $nilai_skor_4,
-                    'membimbing_membangun' => $nilai_skor_5,
+                    'npp_penilai'           => $npp_karyawan[$key],
+                    'npp_dinilai'           => $atasan[$key]['npp_dinilai'],
+                    'jabatan_dinilai'       => $atasan[$key]['jabatan_dinilai'],
+                    'strategi_perencanaan'  => $nilai_skor_1,
+                    'strategi_pengawasan'   => $nilai_skor_2,
+                    'strategi_inovasi'      => $nilai_skor_3,
+                    'kepemimpinan'          => $nilai_skor_4,
+                    'membimbing_membangun'  => $nilai_skor_5,
                     'pengambilan_keputusan' => $nilai_skor_6,
-                    'kerjasama' => $nilai_skor_7,
-                    'komunikasi' => $nilai_skor_8,
-                    'absensi' => $nilai_skor_9,
-                    'integritas' => $nilai_skor_10,
-                    'etika' => $nilai_skor_11,
-                    'goal_kinerja' => $nilai_skor_12,
-                    'error_kinerja' => $nilai_skor_13,
-                    'proses_dokumen' => $nilai_skor_14,
-                    'proses_inisiatif' => $nilai_skor_15,
-                    'proses_polapikir' => $nilai_skor_16,
-                    'sum_nilai' => $temp_nilai,
-                    'relasi' => 'staff',
-                    'npp_penilai_dinilai' => $atasan[$key]['npp_penilai'] . $atasan[$key]['npp_dinilai']
+                    'kerjasama'             => $nilai_skor_7,
+                    'komunikasi'            => $nilai_skor_8,
+                    'absensi'               => $nilai_skor_9,
+                    'integritas'            => $nilai_skor_10,
+                    'etika'                 => $nilai_skor_11,
+                    'goal_kinerja'          => $nilai_skor_12,
+                    'error_kinerja'         => $nilai_skor_13,
+                    'proses_dokumen'        => $nilai_skor_14,
+                    'proses_inisiatif'      => $nilai_skor_15,
+                    'proses_polapikir'      => $nilai_skor_16,
+                    'sum_nilai'             => $temp_nilai,
+                    'relasi'                => 'staff',
+                    'npp_penilai_dinilai'   => $atasan[$key]['npp_penilai'] . $atasan[$key]['npp_dinilai']
                 ];
                 // $store = PoolRespon::updateOrCreate($tempData);
                 $store = PoolRespon::updateOrCreate(
@@ -730,15 +743,16 @@ class SkorController extends Controller
                 );
                 $tempData = [];
             }
+
             return response()->json([
                 'title' => 'berhasil',
-                'html' => 'berhasil menghitung response skor karyawan',
+                'html'  => 'berhasil menghitung response skor karyawan',
                 'icons' => 'success',
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'title' => 'gagal',
-                'html' => $th->getMessage(),
+                'html'  => $th->getMessage(),
                 'icons' => 'danger',
             ]);
         }
@@ -756,27 +770,27 @@ class SkorController extends Controller
                 Cache::forget('relasi_karyawan_rekanan');
             }
             // $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
-            //     return Skor::get()->groupBy('aspek_id')->toArray();
+            //     return ScoreJawaban::get()->groupBy('aspek_id')->toArray();
             // });
 
             // $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
             //     return GResponse::get()->toArray();
             // });
 
-            $skor_jawaban_data = Skor::get()->groupBy('aspek_id')->toArray();
-            $google_form = GResponse::get()->toArray();
+            $skor_jawaban_data = ScoreJawaban::get()->groupBy('aspek_id')->toArray();
+            $google_form       = GResponse::get()->toArray();
 
             // dd($google_form);
 
-            $temp = [];
-            $rekanan = [];
+            $temp         = [];
+            $rekanan      = [];
             $npp_karyawan = [];
             $slugs_relasi = 'rekanan';
 
             $bool = false;
             foreach ($google_form as $key => $value) {
                 if ($google_form[$key]['npp_penilai'] != $google_form[$key]['npp_dinilai']) {
-                    $findrelasi = [];
+                    $findrelasi       = [];
                     $idRelasiKaryawan = [];
                     $idRelasiKaryawan = RelasiKaryawan::where('npp_karyawan', $google_form[$key]['npp_penilai'])->first();
 
@@ -790,7 +804,7 @@ class SkorController extends Controller
                                 continue;
                             } elseif ($findrelasi['npp_selevel'] == $google_form[$key]['npp_dinilai']) {
                                 $npp_karyawan[] = $idRelasiKaryawan['id'];
-                                $temp = $google_form[$key];
+                                $temp           = $google_form[$key];
                                 array_push($rekanan, $temp);
                             }
                         }
@@ -802,20 +816,20 @@ class SkorController extends Controller
             }
             // Pembagian Segment
             $kepemimpinan = $skor_jawaban_data[1];
-            $perilaku = $skor_jawaban_data[2];
-            $sasaran = $skor_jawaban_data[3];
-            $tempData = [];
+            $perilaku     = $skor_jawaban_data[2];
+            $sasaran      = $skor_jawaban_data[3];
+            $tempData     = [];
 
             foreach ($rekanan as $key => $value) {
-                $nilai_skor_1 = 0;
-                $nilai_skor_2 = 0;
-                $nilai_skor_3 = 0;
-                $nilai_skor_4 = 0;
-                $nilai_skor_5 = 0;
-                $nilai_skor_6 = 0;
-                $nilai_skor_7 = 0;
-                $nilai_skor_8 = 0;
-                $nilai_skor_9 = 0;
+                $nilai_skor_1  = 0;
+                $nilai_skor_2  = 0;
+                $nilai_skor_3  = 0;
+                $nilai_skor_4  = 0;
+                $nilai_skor_5  = 0;
+                $nilai_skor_6  = 0;
+                $nilai_skor_7  = 0;
+                $nilai_skor_8  = 0;
+                $nilai_skor_9  = 0;
                 $nilai_skor_10 = 0;
                 $nilai_skor_11 = 0;
                 $nilai_skor_12 = 0;
@@ -824,15 +838,15 @@ class SkorController extends Controller
                 $nilai_skor_15 = 0;
                 $nilai_skor_16 = 0;
 
-                $point_1 = '';
-                $point_2 = '';
-                $point_3 = '';
-                $point_4 = '';
-                $point_5 = '';
-                $point_6 = '';
-                $point_7 = '';
-                $point_8 = '';
-                $point_9 = '';
+                $point_1  = '';
+                $point_2  = '';
+                $point_3  = '';
+                $point_4  = '';
+                $point_5  = '';
+                $point_6  = '';
+                $point_7  = '';
+                $point_8  = '';
+                $point_9  = '';
                 $point_10 = '';
                 $point_11 = '';
                 $point_12 = '';
@@ -872,9 +886,9 @@ class SkorController extends Controller
 
                 foreach ($sasaran as $keys => $value) {
                     // Perilaku
-                    $point_7 = str($rekanan[$key]['kerjasama'])->squish();
-                    $point_8 = str($rekanan[$key]['komunikasi'])->squish();
-                    $point_9 = str($rekanan[$key]['absensi'])->squish();
+                    $point_7  = str($rekanan[$key]['kerjasama'])->squish();
+                    $point_8  = str($rekanan[$key]['komunikasi'])->squish();
+                    $point_9  = str($rekanan[$key]['absensi'])->squish();
                     $point_10 = str($rekanan[$key]['integritas'])->squish();
                     $point_11 = str($rekanan[$key]['etika'])->squish();
                     if ($point_7 == str($perilaku[$keys]['jawaban'])->squish()) {
@@ -920,28 +934,28 @@ class SkorController extends Controller
                 $temp_nilai = $nilai_skor_1 + $nilai_skor_2 + $nilai_skor_3 + $nilai_skor_4 + $nilai_skor_5 + $nilai_skor_6 + $nilai_skor_7 + $nilai_skor_8 + $nilai_skor_9 + $nilai_skor_10 + $nilai_skor_11 + $nilai_skor_12 + $nilai_skor_13 + $nilai_skor_14 + $nilai_skor_15 + $nilai_skor_16;
                 // dd($npp_karyawan);
                 $tempData = [
-                    'npp_penilai' => $npp_karyawan[$key],
-                    'npp_dinilai' => $rekanan[$key]['npp_dinilai'],
-                    'jabatan_dinilai' => $rekanan[$key]['jabatan_dinilai'],
-                    'strategi_perencanaan' => $nilai_skor_1,
-                    'strategi_pengawasan' => $nilai_skor_2,
-                    'strategi_inovasi' => $nilai_skor_3,
-                    'kepemimpinan' => $nilai_skor_4,
-                    'membimbing_membangun' => $nilai_skor_5,
+                    'npp_penilai'           => $npp_karyawan[$key],
+                    'npp_dinilai'           => $rekanan[$key]['npp_dinilai'],
+                    'jabatan_dinilai'       => $rekanan[$key]['jabatan_dinilai'],
+                    'strategi_perencanaan'  => $nilai_skor_1,
+                    'strategi_pengawasan'   => $nilai_skor_2,
+                    'strategi_inovasi'      => $nilai_skor_3,
+                    'kepemimpinan'          => $nilai_skor_4,
+                    'membimbing_membangun'  => $nilai_skor_5,
                     'pengambilan_keputusan' => $nilai_skor_6,
-                    'kerjasama' => $nilai_skor_7,
-                    'komunikasi' => $nilai_skor_8,
-                    'absensi' => $nilai_skor_9,
-                    'integritas' => $nilai_skor_10,
-                    'etika' => $nilai_skor_11,
-                    'goal_kinerja' => $nilai_skor_12,
-                    'error_kinerja' => $nilai_skor_13,
-                    'proses_dokumen' => $nilai_skor_14,
-                    'proses_inisiatif' => $nilai_skor_15,
-                    'proses_polapikir' => $nilai_skor_16,
-                    'sum_nilai' => $temp_nilai,
-                    'relasi' => $slugs_relasi,
-                    'npp_penilai_dinilai' => $rekanan[$key]['npp_penilai'] . $rekanan[$key]['npp_dinilai']
+                    'kerjasama'             => $nilai_skor_7,
+                    'komunikasi'            => $nilai_skor_8,
+                    'absensi'               => $nilai_skor_9,
+                    'integritas'            => $nilai_skor_10,
+                    'etika'                 => $nilai_skor_11,
+                    'goal_kinerja'          => $nilai_skor_12,
+                    'error_kinerja'         => $nilai_skor_13,
+                    'proses_dokumen'        => $nilai_skor_14,
+                    'proses_inisiatif'      => $nilai_skor_15,
+                    'proses_polapikir'      => $nilai_skor_16,
+                    'sum_nilai'             => $temp_nilai,
+                    'relasi'                => $slugs_relasi,
+                    'npp_penilai_dinilai'   => $rekanan[$key]['npp_penilai'] . $rekanan[$key]['npp_dinilai']
                 ];
                 // dd($tempData);
                 // $store = PoolRespon::updateOrCreate($tempData);
@@ -953,15 +967,16 @@ class SkorController extends Controller
                 );
                 $tempData = [];
             }
+
             return response()->json([
                 'title' => 'berhasil',
-                'html' => 'berhasil menghitung response skor karyawan',
+                'html'  => 'berhasil menghitung response skor karyawan',
                 'icons' => 'success',
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'title' => 'gagal',
-                'html' => $th->getMessage(),
+                'html'  => $th->getMessage(),
                 'icons' => 'danger',
             ]);
         }
@@ -982,32 +997,32 @@ class SkorController extends Controller
             //     Cache::forget('relasi_karyawan_staff');
             // }
             // $skor_jawaban_data = Cache::remember('skor_jawaban_data', now()->addMinutes(5), function(){
-            //     return Skor::get()->groupBy('aspek_id')->toArray();
+            //     return ScoreJawaban::get()->groupBy('aspek_id')->toArray();
             // });
 
             // $google_form = Cache::remember('google_form_respon', now()->addMinutes(5), function(){
             //     return GResponse::get()->toArray();
             // });
 
-            $skor_jawaban_data = Skor::get()->groupBy('aspek_id')->toArray();
-            $google_form = GResponse::get()->toArray();
+            $skor_jawaban_data = ScoreJawaban::get()->groupBy('aspek_id')->toArray();
+            $google_form       = GResponse::get()->toArray();
 
-            $temp = [];
-            $staff = [];
+            $temp         = [];
+            $staff        = [];
             $npp_karyawan = [];
             $slugs_relasi = 'staff';
 
             foreach ($google_form as $key => $value) {
                 // dd($google_form);
                 if ($google_form[$key]['npp_penilai'] != $google_form[$key]['npp_dinilai']) {
-                    $findrelasi = [];
+                    $findrelasi       = [];
                     $idRelasiKaryawan = [];
                     $idRelasiKaryawan = RelasiKaryawan::where('npp_karyawan', $google_form[$key]['npp_penilai'])->first();
                     if ($idRelasiKaryawan) {
                         $idRelasiKaryawan = $idRelasiKaryawan->toArray();
-                        $findrelasi = RelasiStaff::where('relasi_karyawan_id', $idRelasiKaryawan['id'])
-                            ->where('npp_staff', $google_form[$key]['npp_dinilai'])
-                            ->first() ?? '';
+                        $findrelasi       = RelasiStaff::where('relasi_karyawan_id', $idRelasiKaryawan['id'])
+                                                ->where('npp_staff', $google_form[$key]['npp_dinilai'])
+                                                ->first() ?? '';
                         if (!empty($findrelasi)) {
                             $findrelasi->toArray();
                             // dd($findrelasi);
@@ -1015,7 +1030,7 @@ class SkorController extends Controller
                                 continue;
                             } elseif ($findrelasi['npp_staff'] == $google_form[$key]['npp_dinilai']) {
                                 $npp_karyawan[] = $idRelasiKaryawan['id'];
-                                $temp = $google_form[$key];
+                                $temp           = $google_form[$key];
                                 array_push($staff, $temp);
                             }
                         }
@@ -1028,20 +1043,20 @@ class SkorController extends Controller
 
             // Pembagian Segment
             $kepemimpinan = $skor_jawaban_data[1];
-            $perilaku = $skor_jawaban_data[2];
-            $sasaran = $skor_jawaban_data[3];
-            $tempData = [];
+            $perilaku     = $skor_jawaban_data[2];
+            $sasaran      = $skor_jawaban_data[3];
+            $tempData     = [];
 
             foreach ($staff as $key => $value) {
-                $nilai_skor_1 = 0;
-                $nilai_skor_2 = 0;
-                $nilai_skor_3 = 0;
-                $nilai_skor_4 = 0;
-                $nilai_skor_5 = 0;
-                $nilai_skor_6 = 0;
-                $nilai_skor_7 = 0;
-                $nilai_skor_8 = 0;
-                $nilai_skor_9 = 0;
+                $nilai_skor_1  = 0;
+                $nilai_skor_2  = 0;
+                $nilai_skor_3  = 0;
+                $nilai_skor_4  = 0;
+                $nilai_skor_5  = 0;
+                $nilai_skor_6  = 0;
+                $nilai_skor_7  = 0;
+                $nilai_skor_8  = 0;
+                $nilai_skor_9  = 0;
                 $nilai_skor_10 = 0;
                 $nilai_skor_11 = 0;
                 $nilai_skor_12 = 0;
@@ -1050,15 +1065,15 @@ class SkorController extends Controller
                 $nilai_skor_15 = 0;
                 $nilai_skor_16 = 0;
 
-                $point_1 = '';
-                $point_2 = '';
-                $point_3 = '';
-                $point_4 = '';
-                $point_5 = '';
-                $point_6 = '';
-                $point_7 = '';
-                $point_8 = '';
-                $point_9 = '';
+                $point_1  = '';
+                $point_2  = '';
+                $point_3  = '';
+                $point_4  = '';
+                $point_5  = '';
+                $point_6  = '';
+                $point_7  = '';
+                $point_8  = '';
+                $point_9  = '';
                 $point_10 = '';
                 $point_11 = '';
                 $point_12 = '';
@@ -1098,9 +1113,9 @@ class SkorController extends Controller
 
                 foreach ($sasaran as $keys => $value) {
                     // Perilaku
-                    $point_7 = str($staff[$key]['kerjasama'])->squish();
-                    $point_8 = str($staff[$key]['komunikasi'])->squish();
-                    $point_9 = str($staff[$key]['absensi'])->squish();
+                    $point_7  = str($staff[$key]['kerjasama'])->squish();
+                    $point_8  = str($staff[$key]['komunikasi'])->squish();
+                    $point_9  = str($staff[$key]['absensi'])->squish();
                     $point_10 = str($staff[$key]['integritas'])->squish();
                     $point_11 = str($staff[$key]['etika'])->squish();
                     if ($point_7 == str($perilaku[$keys]['jawaban'])->squish()) {
@@ -1145,28 +1160,28 @@ class SkorController extends Controller
                 }
                 $temp_nilai = $nilai_skor_1 + $nilai_skor_2 + $nilai_skor_3 + $nilai_skor_4 + $nilai_skor_5 + $nilai_skor_6 + $nilai_skor_7 + $nilai_skor_8 + $nilai_skor_9 + $nilai_skor_10 + $nilai_skor_11 + $nilai_skor_12 + $nilai_skor_13 + $nilai_skor_14 + $nilai_skor_15 + $nilai_skor_16;
                 $tempData = [
-                    'npp_penilai' => $npp_karyawan[$key],
-                    'npp_dinilai' => $staff[$key]['npp_dinilai'],
-                    'jabatan_dinilai' => $staff[$key]['jabatan_dinilai'],
-                    'strategi_perencanaan' => $nilai_skor_1,
-                    'strategi_pengawasan' => $nilai_skor_2,
-                    'strategi_inovasi' => $nilai_skor_3,
-                    'kepemimpinan' => $nilai_skor_4,
-                    'membimbing_membangun' => $nilai_skor_5,
+                    'npp_penilai'           => $npp_karyawan[$key],
+                    'npp_dinilai'           => $staff[$key]['npp_dinilai'],
+                    'jabatan_dinilai'       => $staff[$key]['jabatan_dinilai'],
+                    'strategi_perencanaan'  => $nilai_skor_1,
+                    'strategi_pengawasan'   => $nilai_skor_2,
+                    'strategi_inovasi'      => $nilai_skor_3,
+                    'kepemimpinan'          => $nilai_skor_4,
+                    'membimbing_membangun'  => $nilai_skor_5,
                     'pengambilan_keputusan' => $nilai_skor_6,
-                    'kerjasama' => $nilai_skor_7,
-                    'komunikasi' => $nilai_skor_8,
-                    'absensi' => $nilai_skor_9,
-                    'integritas' => $nilai_skor_10,
-                    'etika' => $nilai_skor_11,
-                    'goal_kinerja' => $nilai_skor_12,
-                    'error_kinerja' => $nilai_skor_13,
-                    'proses_dokumen' => $nilai_skor_14,
-                    'proses_inisiatif' => $nilai_skor_15,
-                    'proses_polapikir' => $nilai_skor_16,
-                    'sum_nilai' => $temp_nilai,
-                    'relasi' => 'atasan',
-                    'npp_penilai_dinilai' => $staff[$key]['npp_penilai'] . $staff[$key]['npp_dinilai']
+                    'kerjasama'             => $nilai_skor_7,
+                    'komunikasi'            => $nilai_skor_8,
+                    'absensi'               => $nilai_skor_9,
+                    'integritas'            => $nilai_skor_10,
+                    'etika'                 => $nilai_skor_11,
+                    'goal_kinerja'          => $nilai_skor_12,
+                    'error_kinerja'         => $nilai_skor_13,
+                    'proses_dokumen'        => $nilai_skor_14,
+                    'proses_inisiatif'      => $nilai_skor_15,
+                    'proses_polapikir'      => $nilai_skor_16,
+                    'sum_nilai'             => $temp_nilai,
+                    'relasi'                => 'atasan',
+                    'npp_penilai_dinilai'   => $staff[$key]['npp_penilai'] . $staff[$key]['npp_dinilai']
                 ];
                 // $store = PoolRespon::updateOrCreate($tempData);
                 $store = PoolRespon::updateOrCreate(
@@ -1177,15 +1192,16 @@ class SkorController extends Controller
                 );
                 $tempData = [];
             }
+
             return response()->json([
                 'title' => 'berhasil',
-                'html' => 'berhasil menghitung response skor karyawan',
+                'html'  => 'berhasil menghitung response skor karyawan',
                 'icons' => 'success',
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'title' => 'gagal',
-                'html' => $th->getMessage(),
+                'html'  => $th->getMessage(),
                 'icons' => 'danger'
             ]);
         }
@@ -1210,7 +1226,7 @@ class SkorController extends Controller
 
     public function followUpNilai(Request $request)
     {
-        $id = $request->id;
+        $id         = $request->id;
         $nppPenilai = $request->npp_penilai;
         $nppDinilai = $request->npp_dinilai;
 
@@ -1226,9 +1242,9 @@ class SkorController extends Controller
     private function followUpWa($penilai = [], $dinilai = [])
     {
         $namaPenilai = $penilai[0]['nama'];
-        $noPenilai = $penilai[0]['no_hp'];
+        $noPenilai   = $penilai[0]['no_hp'];
         $namaDinilai = $dinilai[0]['nama'];
-        $noDinilai = $dinilai[0]['no_hp'];
+        $noDinilai   = $dinilai[0]['no_hp'];
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -1241,12 +1257,12 @@ class SkorController extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => array(
-                'target' => $noPenilai,
-                'message' => 'Halo, ' . $namaPenilai . '
+                'target'      => $noPenilai,
+                'message'     => 'Halo, ' . $namaPenilai . '
                 mohon lakukan penilaian ulang terhadap
                 sdr.' . $namaDinilai . '
                 Terimakasih',
-                'countryCode' => '62',  // optional
+                'countryCode' => '62',                       // optional
             ),
             CURLOPT_HTTPHEADER => array(
                 'Authorization: ' . env('FONNTE_TOKEN', '')  // change TOKEN to your actual token
@@ -1261,20 +1277,21 @@ class SkorController extends Controller
 
     public function deleteNilai(Request $request)
     {
-        $id = $request->id;
+        $id   = $request->id;
         $pool = PoolRespon::find($id);
         $pool->delete();
 
-        if($pool){
+        if ($pool) {
             $data = [
                 'status' => true,
             ];
+
             return json_encode($data);
         }
         $data = [
             'status' => false,
         ];
-        return json_encode($data);
 
+        return json_encode($data);
     }
 }
