@@ -77,11 +77,11 @@
                              data-penilai-nama="{{ $gres->relasi_penilai->nama_karyawan ?? '' }}"
                              data-penilai-level="{{ $gres->relasi_penilai->level_jabatan ?? '' }}"
                              data-penilai-unit="{{ $gres->relasi_penilai->unit_jabatan ?? '' }}">
-                            {{ $gres->npp_penilai }}
+                            {{ $gres->npp_penilai ?? ''}}
                           </a>
                         </td>
-                        <td>{{ $gres->nama_penilai }}</td>
-                        <td>{{ $gres->relasi_penilai->level_jabatan }}</td>
+                        <td>{{ $gres->nama_penilai ?? '' }}</td>
+                        <td>{{ $gres->relasi_penilai->level_jabatan ?? ''}}</td>
                         <td><a href="javascript:void(0)"
                              class="text-decoration-none lihatProfileDinilai"
                              data-penilai-id="{{ $gres->relasi_dinilai->id ?? '' }}"
