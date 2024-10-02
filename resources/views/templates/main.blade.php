@@ -6,375 +6,117 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
     <title>PT PINDAD MEDIKA UTAMA | {{ $title ?? 'RSU PINDAD' }}</title>
-
-    <link rel="icon"
-          href="{{ asset('/dist/img/logo.png') }}"
-          type="image/x-icon">
-    <link rel="shortcut icon"
-          href="{{ asset('/dist/img/logo.png') }}"
-          type="image/x-icon">
-
-    <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet"
-          href="{{ asset('/plugins/fontawesome-free/css/all.min.css') }}">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet"
-          href="{{ asset('/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-    <!-- Theme style -->
-    <link rel="stylesheet"
-          href="{{ asset('/dist/css/adminlte.min.css') }}">
-
-    @stack('styles')
-
-    <!-- REQUIRED SCRIPTS -->
-    <!-- jQuery -->
-    <script src="{{ asset('/plugins/jquery/jquery.min.js') }}"></script>
-    <!-- Popper -->
-    <script src="{{ asset('/plugins/popper/umd/popper.min.js') }}"></script>
-    <!-- Bootstrap -->
-    <script src="{{ asset('/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
-    <!-- overlayScrollbars -->
-    <script src="{{ asset('/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('/dist/js/adminlte.js') }}"></script>
+          href="https://rsms.me/inter/inter.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
   </head>
 
-  <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
-    <div class="wrapper">
+  <body>
+    <div class="bg-gray-50 antialiased dark:bg-gray-900">
 
-      <!-- Navbar -->
-      <nav class="main-header navbar navbar-expand navbar-dark">
-        <!-- Left navbar links -->
-        @php
-          $rememberState = true;
-        @endphp
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link"
-               data-widget="pushmenu"
-               href="#"
-               role="button"
-               data-enable-remember="{{ $rememberState }}"><i class="fas fa-bars"></i></a>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.navbar -->
+      <x-nav />
+      <!-- Sidebar -->
 
-      <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <!-- Brand Logo -->
-        <a href="{{ route('profile') }}"
-           class="brand-link">
-          <img src="{{ asset('/dist/img/logo.png') }}"
-               alt="Logo"
-               class="brand-image img-circle">
-          <span class="brand-text font-weight-light">PINDAD
-            MEDIKA</span>
-        </a>
-
-        <!-- Sidebar -->
-        <div class="sidebar text-uppercase">
-
-          <!-- Sidebar Menu -->
-          <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column"
-                data-widget="treeview"
-                role="menu"
-                data-accordion="false">
-              @if (Auth::user()->level != 1)
-                <li class="nav-header">PENILAIAN</li>
-                @isset($sheet['LINK_SELF'])
-                  @if ($sheet['LINK_SELF'] != '')
-                    <li class="nav-item {{ $page == 'SELF ASSESSMENT' ? 'menu-open' : '' }}">
-                      <a href="#"
-                         class="nav-link {{ $page == 'SELF ASSESSMENT' ? 'active' : '' }}">
-                        <i class="nav-icon fas fas fa-file-alt"></i>
-                        <p>
-                          MENILAI SENDIRI
-                          <i class="right fas fa-angle-left"></i>
-                        </p>
-                      </a>
-                      <ul class="nav nav-treeview small">
-                        <li class="nav-item">
-                          <a href="{{ route('self', ['page' => 'SELF ASSESSMENT', 'link' => $sheet['LINK_SELF']]) }}"
-                             class="LinkMenilai nav-link {{ $sheet['LINK_SELF'] == $link ? 'active' : '' }}"
-                             data-npp="{{ Auth::user()->npp }}"
-                             onclick="checkstatus(`{{ Auth::user()->npp }}`)">
-                            <img src="{{ asset('storage/' . Auth::user()->foto) }}"
-                                 alt="foto"
-                                 width="32"
-                                 height="32"
-                                 class="img-circle">
-                            <p id="LinkNilaiSelf">
-                              {{ Auth::user()->npp . ' - ' . Auth::user()->nama }}
-                            </p>
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
-                  @endif
-                @endisset
-                @isset($sheet['LINK_ATASAN'])
-                  @if ($sheet['LINK_ATASAN'] != '')
-                    <li class="nav-item {{ $page == 'MENILAI ATASAN' ? 'menu-open' : '' }}">
-                      <a href="#"
-                         class="nav-link {{ $page == 'MENILAI ATASAN' ? 'active' : '' }}">
-                        <i class="nav-icon fas fas fa-file-alt"></i>
-                        <p>
-                          MENILAI ATASAN
-                          <i class="right fas fa-angle-left"></i>
-                        </p>
-                      </a>
-                      <ul class="nav nav-treeview small">
-                        <li class="nav-sheet">
-                          <a href="{{ route('atasan', ['page' => 'MENILAI ATASAN', 'link' => $sheet['LINK_ATASAN']]) }}"
-                             class="LinkMenilai nav-link {{ $sheet['LINK_ATASAN'] == $link ? 'active' : '' }}"
-                             data-npp="{{ $sheet['NPP_ATASAN'] }}"
-                             onclick="checkstatus(`{{ $sheet['NPP_ATASAN'] }}`)">
-                            @if (App\Models\User::where('npp', $sheet['NPP_ATASAN'])->first())
-                              <img src="{{ asset('storage/' . App\Models\User::where('npp', $sheet['NPP_ATASAN'])->first()->foto) }}"
-                                   alt="foto"
-                                   width="32"
-                                   height="32"
-                                   class="img-circle">
-                            @else
-                              <img src="dist/img/avatar.png"
-                                   alt="foto"
-                                   width="32"
-                                   height="32"
-                                   class="img-circle">
-                            @endif
-                            <p id="LinkNilaiAtasan">{{ $sheet['NPP_ATASAN'] }} -
-                              {{ optional(App\Models\RelasiKaryawan::where('npp_karyawan', $sheet['NPP_ATASAN'])->first())->nama_karyawan }}
-                            </p>
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
-                  @endif
-                @endisset
-                @isset($sheet['LINK_SELEVEL'])
-                  @if ($sheet['LINK_SELEVEL'] != null)
-                    <li class="nav-item {{ $page == 'MENILAI SELEVEL' ? 'menu-open' : '' }}">
-                      <a href="#"
-                         class="nav-link {{ $page == 'MENILAI SELEVEL' ? 'active' : '' }}">
-                        <i class="nav-icon fas fas fa-file-alt"></i>
-                        <p>
-                          MENILAI SELEVEL
-                          <i class="right fas fa-angle-left"></i>
-                        </p>
-                      </a>
-                      <ul class="nav nav-treeview small">
-                        <li class="nav-item">
-                          <a href="{{ route('selevel', ['page' => 'MENILAI SELEVEL', 'link' => $sheet['LINK_SELEVEL']]) }}"
-                             class="LinkMenilai nav-link {{ $sheet['LINK_SELEVEL'] == $link ? 'active' : '' }}"
-                             data-npp="{{ $sheet['NPP_SELEVEL'] }}"
-                             onclick="checkstatus(`{{ $sheet['NPP_SELEVEL'] }}`)">
-                            @if (App\Models\User::where('npp', $sheet['NPP_SELEVEL'])->first())
-                              <img src="{{ asset('storage/' . App\Models\User::where('npp', $sheet['NPP_SELEVEL'])->first()->foto) }}"
-                                   alt="foto"
-                                   width="32"
-                                   height="32"
-                                   class="img-circle">
-                            @else
-                              <img src="dist/img/avatar.png"
-                                   alt="foto"
-                                   width="32"
-                                   height="32"
-                                   class="img-circle">
-                            @endif
-                            <p id="LinkNilaiSelevel">{{ $sheet['NPP_SELEVEL'] }} -
-                              {{ optional(App\Models\RelasiKaryawan::where('npp_karyawan', $sheet['NPP_SELEVEL'])->first())->nama_karyawan }}
-                            </p>
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
-                  @endif
-                @endisset
-                @if (count($staff_data) > 0)
-                  <li class="nav-item {{ $page == 'MENILAI STAFF' ? 'menu-open' : '' }}">
-                    <a href="#"
-                       class="nav-link {{ $page == 'MENILAI STAFF' ? 'active' : '' }}">
-                      <i class="nav-icon fas fas fa-file-alt"></i>
-                      <p>
-                        MENILAI STAFF
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview small">
-                      @foreach ($staff_data as $item)
-                        @if ($item['LINK_STAFF'] && $item['LINK_STAFF'] != '#N/A')
-                          <li class="nav-item">
-                            <a href="{{ route('staff', ['page' => 'MENILAI STAFF', 'link' => $item['LINK_STAFF']]) }}"
-                               class="LinkMenilai nav-link {{ $item['LINK_STAFF'] == $link ? 'active' : '' }}"
-                               data-npp="{{ $item['NPP_STAFF'] }}"
-                               onclick="checkstatus(`{{ $item['NPP_STAFF'] }}`)">
-                              @if (App\Models\User::where('npp', $item['NPP_STAFF'])->first())
-                                <img src="{{ asset('storage/' . App\Models\User::where('npp', $item['NPP_STAFF'])->first()->foto) }}"
-                                     alt="foto"
-                                     width="32"
-                                     height="32"
-                                     class="img-circle">
-                              @else
-                                <img src="dist/img/avatar.png"
-                                     alt="foto"
-                                     width="32"
-                                     height="32"
-                                     class="img-circle">
-                              @endif
-                              <p class="LinkNilaiStaff">{{ $item['NPP_STAFF'] }} -
-                                {{ optional(App\Models\RelasiKaryawan::where('npp_karyawan', $item['NPP_STAFF'])->first())->nama_karyawan }}
-                              </p>
-                            </a>
-                          </li>
-                        @endif
-                      @endforeach
-                    </ul>
-                  </li>
-                @endif
-              @endif
-              @if (Auth::user()->level == 1)
-                <li class="nav-header">INTERFACE</li>
-                @include('templates.partials.sidebar-hc')
-              @endif
-              @if (Auth::user()->level != 1)
-                <li class="nav-header">NILAI</li>
-                <li class="nav-item">
-                  <a href="{{ url('/nilai-rekap/' . Auth::user()->npp) }}"
-                     class="nav-link {{ Route::currentRouteName() == 'penilai-rekap-rekapitulasi' ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-book-open"></i>
-                    <p>Rekapitulasi</p>
-                  </a>
+      <aside id="drawer-navigation"
+             class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full border-r border-gray-200 bg-white pt-14 transition-transform dark:border-gray-700 dark:bg-gray-800 md:translate-x-0"
+             aria-label="Sidenav">
+        <div class="h-full overflow-y-auto bg-white px-3 py-5 dark:bg-gray-800">
+          <ul class="space-y-2">
+            <li>
+              <a href="#"
+                 class="group flex items-center rounded-lg p-2 text-base font-medium text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                <svg aria-hidden="true"
+                     class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                  <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+                </svg>
+                <span class="ml-3">Overview</span>
+              </a>
+            </li>
+            <li>
+              <button type="button"
+                      class="group flex w-full items-center rounded-lg p-2 text-base font-medium text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                      aria-controls="dropdown-pages"
+                      data-collapse-toggle="dropdown-pages">
+                <svg aria-hidden="true"
+                     class="h-6 w-6 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
+                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span class="ml-3 flex-1 whitespace-nowrap text-left">Pages</span>
+                <svg aria-hidden="true"
+                     class="h-6 w-6"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd"></path>
+                </svg>
+              </button>
+              <ul id="dropdown-pages"
+                  class="hidden space-y-2 py-2">
+                <li>
+                  <a href="#"
+                     class="group flex w-full items-center rounded-lg p-2 pl-11 text-base font-medium text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Settings</a>
                 </li>
-              @endif
-              <li class="nav-header">SETTINGS</li>
-              <li class="nav-item">
-                <a href="{{ route('profile') }}"
-                   class="nav-link {{ Route::currentRouteName() == 'profile' ? 'active' : '' }}">
-                  <i class="nav-icon fas fa-user"></i>
-                  <p>Profile</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('logout') }}"
-                   class="nav-link">
-                  <i class="nav-icon fas fa-sign-out-alt"></i>
-                  <p>Logout</p>
-                </a>
-              </li>
-              <li class="text-center">
-                <!-- Button trigger modal -->
-                <button type="button"
-                        class="btn btn-primary btn-sm"
-                        data-toggle="modal"
-                        data-target="#popup">
-                  <i class="fas fa-info-circle"></i> Bantuan
-                </button>
-              </li>
-            </ul>
-          </nav>
-          <!-- /.sidebar-menu -->
+                <li>
+                  <a href="#"
+                     class="group flex w-full items-center rounded-lg p-2 pl-11 text-base font-medium text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Kanban</a>
+                </li>
+                <li>
+                  <a href="#"
+                     class="group flex w-full items-center rounded-lg p-2 pl-11 text-base font-medium text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Calendar</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="mt-5 space-y-2 border-t border-gray-200 pt-5 dark:border-gray-700">
+            <li>
+              <a href="#"
+                 class="group flex items-center rounded-lg p-2 text-base font-medium text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                <svg aria-hidden="true"
+                     class="h-6 w-6 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span class="ml-3">Help</span>
+              </a>
+            </li>
+          </ul>
         </div>
-        <!-- /.sidebar -->
       </aside>
 
-      <!-- Modal -->
-      <div id="popup"
-           class="modal fade"
-           tabindex="-1"
-           role="dialog"
-           aria-labelledby="modelTitleId"
-           aria-hidden="true">
-        <div class="modal-dialog modal-xl"
-             role="document">
-          <div class="modal-content">
-            <div class="modal-body">
-              <div class="container-fluid">
-                <h2>Selamat Datang</h2>
-                <p>
-                  Anda berada di portal penilaian tahunan karyawan <b>PT Pindad Medika Utama</b>.
-                  dalam penilaian ini anda akan menilai dan dinilai dari beberapa kriteria yang
-                  ditetapkan.
-                  Pilihlah pernyataan yang sesuai, yang menggambarkan kondisi objek penilaian.
-                  Untuk mendapatkan nilai yang utuh, setiap karyawan melakukan penilaian terhadap :
-                </p>
-                <ol>
-                  <li>
-                    Diri sendiri (self assessment), isilah bagian ini secara jujur sebagaimana anda apa
-                    adanya
-                    sesuai kondisi sebenarnya yang relevan dengan kriteria penilaian yang ditetapkan
-                    pada
-                    bagian
-                    deskripsi.
-                  </li>
-                  <li>
-                    Atasan, isilah bagian ini secara jujur sebagaimana atasan anda apa adanya sesuai
-                    kondisi
-                    sebenarnya yang relevan dengan kriteria penilaian yang ditetapkan pada bagian
-                    deskripsi.
-                  </li>
-                  <li>
-                    Rekan kerja, isilah bagian ini secara jujur sebagaimana rekan kerja anda apa adanya
-                    sesuai
-                    kondisi sebenarnya yang relevan dengan kriteria penilaian yang ditetapkan pada
-                    bagian
-                    deskripsi.
-                  </li>
-                  <li>
-                    Bawahan, isilah bagian ini secara jujur sebagaimana staff anda apa adanya sesuai
-                    kondisi
-                    sebenarnya yang relevan dengan kriteria penilaian yang ditetapkan pada bagian
-                    deskripsi.
-                  </li>
-                </ol>
-                <p>
-                  Keterangan : pemilihan untuk siapa rekan kerja yang dinilai, dipilih berdasarkan
-                  kriteria
-                  tertentu dengan pertimbangan seringnya koordinasi perihal pekerjaan dan interaksi, serta
-                  level
-                  jabatan.
-                </p>
-                <p>
-                  Jika ada hal yang kurang jelas maupun permasalahan dalam melakukan penilaian ini,
-                  silakan
-                  klik
-                  <a href="https://wa.me/6282240028580"
-                     target="_blank"
-                     rel="noopener noreferrer">disini</a>
-                  untuk
-                  pelaporan kendala.
-                </p>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button"
-                      class="btn btn-secondary"
-                      data-dismiss="modal">Tutup</button>
-            </div>
-          </div>
+      <main class="h-auto p-4 pt-20 md:ml-64">
+        {{$slot}}
+        <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="h-32 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 md:h-64"></div>
+          <div class="h-32 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 md:h-64"></div>
+          <div class="h-32 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 md:h-64"></div>
+          <div class="h-32 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 md:h-64"></div>
         </div>
-      </div>
-
-      {{-- Konten Di Sini --}}
-      @yield('content')
-
-      <!-- Main Footer -->
-      <footer class="main-footer">
-        <strong>Copyright &copy; 2024 <a href="https://pindadmedika.com">PT PINDAD MEDIKA UTAMA</a>.</strong>
-        All rights reserved.
-      </footer>
+        <div class="mb-4 h-96 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600"></div>
+        <div class="mb-4 grid grid-cols-2 gap-4">
+          <div class="h-48 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 md:h-72"></div>
+          <div class="h-48 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 md:h-72"></div>
+          <div class="h-48 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 md:h-72"></div>
+          <div class="h-48 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 md:h-72"></div>
+        </div>
+      </main>
     </div>
-    <!-- ./wrapper -->
-
-    @stack('modals')
-
-    @stack('scripts')
-    @include('sweetalert::alert')
+    @yield('content')
   </body>
 
 </html>

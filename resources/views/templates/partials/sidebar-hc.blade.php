@@ -8,8 +8,8 @@
 </li>
 <li class="nav-header">INTERFACE 2024</li>
 <li class="nav-item">
-  <a href="{{ route('aturjadwal') }}"
-     class="nav-link {{ Route::currentRouteName() == 'aturjadwal' ? 'active' : '' }}">
+  <a href="{{ route('atur-jadwal') }}"
+     class="nav-link {{ Route::currentRouteName() == 'atur-jadwal' ? 'active' : '' }}">
     <i class="nav-icon fas fa-square"></i>
     <p>Jadwal</p>
   </a>

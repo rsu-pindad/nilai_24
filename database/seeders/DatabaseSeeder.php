@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call([
             UserSeeder::class,
-            EmployeeSeeder::class,
-            IndicatorScoreSeeder::class,
-            IndicatorLevelScoreSeeder::class,
-            LevelScoreSeeder::class,
+            // EmployeeSeeder::class,
+            // IndicatorScoreSeeder::class,
+            // IndicatorLevelScoreSeeder::class,
+            // LevelScoreSeeder::class,
         ]);
     }
 }

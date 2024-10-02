@@ -12,14 +12,21 @@ use App\Http\Controllers\HC\LinkNilaiController;
 use App\Http\Controllers\HC\RekapBobotController;
 use App\Http\Controllers\HC\RekapNonBobotController;
 use App\Http\Controllers\HC\RekapPenilaiController;
-use App\Http\Controllers\HC\RelasiKaryawan;
+use App\Http\Controllers\HC\RelasiKaryawanController;
 use App\Http\Controllers\HC\ResponseController;
 use App\Http\Controllers\HC\SkorController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Livewire\Sdm\GoogleRespon;
+use App\Livewire\Sdm\RekapRespon;
+use App\Livewire\Sdm\RelasiKaryawan;
+use App\Livewire\Sdm\Skor;
+use App\Livewire\Sdm\SkorRespon;
+use App\Livewire\Sdm\UserMgmt;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 /*
  * |--------------------------------------------------------------------------
@@ -44,9 +51,9 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(ProfileController::class)->group(function () {
         Route::get('profile', 'index')->name('profile');
-        Route::patch('profile/update/{user}', 'update')->name('profile/update');
-        Route::patch('profile/update_photo/{user}', 'update_photo')->name('profile/update_photo');
-        Route::patch('profile/update_password/{user}', 'update_password')->name('profile/update_password');
+        Route::patch('profile-update/{user}', 'update')->name('profile-update');
+        Route::patch('profile-update-photo/{user}', 'update_photo')->name('profile-update-photo');
+        Route::patch('profile-update-password/{user}', 'update_password')->name('profile-update-password');
     });
 
     Route::controller(RekapPenilaiController::class)->group(function () {
@@ -68,12 +75,37 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::controller(AturJadwallController::class)->group(function () {
-            Route::get('/aturjadwal', 'index')->name('aturjadwal');
-            Route::post('/aturjadwal/store', 'store')->name('aturjadwal/store');
+            Route::get('/atur-jadwal', 'index')->name('atur-jadwal');
+            Route::post('/atur-jadwal/store', 'store')->name('atur-jadwal-store');
         });
 
+        // Livewire Route
+        Route::controller(Skor::class)->group(function () {
+            Route::get('/skor', Skor::class)->name('skor');
+            // Route::get('/skor-indikator', [Skor::class, 'selectIndikator'])->name('skor-get-indikator');
+        });
+        Route::controller(UserMgmt::class)->group(function () {
+            Route::get('/user-mgmt', UserMgmt::class)->name('user-mgmt');
+        });
+        Route::controller(RelasiKaryawan::class)->group(function () {
+            Route::get('/relasi-karyawan', RelasiKaryawan::class)->name('relasi-karyawan');
+        });
+        // Route::get('/gform', 'index')->name('gform');
+        Route::controller(GoogleRespon::class)->group(function () {
+            Route::get('/respon', GoogleRespon::class)->name('google-respon');
+        });
+        Route::controller(SkorRespon::class)->group(function () {
+            Route::get('/skor-respon', SkorRespon::class)->name('skor-respon');
+        });
+        // Route::get('/penilai-rekap/all', 'index')->name('penilai-rekap-all');
+        Route::controller(RekapRespon::class)->group(function(){
+            Route::get('/rekap-respon', RekapRespon::class)->name('rekap-respon');
+        });
+        // End Livewire route
+
         Route::controller(SkorController::class)->group(function () {
-            Route::get('/skor', 'index')->name('skor');
+            // Route::get('/skor', 'index')->name('skor');
+
             Route::get('/skor/pool/all', 'index_pool_all')->name('skor-index-pool-all');
             Route::get('/skor/pool/self', 'index_pool_self')->name('skor-index-pool-self');
             Route::get('/skor/pool/atasan', 'index_pool_atasan')->name('skor-index-pool-atasan');
@@ -109,7 +141,7 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::controller(GResponseController::class)->group(function () {
-            Route::get('/gform', 'index')->name('gform');
+            // Route::get('/gform', 'index')->name('gform');
             Route::delete('/gform/destroy/{id}', 'destroy')->name('gform-destroy');
             Route::get('/gform/pull', 'pull')->name('gform-pull');  // Button btnPullResponse
             Route::get('/gform/pull2', 'pull_excel')->name('gform-pull2');
@@ -117,9 +149,9 @@ Route::middleware('auth')->group(function () {
             // Route::get('gform/populate', 'populate')->name('gform-populate');
         });
 
-        Route::controller(RelasiKaryawan::class)->group(function () {
-            Route::get('/relasi-karyawan', 'index')->name('relasi-karyawan');
-            Route::get('/relasi-karyawan/user', 'index_user')->name('relasi-user');
+        Route::controller(RelasiKaryawanController::class)->group(function () {
+            // Route::get('/relasi-karyawan', 'index')->name('relasi-karyawan');
+            // Route::get('/relasi-karyawan/user', 'index_user')->name('relasi-user');
             Route::put('/relasi-karyawan/update-user/{id}', 'updateUser')->name('relasi-user-update');
             Route::put('/relasi-karyawan/reset-password-user/{id}', 'resetPasswordUser')->name('relasi-user-reset-password');
             Route::put('/relasi-karyawan/reset-password-user-custom/{id}', 'resetPasswordUserCustom')->name('relasi-user-reset-password-custom');
@@ -226,7 +258,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('guest')->group(function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('/', 'index')->name('login');
-        Route::post('/authenticate', 'authenticate')->name('login/authenticate');
+        Route::post('/authenticate', 'authenticate')->name('login-authenticate');
     });
 
     Route::controller(RegisterController::class)->group(function () {

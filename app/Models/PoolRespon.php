@@ -11,7 +11,6 @@ class PoolRespon extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'pool_respon';
-
     protected $guard = 'id';
 
     protected $fillable = [
@@ -41,9 +40,9 @@ class PoolRespon extends Model
 
     public function karyawan()
     {
-        return $this->belongsTo(RelasiKaryawan::class, 'npp_penilai');
+        return $this->belongsTo(RelasiKaryawan::class, 'npp_penilai', 'id');
     }
-
+    
     public function karyawan_dinilai()
     {
         return $this->belongsTo(RelasiKaryawan::class, 'npp_dinilai', 'npp_karyawan');

@@ -10,7 +10,6 @@ class ScoreJawaban extends Model
     use HasFactory;
 
     protected $table = 'score_jawaban';
-
     protected $guard = 'id';
 
     protected $fillable = [
@@ -22,12 +21,12 @@ class ScoreJawaban extends Model
 
     public function aspek()
     {
-        return $this->belongsTo(Aspek::class, 'aspek_id');
+        return $this->belongsTo(Aspek::class, 'aspek_id', 'id');
     }
 
     public function indikator()
     {
-        return $this->belongsTo(Indikator::class, 'indikator_id');
+        return $this->belongsTo(Indikator::class, 'indikator_id', 'id');
     }
 
     // public function arahans()

@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Carbon;
 
 class LoginController extends Controller
 {
     public function index()
     {
-        // Alert::toast('Your Post as been submited!', 'success');
         $data = ['title' => 'Halaman Login'];
+
         return View::make('login', $data);
     }
 
@@ -26,19 +26,30 @@ class LoginController extends Controller
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials = Validator::make($request->all(), [
-            'npp' => ['required'],
+            'npp'      => ['required'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials->validated())) {
-            $request->session()->regenerate();
-
-            $user = User::where('npp', $request->npp)->first();
-            $user->update(['last_login' => Carbon::now()]);
-
-            return redirect()->intended('profile');
+        if ($credentials->fails()) {
+            return redirect()
+                       ->back()
+                       ->withErrors($credentials)
+                       ->withInput();
         }
 
-        return back()->with('toast_error', 'username atau password salah')->withInput();
+        if (!$auth = Auth::attempt($credentials->validated())) {
+            return redirect()
+                       ->back()
+                       ->withErrors(['auth' => 'username atau password salah !.'])
+                       ->withInput();
+        }
+
+        $request->session()->regenerate();
+
+        $user             = User::find(Auth::id());
+        $user->last_login = Carbon::now();
+        $user->save();
+
+        return redirect()->intended('profile');
     }
 }

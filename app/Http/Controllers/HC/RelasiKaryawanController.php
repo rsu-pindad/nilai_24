@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Revolution\Google\Sheets\Facades\Sheets;
 
-class RelasiKaryawan extends Controller
+class RelasiKaryawanController extends Controller
 {
     public function index()
     {

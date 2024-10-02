@@ -3,45 +3,32 @@
 namespace App\Http\Controllers\HC;
 
 use App\Exports\SkorAllExport;
+use App\Http\Controllers\Controller;
 use App\Models\Aspek;
 use App\Models\FinalDp3;
 use App\Models\GResponse;
 use App\Models\PoolRespon;
 use App\Models\RekapPenilai;
 use App\Models\RelasiAtasan;
+use App\Models\RelasiKaryawan;
 use App\Models\RelasiSelevel;
 use App\Models\RelasiStaff;
 use App\Models\ScoreJawaban;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-// use App\Models\RekapBobotKepemimpinan;
-// use App\Models\RekapBobotPerilaku;
-// use App\Models\RekapBobotSasaran;
-// use App\Models\RekapNonBobot;
-// use App\Models\RekapNonBobotPerilaku;
-// use App\Models\RekapNonBobotSasaran;
-use App\Http\Controllers\Controller;
-use App\Models\RelasiKaryawan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SkorController extends Controller
 {
     public function index()
     {
-        // $skor_data  = ScoreJawaban::with('aspek', 'indikator')->get();
-        // $aspek_data = Aspek::get();
+        $skor_data  = ScoreJawaban::with(['aspek', 'indikator'])->get();
+        $aspek_data = Aspek::get();
 
-        $skor_data = Cache::remember('skor_data', now()->addMinutes(60), function () {
-            return ScoreJawaban::with(['aspek', 'indikator'])->get();
-        });
-        $aspek_data = Cache::remember('aspek_data', now()->addMinutes(60), function () {
-            return Aspek::get();
-        });
-
-        return view('hc.skor.index')->with([
+        return view('hc.skor.view')->with([
             'data_skor'  => $skor_data,
             'data_aspek' => $aspek_data,
         ]);
