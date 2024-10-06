@@ -19,6 +19,7 @@
         "predis/predis": "^2.2",
         "realrashid/sweet-alert": "^6.0",
         "revolution/laravel-google-sheets": "^6.2",
+        "spatie/laravel-pdf": "^1.5",
         "wireui/wireui": "^2.1.0"
     },
     "require-dev": {

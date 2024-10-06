@@ -13,4 +13,42 @@
       <livewire:Power.Sdm.Respon.RekapResponTable />
     </div>
   </div>
+
+  <x-wireui-modal name="persistentModal"
+                  persistent
+                  width="xl3">
+
+    <x-wireui-card title="Consent Terms">
+
+      <iframe src="http://localhost:8083/skor"
+              width="600"
+              height="450"
+              style="border:0;"
+              allowfullscreen="false"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <x-slot name="footer"
+              class="flex justify-end gap-x-4">
+
+        <x-wireui-button flat
+                         label="Cancel"
+                         x-on:click="close" />
+
+        <x-wireui-button primary
+                         label="I Agree"
+                         wire:click="agree" />
+
+      </x-slot>
+
+    </x-wireui-card>
+
+  </x-wireui-modal>
+
+  <script type="module">
+    // Livewire.on('lihatDokumen', function() {
+    //   // alert('ok via javascript');
+    //   $openModal('persistentModal');
+    // });
+  </script>
+
 </div>

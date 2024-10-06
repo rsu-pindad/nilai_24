@@ -252,6 +252,10 @@ Route::middleware('auth')->group(function () {
         // Route::controller(ScoresController::class)->group(function () {
         //     Route::get('/score/table', 'index')->name('score.index');
         // });
+
+        Route::get('/pdfsample',function(){
+            return view('pdf.dokumen-table');
+        });
     });
 });
 

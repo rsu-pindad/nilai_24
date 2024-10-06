@@ -52,9 +52,9 @@ class SyncAtasan implements ShouldQueue
                             $idRelasiKaryawan = $idRelasiKaryawan->toArray();
                             // $findrelasi       = $this->findRelasi('atasan', $idRelasiKaryawan['id']);
 
-                            $findrelasi       = RelasiStaff::where('relasi_karyawan_id', $idRelasiKaryawan['id'])
-                                                    ->where('npp_staff', $chunk[$key]['npp_dinilai'])
-                                                    ->first() ?? '';
+                            $findrelasi = RelasiStaff::where('relasi_karyawan_id', $idRelasiKaryawan['id'])
+                                              ->where('npp_staff', $chunk[$key]['npp_dinilai'])
+                                              ->first() ?? '';
                             if (!empty($findrelasi)) {
                                 $findrelasi->toArray();
                                 if ($findrelasi['npp_staff'] != $chunk[$key]['npp_dinilai']) {

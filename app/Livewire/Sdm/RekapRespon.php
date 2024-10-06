@@ -6,8 +6,12 @@ use App\Models\PoolRespon;
 use App\Models\RekapPenilai;
 use App\Models\RelasiKaryawan;
 use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Spatie\LaravelPdf\Enums\Format;
+use Spatie\LaravelPdf\Enums\Orientation;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 #[Title('Halaman Rekap Respon')]
 class RekapRespon extends Component
@@ -15,6 +19,21 @@ class RekapRespon extends Component
     public function render()
     {
         return view('livewire.sdm.rekap-respon');
+    }
+
+    #[On('lihatDokumen')]
+    public function dokument($rowId)
+    {
+        $dataRekap = RekapPenilai::with(['relasi_respon','identitas_penilai', 'identitas_dinilai'])->find($rowId);
+        $pdfName   = $dataRekap->npp_penilai_dinilai . '.pdf';
+
+        return Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+                   ->orientation(Orientation::Portrait)
+                //    ->format(Format::A4)
+                   ->margins(2, 2, 2, 2)
+                   //    ->name($pdfName);
+                   ->disk('public')
+                   ->save('dokumen/' . $pdfName);
     }
 
     public function calculate()
