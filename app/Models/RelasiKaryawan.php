@@ -21,17 +21,17 @@ class RelasiKaryawan extends Model
         'nama_karyawan',
     ];
 
-    public function karyawan_atasan()
+    public function karyawan_atasan(): HasMany
     {
         return $this->hasMany(RelasiAtasan::class, 'relasi_karyawan_id', 'id');
     }
 
-    public function karyawan_selevel()
+    public function karyawan_selevel(): HasMany
     {
         return $this->hasMany(RelasiSelevel::class, 'relasi_karyawan_id', 'id');
     }
 
-    public function karyawan_staff()
+    public function karyawan_staff(): HasMany
     {
         return $this->hasMany(RelasiStaff::class, 'relasi_karyawan_id', 'id');
     }

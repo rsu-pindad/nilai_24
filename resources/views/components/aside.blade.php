@@ -43,7 +43,7 @@
           </svg>
         </button>
         <ul id="dropdown-interface-2024"
-        class="@if (request()->routeIs(['atur-jadwal','skor'])) space-y-2 py-2 @else hidden space-y-2 py-2 @endif">
+            class="@if (request()->routeIs(['atur-jadwal', 'skor'])) space-y-2 py-2 @else hidden space-y-2 py-2 @endif">
           <li>
             <a href="{{ route('atur-jadwal') }}"
                class="@if (Route::currentRouteName() === 'atur-jadwal') active bg-blue-200 @endif group flex w-full items-center rounded-lg p-2 pl-11 text-base font-medium text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -119,7 +119,7 @@
           </svg>
         </button>
         <ul id="dropdown-users"
-        class="@if (request()->routeIs(['user-mgmt','relasi-karyawan'])) space-y-2 py-2 @else hidden space-y-2 py-2 @endif">
+            class="@if (request()->routeIs(['user-mgmt', 'relasi-karyawan'])) space-y-2 py-2 @else hidden space-y-2 py-2 @endif">
           <li>
             <a href="{{ route('user-mgmt') }}"
                class="@if (Route::currentRouteName() === 'user-mgmt') active bg-blue-200 @endif group flex w-full items-center rounded-lg p-2 pl-11 text-base font-medium text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -192,7 +192,7 @@
           </svg>
         </button>
         <ul id="dropdown-google"
-        class="@if (request()->routeIs(['google-respon','skor'])) space-y-2 py-2 @else hidden space-y-2 py-2 @endif">
+            class="@if (request()->routeIs(['google-respon', 'skor'])) space-y-2 py-2 @else hidden space-y-2 py-2 @endif">
           <li>
             <a href="{{ route('google-respon') }}"
                class="@if (Route::currentRouteName() === 'google-respon') active bg-blue-200 @endif group flex w-full items-center rounded-lg p-2 pl-11 text-base font-medium text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -245,7 +245,7 @@
           </svg>
         </button>
         <ul id="dropdown-skor-respon"
-        class="@if (request()->routeIs(['skor-respon','rekap-respon','rekap-dp-except-staff'])) space-y-2 py-2 @else hidden space-y-2 py-2 @endif">
+            class="@if (request()->routeIs(['skor-respon', 'rekap-respon', 'rekap-dp-except-staff'])) space-y-2 py-2 @else hidden space-y-2 py-2 @endif">
           <li>
             <a href="{{ route('skor-respon') }}"
                class="@if (Route::currentRouteName() === 'skor-respon') active bg-blue-200 @endif group flex w-full items-center rounded-lg p-2 pl-11 text-base font-medium text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">

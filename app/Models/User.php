@@ -43,6 +43,5 @@ class User extends Authenticatable
     ];
 
     protected $table = 'tbl_pengguna';
-
-    protected $guarded = ['id'];
+    protected $guard = 'id';
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -11,7 +12,6 @@ class GResponse extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'google_form';
-
     protected $guard = 'id';
 
     protected $fillable = [
@@ -39,12 +39,12 @@ class GResponse extends Model
         'proses_polapikir',
     ];
 
-    public function relasi_penilai()
+    public function relasi_penilai(): BelongsTo
     {
         return $this->belongsTo(RelasiKaryawan::class, 'npp_penilai', 'npp_karyawan');
     }
 
-    public function relasi_dinilai()
+    public function relasi_dinilai(): BelongsTo
     {
         return $this->belongsTo(RelasiKaryawan::class, 'npp_dinilai', 'npp_karyawan');
     }

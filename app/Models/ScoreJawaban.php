@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class ScoreJawaban extends Model
@@ -19,12 +20,12 @@ class ScoreJawaban extends Model
         'skor'
     ];
 
-    public function aspek()
+    public function aspek(): BelongsTo
     {
         return $this->belongsTo(Aspek::class, 'aspek_id', 'id');
     }
 
-    public function indikator()
+    public function indikator(): BelongsTo
     {
         return $this->belongsTo(Indikator::class, 'indikator_id', 'id');
     }
