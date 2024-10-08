@@ -58,10 +58,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/rekap-dp-except-staff', RekapDp3ExStaff::class)->name('rekap-dp-except-staff');
         });
         // End Livewire route
-
-        Route::get('/pdfsample', function () {
-            return view('pdf.dokumen-table');
-        });
     });
 });
 
@@ -73,12 +69,12 @@ Route::middleware('guest')->group(function () {
 
     Route::controller(RegisterController::class)->group(function () {
         Route::get('register', 'index')->name('register');
-        Route::post('register/create', 'create')->name('register/create');
-        Route::post('register/check', 'check')->name('register/check');
+        Route::post('register-create', 'create')->name('register-create');
+        Route::post('register-check', 'check')->name('register-check');
     });
 
     Route::controller(ForgotPasswordController::class)->group(function () {
         Route::get('forgot', 'index')->name('forgot');
-        Route::post('forgot/send', 'send')->name('forgot/send');
+        Route::post('forgot-send', 'send')->name('forgot-send');
     });
 });

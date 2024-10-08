@@ -38,7 +38,7 @@
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Form Lupa Password</p>
 
-                <form action="{{ route('forgot/send') }}" method="post">
+                <form action="{{ route('forgot-send') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
                         <input type="text" class="form-control @error('npp') is-invalid @enderror" placeholder="NPP"

@@ -32,7 +32,7 @@
             <div class="card-body register-card-body">
                 <p class="login-box-msg">Form Pendaftaran</p>
 
-                <form action="{{ route('register/check') }}" method="post">
+                <form action="{{ route('register-check') }}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-lg-6">
@@ -68,7 +68,7 @@
                     </div>
                 </form>
                 @if (Session::get('nama'))
-                    <form action="{{ route('register/create') }}" method="post" enctype="multipart/form-data"
+                    <form action="{{ route('register-create') }}" method="post" enctype="multipart/form-data"
                         id="formDaftar">
                         <div class="row">
                             @csrf
