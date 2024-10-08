@@ -10,7 +10,6 @@ class Aspek extends Model
     use HasFactory;
 
     protected $table = 'aspek';
-
     protected $guard = 'id';
 
     protected $fillable = [
