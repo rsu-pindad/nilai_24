@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Sdm;
 
+use App\Exports\Sdm\Rekap\Dp3Export;
 use App\Jobs\Sdm\Rekap\RekapNilaiDp3;
 use App\Livewire\Notifikasi\NotifikasiDefault;
 use App\Models\RekapDp3;
@@ -14,6 +15,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\LaravelPdf\Enums\Orientation;
 use Spatie\LaravelPdf\Facades\Pdf;
 
@@ -51,26 +53,26 @@ class RekapDp3ExStaff extends Component
                 'atasan_nama_karyawan'                 => $dataAtasanKaryawan->relasi_baru_karyawan->nama_karyawan,
                 'atasan_level_jabatan'                 => $dataAtasanKaryawan->relasi_baru_karyawan->level_jabatan,
                 'atasan_unit_jabatan'                  => $dataAtasanKaryawan->relasi_baru_karyawan->unit_jabatan,
-                'strategi_perencanaan_konversi_aspek'  => round($dataKaryawan->getSum('strategi_perencanaan_konversi_aspek') + $dataKaryawan->getAvg('strategi_perencanaan_konversi_aspek'), 2),
-                'strategi_pengawasan_konversi_aspek'   => round($dataKaryawan->getSum('strategi_pengawasan_konversi_aspek') + $dataKaryawan->getAvg('strategi_pengawasan_konversi_aspek'), 2),
-                'strategi_inovasi_konversi_aspek'      => round($dataKaryawan->getSum('strategi_inovasi_konversi_aspek') + $dataKaryawan->getAvg('strategi_inovasi_konversi_aspek'), 2),
-                'kepemimpinan_konversi_aspek'          => round($dataKaryawan->getSum('kepemimpinan_konversi_aspek') + $dataKaryawan->getAvg('kepemimpinan_konversi_aspek'), 2),
-                'membimbing_membangun_konversi_aspek'  => round($dataKaryawan->getSum('membimbing_membangun_konversi_aspek') + $dataKaryawan->getAvg('membimbing_membangun_konversi_aspek'), 2),
-                'pengambilan_keputusan_konversi_aspek' => round($dataKaryawan->getSum('pengambilan_keputusan_konversi_aspek') + $dataKaryawan->getAvg('pengambilan_keputusan_konversi_aspek'), 2),
-                'kerjasama_konversi_aspek'             => round($dataKaryawan->getSum('kerjasama_konversi_aspek') + $dataKaryawan->getAvg('kerjasama_konversi_aspek'), 2),
-                'komunikasi_konversi_aspek'            => round($dataKaryawan->getSum('komunikasi_konversi_aspek') + $dataKaryawan->getAvg('komunikasi_konversi_aspek'), 2),
-                'absensi_konversi_aspek'               => round($dataKaryawan->getSum('absensi_konversi_aspek') + $dataKaryawan->getAvg('absensi_konversi_aspek'), 2),
-                'integritas_konversi_aspek'            => round($dataKaryawan->getSum('integritas_konversi_aspek') + $dataKaryawan->getAvg('integritas_konversi_aspek'), 2),
-                'etika_konversi_aspek'                 => round($dataKaryawan->getSum('etika_konversi_aspek') + $dataKaryawan->getAvg('etika_konversi_aspek'), 2),
-                'goal_kinerja_konversi_aspek'          => round($dataKaryawan->getSum('goal_kinerja_konversi_aspek') + $dataKaryawan->getAvg('goal_kinerja_konversi_aspek'), 2),
-                'error_kinerja_konversi_aspek'         => round($dataKaryawan->getSum('error_kinerja_konversi_aspek') + $dataKaryawan->getAvg('error_kinerja_konversi_aspek'), 2),
-                'proses_dokumen_konversi_aspek'        => round($dataKaryawan->getSum('proses_dokumen_konversi_aspek') + $dataKaryawan->getAvg('proses_dokumen_konversi_aspek'), 2),
-                'proses_inisiatif_konversi_aspek'      => round($dataKaryawan->getSum('proses_inisiatif_konversi_aspek') + $dataKaryawan->getAvg('proses_inisiatif_konversi_aspek'), 2),
-                'proses_polapikir_konversi_aspek'      => round($dataKaryawan->getSum('proses_polapikir_konversi_aspek') + $dataKaryawan->getAvg('proses_polapikir_konversi_aspek'), 2),
-                'sum_nilai_k_konversi_aspek'           => round($dataKaryawan->getSum('sum_nilai_k_konversi_aspek') + $dataKaryawan->getAvg('sum_nilai_k_konversi_aspek'), 2),
-                'sum_nilai_s_konversi_aspek'           => round($dataKaryawan->getSum('sum_nilai_s_konversi_aspek') + $dataKaryawan->getAvg('sum_nilai_s_konversi_aspek'), 2),
-                'sum_nilai_p_konversi_aspek'           => round($dataKaryawan->getSum('sum_nilai_p_konversi_aspek') + $dataKaryawan->getAvg('sum_nilai_p_konversi_aspek'), 2),
-                'sum_nilai_dp3'                        => round($dataKaryawan->getSum('sum_nilai_dp3') + $dataKaryawan->getAvg('sum_nilai_dp3'), 2),
+                'strategi_perencanaan_konversi_aspek'  => round($dataKaryawan->getAvgAtasan('strategi_perencanaan_konversi_aspek') + $dataKaryawan->getAvgSelf('strategi_perencanaan_konversi_aspek') + $dataKaryawan->getAvgRekanan('strategi_perencanaan_konversi_aspek') + $dataKaryawan->getAvgStaff('strategi_perencanaan_konversi_aspek'), 2),
+                'strategi_pengawasan_konversi_aspek'   => round($dataKaryawan->getAvgAtasan('strategi_pengawasan_konversi_aspek') + $dataKaryawan->getAvgSelf('strategi_pengawasan_konversi_aspek') + $dataKaryawan->getAvgRekanan('strategi_pengawasan_konversi_aspek') + $dataKaryawan->getAvgStaff('strategi_pengawasan_konversi_aspek'), 2),
+                'strategi_inovasi_konversi_aspek'      => round($dataKaryawan->getAvgAtasan('strategi_inovasi_konversi_aspek') + $dataKaryawan->getAvgSelf('strategi_inovasi_konversi_aspek') + $dataKaryawan->getAvgRekanan('strategi_inovasi_konversi_aspek') + $dataKaryawan->getAvgStaff('strategi_inovasi_konversi_aspek'), 2),
+                'kepemimpinan_konversi_aspek'          => round($dataKaryawan->getAvgAtasan('kepemimpinan_konversi_aspek') + $dataKaryawan->getAvgSelf('kepemimpinan_konversi_aspek') + $dataKaryawan->getAvgRekanan('kepemimpinan_konversi_aspek') + $dataKaryawan->getAvgStaff('kepemimpinan_konversi_aspek'), 2),
+                'membimbing_membangun_konversi_aspek'  => round($dataKaryawan->getAvgAtasan('membimbing_membangun_konversi_aspek') + $dataKaryawan->getAvgSelf('membimbing_membangun_konversi_aspek') + $dataKaryawan->getAvgRekanan('membimbing_membangun_konversi_aspek') + $dataKaryawan->getAvgStaff('membimbing_membangun_konversi_aspek'), 2),
+                'pengambilan_keputusan_konversi_aspek' => round($dataKaryawan->getAvgAtasan('pengambilan_keputusan_konversi_aspek') + $dataKaryawan->getAvgSelf('pengambilan_keputusan_konversi_aspek') + $dataKaryawan->getAvgRekanan('pengambilan_keputusan_konversi_aspek') + $dataKaryawan->getAvgStaff('pengambilan_keputusan_konversi_aspek'), 2),
+                'kerjasama_konversi_aspek'             => round($dataKaryawan->getAvgAtasan('kerjasama_konversi_aspek') + $dataKaryawan->getAvgSelf('kerjasama_konversi_aspek') + $dataKaryawan->getAvgRekanan('kerjasama_konversi_aspek') + $dataKaryawan->getAvgStaff('kerjasama_konversi_aspek'), 2),
+                'komunikasi_konversi_aspek'            => round($dataKaryawan->getAvgAtasan('komunikasi_konversi_aspek') + $dataKaryawan->getAvgSelf('komunikasi_konversi_aspek') + $dataKaryawan->getAvgRekanan('komunikasi_konversi_aspek') + $dataKaryawan->getAvgStaff('komunikasi_konversi_aspek'), 2),
+                'absensi_konversi_aspek'               => round($dataKaryawan->getAvgAtasan('absensi_konversi_aspek') + $dataKaryawan->getAvgSelf('absensi_konversi_aspek') + $dataKaryawan->getAvgRekanan('absensi_konversi_aspek') + $dataKaryawan->getAvgStaff('absensi_konversi_aspek'), 2),
+                'integritas_konversi_aspek'            => round($dataKaryawan->getAvgAtasan('integritas_konversi_aspek') + $dataKaryawan->getAvgSelf('integritas_konversi_aspek') + $dataKaryawan->getAvgRekanan('integritas_konversi_aspek') + $dataKaryawan->getAvgStaff('integritas_konversi_aspek'), 2),
+                'etika_konversi_aspek'                 => round($dataKaryawan->getAvgAtasan('etika_konversi_aspek') + $dataKaryawan->getAvgSelf('etika_konversi_aspek') + $dataKaryawan->getAvgRekanan('etika_konversi_aspek') + $dataKaryawan->getAvgStaff('etika_konversi_aspek'), 2),
+                'goal_kinerja_konversi_aspek'          => round($dataKaryawan->getAvgAtasan('goal_kinerja_konversi_aspek') + $dataKaryawan->getAvgSelf('goal_kinerja_konversi_aspek') + $dataKaryawan->getAvgRekanan('goal_kinerja_konversi_aspek') + $dataKaryawan->getAvgStaff('goal_kinerja_konversi_aspek'), 2),
+                'error_kinerja_konversi_aspek'         => round($dataKaryawan->getAvgAtasan('error_kinerja_konversi_aspek') + $dataKaryawan->getAvgSelf('error_kinerja_konversi_aspek') + $dataKaryawan->getAvgRekanan('error_kinerja_konversi_aspek') + $dataKaryawan->getAvgStaff('error_kinerja_konversi_aspek'), 2),
+                'proses_dokumen_konversi_aspek'        => round($dataKaryawan->getAvgAtasan('proses_dokumen_konversi_aspek') + $dataKaryawan->getAvgSelf('proses_dokumen_konversi_aspek') + $dataKaryawan->getAvgRekanan('proses_dokumen_konversi_aspek') + $dataKaryawan->getAvgStaff('proses_dokumen_konversi_aspek'), 2),
+                'proses_inisiatif_konversi_aspek'      => round($dataKaryawan->getAvgAtasan('proses_inisiatif_konversi_aspek') + $dataKaryawan->getAvgSelf('proses_inisiatif_konversi_aspek') + $dataKaryawan->getAvgRekanan('proses_inisiatif_konversi_aspek') + $dataKaryawan->getAvgStaff('proses_inisiatif_konversi_aspek'), 2),
+                'proses_polapikir_konversi_aspek'      => round($dataKaryawan->getAvgAtasan('proses_polapikir_konversi_aspek') + $dataKaryawan->getAvgSelf('proses_polapikir_konversi_aspek') + $dataKaryawan->getAvgRekanan('proses_polapikir_konversi_aspek') + $dataKaryawan->getAvgStaff('proses_polapikir_konversi_aspek'), 2),
+                'sum_nilai_k_konversi_aspek'           => round($dataKaryawan->getAvgAtasan('sum_nilai_k_konversi_aspek') + $dataKaryawan->getAvgSelf('sum_nilai_k_konversi_aspek') + $dataKaryawan->getAvgRekanan('sum_nilai_k_konversi_aspek') + $dataKaryawan->getAvgStaff('sum_nilai_k_konversi_aspek'), 2),
+                'sum_nilai_s_konversi_aspek'           => round($dataKaryawan->getAvgAtasan('sum_nilai_s_konversi_aspek') + $dataKaryawan->getAvgSelf('sum_nilai_s_konversi_aspek') + $dataKaryawan->getAvgRekanan('sum_nilai_s_konversi_aspek') + $dataKaryawan->getAvgStaff('sum_nilai_s_konversi_aspek'), 2),
+                'sum_nilai_p_konversi_aspek'           => round($dataKaryawan->getAvgAtasan('sum_nilai_p_konversi_aspek') + $dataKaryawan->getAvgSelf('sum_nilai_p_konversi_aspek') + $dataKaryawan->getAvgRekanan('sum_nilai_p_konversi_aspek') + $dataKaryawan->getAvgStaff('sum_nilai_p_konversi_aspek'), 2),
+                'sum_nilai_dp3'                        => round($dataKaryawan->getAvgAtasan('sum_nilai_dp3') + $dataKaryawan->getAvgSelf('sum_nilai_dp3') + $dataKaryawan->getAvgRekanan('sum_nilai_dp3') + $dataKaryawan->getAvgStaff('sum_nilai_dp3'), 2),
             ];
             $pdfName        = $dataKaryawan->npp_karyawan . '_final.pdf';
             $this->judulPdf = 'Personal : ' . $dataKaryawan->npp_karyawan . '/' . $dataKaryawan->nama_karyawan . '-' . $dataKaryawan->level_jabatan;
@@ -88,5 +90,10 @@ class RekapDp3ExStaff extends Component
         } catch (\Throwable $th) {
             return $this->dispatch('notifError', title: 'Rekap DP3', description: $th->getMessage())->to(NotifikasiDefault::class);
         }
+    }
+
+    public function export()
+    {
+        return Excel::download(new Dp3Export, 'test.xlsx');
     }
 }

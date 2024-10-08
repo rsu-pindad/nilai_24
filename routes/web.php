@@ -13,6 +13,7 @@ use App\Livewire\Sdm\Skor;
 use App\Livewire\Sdm\SkorRespon;
 use App\Livewire\Sdm\UserMgmt;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HC\AturJadwallController;
 
 /*
  * |--------------------------------------------------------------------------
@@ -36,6 +37,11 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('hc')->group(function () {
+        Route::controller(AturJadwallController::class)->group(function () {
+            Route::get('/atur-jadwal', 'index')->name('atur-jadwal');
+            Route::post('/atur-jadwal/store', 'store')->name('atur-jadwal-store');
+        });
+        
         // Livewire Route
         Route::controller(Skor::class)->group(function () {
             Route::get('/skor', Skor::class)->name('skor');

@@ -41,14 +41,24 @@ class RelasiKaryawan extends Model
         return $this->hasMany(RekapDp3::class, 'dinilai_id', 'id');
     }
 
-    public function getSum($value)
+    public function getAvgAtasan($value)
     {
-        return $this->finalDp3()->where('relasi', '!=', 'staff')->sum($value);
+        return $this->finalDp3()->where('relasi', '=', 'atasan')->average($value);
     }
 
-    public function getAvg($value)
+    public function getAvgSelf($value)
+    {
+        return $this->finalDp3()->where('relasi', '=', 'self')->average($value);
+    }
+
+    public function getAvgStaff($value)
     {
         return $this->finalDp3()->where('relasi', '=', 'staff')->average($value);
+    }
+
+    public function getAvgRekanan($value)
+    {
+        return $this->finalDp3()->where('relasi', '=', 'rekanan')->average($value);
     }
 
     public function relasi_atasan(): HasOne
