@@ -41,7 +41,7 @@
           <div class="flex space-x-4">
             <span class="group relative block">
               <img class="h-32 w-32 rounded-lg group-hover:opacity-50"
-                   src="{{ asset('storage/photo/' . Auth::user()->foto) }}"
+                   src="{{ asset('storage/photo/' . Auth::user()->foto ?? 'default.png') }}"
                    alt="user-avatar" />
               <div
                    class="translate-y-8 transform py-2 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">

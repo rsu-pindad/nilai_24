@@ -1,16 +1,28 @@
 <x-layout>
   <div class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-1 lg:grid-cols-2">
     <div class="grid h-auto justify-items-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
-      <div id="datepicker-inline"
-           class="p-4"
-           datepicker
-           datepicker-title="Jadwal Penilaian"
-           data-date="
-           {{ \Illuminate\Support\Carbon::createFromFormat('Y-m-d', $jadwalberjalan['jadwal'])->format('m/d/Y') ?? now()->format('m/d/Y') }}
+      @if (isset($jadwalberjalan['jadwal']))
+        <div id="datepicker-inline"
+             class="p-4"
+             datepicker
+             datepicker-title="Jadwal Penilaian"
+             data-date="
+           {{ \Illuminate\Support\Carbon::createFromFormat('Y-m-d', $jadwalberjalan['jadwal'])->format('m/d/Y') }}
            ">
-      </div>
+        </div>
+      @else
+        <div id="datepicker-inline"
+             class="p-4"
+             datepicker
+             datepicker-title="Jadwal Penilaian"
+             data-date="
+           {{ \Illuminate\Support\Carbon::now()->format('m/d/Y') }}
+           ">
+        </div>
+      @endif
     </div>
-    <div class="grid h-auto justify-items-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
+    <div
+         class="grid h-auto justify-items-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
 
       <div class="py-4">
         <svg class="h-[48px] w-[48px] text-gray-800 dark:text-white"

@@ -5,6 +5,7 @@ namespace App\Livewire\Sdm;
 use App\Models\PoolRespon;
 use App\Models\RekapPenilai;
 use App\Models\RelasiKaryawan;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -16,6 +17,9 @@ use Spatie\LaravelPdf\Facades\Pdf;
 #[Title('Halaman Rekap Respon')]
 class RekapRespon extends Component
 {
+    public $urlPdf   = '';
+    public $judulPdf = '';
+
     public function render()
     {
         return view('livewire.sdm.rekap-respon');
@@ -24,16 +28,18 @@ class RekapRespon extends Component
     #[On('lihatDokumen')]
     public function dokument($rowId)
     {
-        $dataRekap = RekapPenilai::with(['relasi_respon','identitas_penilai', 'identitas_dinilai'])->find($rowId);
-        $pdfName   = $dataRekap->npp_penilai_dinilai . '.pdf';
+        $dataRekap      = RekapPenilai::with(['relasi_respon', 'identitas_penilai', 'identitas_dinilai'])->find($rowId);
+        $pdfName        = $dataRekap->npp_penilai_dinilai . '.pdf';
+        $this->judulPdf = 'Penilai : ' . $dataRekap->identitas_penilai->nama_karyawan . ' - ' . 'Dinilai : ' . $dataRekap->identitas_dinilai->nama_karyawan;
 
-        return Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
-                   ->orientation(Orientation::Portrait)
-                //    ->format(Format::A4)
-                   ->margins(2, 2, 2, 2)
-                   //    ->name($pdfName);
-                   ->disk('public')
-                   ->save('dokumen/' . $pdfName);
+        Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+            ->orientation(Orientation::Portrait)
+            //    ->format(Format::A4)
+            ->margins(2, 2, 2, 2)
+            //    ->name($pdfName);
+            ->disk('public')
+            ->save('dokumen/' . $pdfName);
+        $this->urlPdf = Storage::disk('public')->url('dokumen/' . $pdfName);
     }
 
     public function calculate()

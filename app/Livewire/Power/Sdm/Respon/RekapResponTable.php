@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Power\Sdm\Respon;
 
+use App\Enums\Relasi;
 use App\Models\RekapPenilai;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -96,6 +97,7 @@ final class RekapResponTable extends PowerGridComponent
                            || Str::remove(' ', $query->jabatan_dinilai) == 'IB'
                            || Str::remove(' ', $query->jabatan_dinilai) == 'IC'
                            || Str::remove(' ', $query->jabatan_dinilai) == 'IANS'
+                           || Str::remove(' ', $query->jabatan_dinilai) == 'II'
                            || Str::remove(' ', $query->jabatan_dinilai) == 'III'
                            || Str::remove(' ', $query->jabatan_dinilai) == 'IIINS'
                            || Str::remove(' ', $query->jabatan_dinilai) == 'IIII'
@@ -146,8 +148,8 @@ final class RekapResponTable extends PowerGridComponent
                 ->hidden(isHidden: true, isForceHidden: false),
             // Column::make('Npp penilai', 'npp_penilai')
             Column::make('Relasi', 'relasi')
-                ->searchable(),
-            Column::make('Bobot Relasi', 'relasi_label', 'relasi'),
+                ->sortable(),
+            Column::make('Bobot Relasi', 'relasi_label' ),
             Column::make('Npp penilai', 'npp_penilai_npp_karyawan', 'npp_penilai'),
             Column::make('Nama penilai', 'npp_penilai_nama_karyawan', 'npp_penilai'),
             Column::make('Jabatan penilai', 'jabatan_penilai'),
@@ -172,7 +174,7 @@ final class RekapResponTable extends PowerGridComponent
                 ->sortable(),
             Column::make('Pengambilan keputusan', 'pengambilan_keputusan_bobot_aspek')
                 ->sortable(),
-            Column::make('Sum Kepemimpinan aspek', 'sum_nilai_k_bobot_aspek')
+            Column::make('Sum Kepemimpinan', 'sum_nilai_k_bobot_aspek')
                 ->sortable(),
             Column::make('Kerjasama', 'kerjasama_bobot_aspek')
                 ->sortable(),
@@ -205,13 +207,16 @@ final class RekapResponTable extends PowerGridComponent
                 ->searchable(),
             Column::make('Created at', 'created_at')
                 ->sortable(),
-            Column::action('Action')
+            Column::action('Kasi')
         ];
     }
 
     public function filters(): array
     {
         return [
+            Filter::enumSelect('relasi', 'relasi')
+                ->dataSource(Relasi::cases())
+                ->optionLabel('relasi'),
             Filter::inputText('npp_penilai_npp_karyawan')
                 ->placeholder('cari npp penilai')
                 ->operators(['contains', 'is_not'])
@@ -239,11 +244,6 @@ final class RekapResponTable extends PowerGridComponent
     public function actions(RekapPenilai $row): array
     {
         return [
-            Button::add('edit')
-                ->slot('Edit: ' . $row->id)
-                ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id]),
             Button::add('Pdf')
                 ->slot('<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17v-5h1.5a1.5 1.5 0 1 1 0 3H5m12 2v-5h2m-2 3h2M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m6 4v5h1.375A1.627 1.627 0 0 0 14 15.375v-1.75A1.627 1.627 0 0 0 12.375 12H11Z"/>

@@ -20,6 +20,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Livewire\Sdm\GoogleRespon;
+use App\Livewire\Sdm\RekapDp3ExStaff;
 use App\Livewire\Sdm\RekapRespon;
 use App\Livewire\Sdm\RelasiKaryawan;
 use App\Livewire\Sdm\Skor;
@@ -98,8 +99,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/skor-respon', SkorRespon::class)->name('skor-respon');
         });
         // Route::get('/penilai-rekap/all', 'index')->name('penilai-rekap-all');
-        Route::controller(RekapRespon::class)->group(function(){
+        Route::controller(RekapRespon::class)->group(function () {
             Route::get('/rekap-respon', RekapRespon::class)->name('rekap-respon');
+            Route::get('/rekap-dp-except-staff', RekapDp3ExStaff::class)->name('rekap-dp-except-staff');
         });
         // End Livewire route
 
@@ -253,7 +255,7 @@ Route::middleware('auth')->group(function () {
         //     Route::get('/score/table', 'index')->name('score.index');
         // });
 
-        Route::get('/pdfsample',function(){
+        Route::get('/pdfsample', function () {
             return view('pdf.dokumen-table');
         });
     });

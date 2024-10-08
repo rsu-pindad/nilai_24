@@ -17,11 +17,7 @@ class RelasiKaryawan extends Component
 
     public function sync()
     {
-        $sync = SynchronizeSpreadsheetUser::dispatch();
-        if (!$sync) {
-            return $this->dispatch('notifError', title: 'Relasi', description: $sync)->to(NotifikasiDefault::class);
-        }
-
+        SynchronizeSpreadsheetUser::dispatch();
         return $this->dispatch('notifSuccess', title: 'Relasi', description: 'relasi karyawan dilakukan!.')->to(NotifikasiDefault::class);
     }
 }

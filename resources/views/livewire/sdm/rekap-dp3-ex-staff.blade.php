@@ -1,16 +1,39 @@
 <div>
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
     <div class="grid h-auto rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
-      <div class="m-4">
-        <x-wireui-button label="Rekap Respon"
-                         wire:click="calculate"
-                         spinner
-                         icon="calculator"
-                         primary />
+      <div class="flex flex-row justify-around">
+        <div class="m-4">
+          <x-wireui-button label="Rekap DP3 Atasan"
+                           wire:click="calculate('atasan')"
+                           spinner
+                           icon="calculator"
+                           lime />
+        </div>
+        <div class="m-4">
+          <x-wireui-button label="Rekap DP3 Rekanan"
+                           wire:click="calculate('rekanan')"
+                           spinner
+                           icon="calculator"
+                           blue />
+        </div>
+        <div class="m-4">
+          <x-wireui-button label="Rekap DP3 Self"
+                           wire:click="calculate('self')"
+                           spinner
+                           icon="calculator"
+                           orange />
+        </div>
+        <div class="m-4">
+          <x-wireui-button label="Rekap DP3 Staff"
+                           wire:click="calculate('staff')"
+                           spinner
+                           icon="calculator"
+                           violet />
+        </div>
       </div>
     </div>
     <div class="rounded-lg border-2 border-dashed border-gray-300 p-4 dark:border-gray-600">
-      <livewire:Power.Sdm.Respon.RekapResponTable />
+      <livewire:Power.Sdm.Rekap.RekapDp3Table />
     </div>
   </div>
 
@@ -20,8 +43,7 @@
 
     <x-wireui-card title="Dokumen {{ $this->judulPdf }}">
 
-      <div class="flex flex-row content-center"
-           wire:loading>
+      <div class="flex flex-row content-center">
         <div role="status"
              class="self-center"
              wire:loading>
@@ -39,15 +61,15 @@
         </div>
       </div>
 
-      <div class="flex flex-row"
-           wire:loading.remove>
-        <iframe src="{{ $this->urlPdf }}#toolbar=0"
+      <div class="flex flex-row">
+        <iframe src="{{ $this->urlPdf }}"
                 width="800"
                 height="460"
                 style="border:0;"
                 allowfullscreen="false"
                 loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
+                referrerpolicy="no-referrer-when-downgrade"
+                wire:loading.remove>
         </iframe>
       </div>
 
@@ -59,8 +81,8 @@
                          x-on:click="close" />
 
         {{-- <x-wireui-button primary
-                         label="I Agree"
-                         wire:click="agree" /> --}}
+                           label="I Agree"
+                           wire:click="agree" /> --}}
 
       </x-slot>
 
@@ -69,7 +91,7 @@
   </x-wireui-modal>
 
   <script type="module">
-    Livewire.on('lihatDokumen', function() {
+    Livewire.on('lihatPersonalDokumen', function() {
       // alert('ok via javascript');
       $openModal('persistentModal');
 

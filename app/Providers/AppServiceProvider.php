@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View as FacadesView;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
+use Illuminate\Support\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        config(['app.locale' => 'id']);
+        Carbon::setLocale('id');
+
         FacadesView::composer('*', function (View $view) {
             $user            = Auth::user();
             $page            = '';

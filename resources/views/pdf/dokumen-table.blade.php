@@ -34,6 +34,94 @@
 
   <body>
 
+    @php
+
+      $jabatanDinilai = $dataRekap->identitas_dinilai->level_jabatan;
+      $relasi = $dataRekap->relasi_respon->relasi;
+      $aspek_perusahaan = false;
+      $aspek_kepemimpinan = false;
+      $aspek_sasaran = false;
+      $bobot_penilai = false;
+      if (
+          Str::remove(' ', $jabatanDinilai) == 'DIREKSI' ||
+          Str::remove(' ', $jabatanDinilai) == 'IA' ||
+          Str::remove(' ', $jabatanDinilai) == 'IB' ||
+          Str::remove(' ', $jabatanDinilai) == 'IC' ||
+          Str::remove(' ', $jabatanDinilai) == 'IANS' ||
+          Str::remove(' ', $jabatanDinilai) == 'II' ||
+          Str::remove(' ', $jabatanDinilai) == 'III' ||
+          Str::remove(' ', $jabatanDinilai) == 'IIINS' ||
+          Str::remove(' ', $jabatanDinilai) == 'IIII' ||
+          Str::remove(' ', $jabatanDinilai) == 'IV' ||
+          Str::remove(' ', $jabatanDinilai) == 'IVA(III)' ||
+          Str::remove(' ', $jabatanDinilai) == 'IVA(IIINS)' ||
+          Str::remove(' ', $jabatanDinilai) == 'IVA'
+      ) {
+          if ($relasi == 'atasan') {
+              $bobot_penilai = '60%';
+          }
+          if ($relasi == 'rekanan') {
+              $bobot_penilai = '20%';
+          }
+          if ($relasi == 'staff') {
+              $bobot_penilai = '15%';
+          }
+          if ($relasi == 'self') {
+              $bobot_penilai = '5%';
+          }
+      } else {
+          if ($relasi == 'atasan') {
+              $bobot_penilai = '65%';
+          }
+          if ($relasi == 'rekanan') {
+              $bobot_penilai = '25%';
+          }
+          if ($relasi == 'staff') {
+              $bobot_penilai = '-';
+          }
+          if ($relasi == 'self') {
+              $bobot_penilai = '10%';
+          }
+      }
+
+      if (
+          Str::remove(' ', $jabatanDinilai) == 'DIREKSI' ||
+          Str::remove(' ', $jabatanDinilai) == 'IA' ||
+          Str::remove(' ', $jabatanDinilai) == 'IB' ||
+          Str::remove(' ', $jabatanDinilai) == 'IC' ||
+          Str::remove(' ', $jabatanDinilai) == 'IANS'
+      ) {
+          $aspek_perusahaan = '25%';
+          $aspek_sasaran = '35%';
+          $aspek_kepemimpinan = '40%';
+      } elseif (Str::remove(' ', $jabatanDinilai) == 'II') {
+          $aspek_perusahaan = '25%';
+          $aspek_sasaran = '40%';
+          $aspek_kepemimpinan = '35%';
+      } elseif (
+          Str::remove(' ', $jabatanDinilai) == 'III' ||
+          Str::remove(' ', $jabatanDinilai) == 'IIINS' ||
+          Str::remove(' ', $jabatanDinilai) == 'IIII'
+      ) {
+          $aspek_perusahaan = '25%';
+          $aspek_sasaran = '45%';
+          $aspek_kepemimpinan = '30%';
+      } elseif (
+          Str::remove(' ', $jabatanDinilai) == 'IV' ||
+          Str::remove(' ', $jabatanDinilai) == 'IVA(III)' ||
+          Str::remove(' ', $jabatanDinilai) == 'IVA(IIINS)' ||
+          Str::remove(' ', $jabatanDinilai) == 'IVA'
+      ) {
+          $aspek_perusahaan = '30%';
+          $aspek_sasaran = '60%';
+          $aspek_kepemimpinan = '10%';
+      } else {
+          $aspek_perusahaan = '35%';
+          $aspek_sasaran = '65%';
+          $aspek_kepemimpinan = '0%';
+      }
+    @endphp
+
     <div class="mx-auto max-w-xl px-2 py-4">
       <table class="table-auto border-collapse border-spacing-0 border-slate-500 text-xs">
         <thead>
@@ -132,16 +220,18 @@
             <td class="border border-slate-600">Bobot Kinerja:</td>
             <td class="border border-slate-600">a</td>
             <td class="border border-slate-600">b</td>
-            <td class="border border-slate-600">c = (jml b / 30) * a</td>
+            <td class="border border-slate-600">c = (jml b / (Penilaian)) * a</td>
             <td class="border border-slate-600">d = c * 100</td>
           </tr>
 
           {{-- Nilai - Nilai <br>Perusahaan --}}
           <tr>
             <td class="border border-slate-600 font-semibold">1.Nilai - Nilai <br>Perusahaan</td>
-            <td class="border border-slate-600">%</td>
+            <td class="border border-slate-600">{{ $aspek_perusahaan }}</td>
             <td class="border border-slate-600">1 2 3 4 5</td>
-            <td class="border border-slate-600">xx/25 * ()%</td>
+            <td class="border border-slate-600">
+              ({{ $dataRekap->relasi_respon->kerjasama + $dataRekap->relasi_respon->komunikasi + $dataRekap->relasi_respon->absensi + $dataRekap->relasi_respon->integritas + $dataRekap->relasi_respon->etika }}/25)
+              * ({{ $aspek_perusahaan }})%</td>
             <td class="border border-slate-600"></td>
           </tr>
 
@@ -184,9 +274,11 @@
           {{-- Kepemimpinan --}}
           <tr>
             <td class="border border-slate-600 font-semibold">2.Kepemimpinan</td>
-            <td class="border border-slate-600">%</td>
+            <td class="border border-slate-600">{{ $aspek_kepemimpinan }}</td>
             <td class="border border-slate-600">1 2 3 4 5</td>
-            <td class="border border-slate-600">xx/35 * ()%</td>
+            <td class="border border-slate-600">
+              ({{ $dataRekap->relasi_respon->strategi_perencanaan + $dataRekap->relasi_respon->strategi_pengawasan + $dataRekap->relasi_respon->strategi_inovasi + $dataRekap->relasi_respon->kepemimpinan + $dataRekap->relasi_respon->membimbing_membangun + $dataRekap->relasi_respon->pengambilan_keputusan }}/30)
+              * ({{ $aspek_kepemimpinan }})%</td>
             <td class="border border-slate-600"></td>
           </tr>
 
@@ -237,9 +329,11 @@
           <tr>
             <td class="border border-slate-600 font-semibold">3.Tugas Utama <br>Sasaran Kinerja <br>Dan<br>Pengembangan
               Profesi</td>
-            <td class="border border-slate-600">%</td>
+            <td class="border border-slate-600">{{ $aspek_sasaran }}</td>
             <td class="border border-slate-600">1 2 3 4 5</td>
-            <td class="border border-slate-600">xx/30 * ()%</td>
+            <td class="border border-slate-600">
+              ({{ $dataRekap->relasi_respon->goal_kinerja + $dataRekap->relasi_respon->error_kinerja + $dataRekap->relasi_respon->proses_dokumen + $dataRekap->relasi_respon->proses_inisiatif + $dataRekap->relasi_respon->proses_polapikir }}/25)
+              * ({{ $aspek_sasaran }})%</td>
             <td class="border border-slate-600"></td>
           </tr>
           <tr>
@@ -284,6 +378,7 @@
                 class="border border-slate-800"></td>
             <td class="border border-slate-800 font-bold">
               {{ ($dataRekap->sum_nilai_k_bobot_aspek + $dataRekap->sum_nilai_s_bobot_aspek + $dataRekap->sum_nilai_p_bobot_aspek) * 100 }}
+              ({{ $bobot_penilai }})
             </td>
           </tr>
 

@@ -29,7 +29,7 @@ final class SkorResponTable extends PowerGridComponent
             Exportable::make('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-            Header::make()->showSoftDeletes(true),
+            Header::make()->showSoftDeletes(false),
             Footer::make()
                 ->pageName('skorResponTabel')
                 ->showPerPage(perPage: 25, perPageValues: [25, 50, 100, 500])
