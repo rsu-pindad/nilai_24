@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Enums\Format;
 use Spatie\LaravelPdf\Enums\Orientation;
 use Spatie\LaravelPdf\Facades\Pdf;
@@ -34,8 +35,11 @@ class RekapRespon extends Component
 
         if (config('app.env') != 'local') {
             Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
-                ->withBrowsershot('/usr/bin/chromium-browser')
-                ->setCustomTempPath(storage_path())
+                ->withBrowsershot(function (Browsershot $browsershot) {
+                    $browsershot
+                        ->setChromePath('/usr/bin/chromium-browser')
+                        ->setCustomTempPath(storage_path());
+                })
                 ->orientation(Orientation::Portrait)
                 //    ->format(Format::A4)
                 ->margins(2, 2, 2, 2)
