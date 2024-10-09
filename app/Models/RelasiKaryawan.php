@@ -21,17 +21,17 @@ class RelasiKaryawan extends Model
         'nama_karyawan',
     ];
 
-    public function karyawan_atasan()
+    public function karyawan_atasan(): HasMany
     {
         return $this->hasMany(RelasiAtasan::class, 'relasi_karyawan_id', 'id');
     }
 
-    public function karyawan_selevel()
+    public function karyawan_selevel(): HasMany
     {
         return $this->hasMany(RelasiSelevel::class, 'relasi_karyawan_id', 'id');
     }
 
-    public function karyawan_staff()
+    public function karyawan_staff(): HasMany
     {
         return $this->hasMany(RelasiStaff::class, 'relasi_karyawan_id', 'id');
     }
@@ -41,14 +41,24 @@ class RelasiKaryawan extends Model
         return $this->hasMany(RekapDp3::class, 'dinilai_id', 'id');
     }
 
-    public function getSum($value)
+    public function getAvgAtasan($value)
     {
-        return $this->finalDp3()->where('relasi', '!=', 'staff')->sum($value);
+        return $this->finalDp3()->where('relasi', '=', 'atasan')->average($value);
     }
 
-    public function getAvg($value)
+    public function getAvgSelf($value)
+    {
+        return $this->finalDp3()->where('relasi', '=', 'self')->average($value);
+    }
+
+    public function getAvgStaff($value)
     {
         return $this->finalDp3()->where('relasi', '=', 'staff')->average($value);
+    }
+
+    public function getAvgRekanan($value)
+    {
+        return $this->finalDp3()->where('relasi', '=', 'rekanan')->average($value);
     }
 
     public function relasi_atasan(): HasOne

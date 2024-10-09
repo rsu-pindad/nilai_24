@@ -10,7 +10,6 @@ class Indikator extends Model
     use HasFactory;
 
     protected $table = 'indikator';
-
     protected $guard = 'id';
 
     protected $fillable = [

@@ -3,7 +3,6 @@
 namespace App\Livewire\Power\Sdm\Rekap;
 
 use App\Models\RekapDp3;
-use App\Models\RelasiKaryawan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
@@ -19,17 +18,12 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 final class RekapDp3Table extends PowerGridComponent
 {
-    use WithExport;
-
     public function setUp(): array
     {
-        $this->showCheckBox();
+        // $this->showCheckBox();
 
         return [
-            Exportable::make('export_rekap_dp3_')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-            Header::make()->showSoftDeletes(false)->showSearchInput(),
+            Header::make()->showSearchInput(),
             Footer::make()
                 ->pageName('personalPage')
                 ->showPerPage(perPage: 25, perPageValues: [25, 50, 100, 250])

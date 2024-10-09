@@ -9,8 +9,7 @@ class LinkNilai extends Model
 {
     use HasFactory;
 
-    protected $table = 'link_nilai';
-
+    protected $table   = 'link_nilai';
     protected $guarded = 'id';
 
     protected $fillable = [

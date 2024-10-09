@@ -37,7 +37,7 @@ class LoginController extends Controller
                        ->withInput();
         }
 
-        if (!$auth = Auth::attempt($credentials->validated())) {
+        if (!Auth::attempt($credentials->validated())) {
             return redirect()
                        ->back()
                        ->withErrors(['auth' => 'username atau password salah !.'])

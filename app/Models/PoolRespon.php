@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -38,12 +39,12 @@ class PoolRespon extends Model
         'npp_penilai_dinilai'
     ];
 
-    public function karyawan()
+    public function karyawan(): BelongsTo
     {
         return $this->belongsTo(RelasiKaryawan::class, 'npp_penilai', 'id');
     }
-    
-    public function karyawan_dinilai()
+
+    public function karyawan_dinilai(): BelongsTo
     {
         return $this->belongsTo(RelasiKaryawan::class, 'npp_dinilai', 'npp_karyawan');
     }

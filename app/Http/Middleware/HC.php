@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Closure;
 
 class HC
 {
@@ -19,6 +19,7 @@ class HC
         if (Auth::user()->level != 1) {
             return abort(401);
         }
+
         return $next($request);
     }
 }

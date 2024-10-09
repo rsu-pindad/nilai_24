@@ -12,13 +12,14 @@ class ForgotPasswordController extends Controller
     public function index()
     {
         $data = ['title' => 'Halaman Lupa Password'];
+
         return view('forgotpassword', $data);
     }
 
     public function send(Request $request)
     {
         $password = Str::random(10);
-        $user = User::where('npp', $request->npp)->first();
+        $user     = User::where('npp', $request->npp)->first();
 
         if ($user) {
             if ($user->no_hp == $request->no_hp) {
@@ -36,11 +37,11 @@ class ForgotPasswordController extends Controller
                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                     CURLOPT_CUSTOMREQUEST => 'POST',
                     CURLOPT_POSTFIELDS => array(
-                        'target' => $request->no_hp,
-                        'message' => "Password baru : $password
+                        'target'      => $request->no_hp,
+                        'message'     => "Password baru : $password
 
                         https://assessment.pindadmedika.com/2024",
-                        'countryCode' => '62',  // optional
+                        'countryCode' => '62',                       // optional
                     ),
                     CURLOPT_HTTPHEADER => array(
                         'Authorization: ' . env('FONNTE_TOKEN', '')  // change TOKEN to your actual token

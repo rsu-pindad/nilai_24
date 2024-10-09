@@ -10,7 +10,6 @@ class Employee extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'tbl_karyawan';
-
-    protected $guarded = ['id'];
+    protected $table   = 'tbl_karyawan';
+    protected $guarded = 'id';
 }

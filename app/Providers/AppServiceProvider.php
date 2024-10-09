@@ -8,9 +8,9 @@ use App\Models\RelasiSelevel;
 use App\Models\RelasiStaff;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View as FacadesView;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
-use Illuminate\Support\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,14 +34,11 @@ class AppServiceProvider extends ServiceProvider
             $user            = Auth::user();
             $page            = '';
             $link            = '';
-            $chunk           = [];
-            $sheet           = [];
             $relasi_karyawan = [];
             $relasi_atasan   = [];
             $relasi_selevel  = [];
             $relasi_staff    = [];
             $custom_data     = [];
-            $sheet_id        = config('google.config.sheet_dp_2024_id', '');
             $googleFormLink  = config('google.config.sheet_response_link', '');
             if ($user) {
                 if ($user->level != 1) {
@@ -52,10 +49,7 @@ class AppServiceProvider extends ServiceProvider
                     $relasi_selevel  = RelasiSelevel::where('relasi_karyawan_id', $relasi_karyawan->id);
                     $relasi_staff    = RelasiStaff::with(['relasi_karyawan'])->where('relasi_karyawan_id', $relasi_karyawan->id)->get();
 
-                    // if($form_link){
-                    // $form_data = $form_link->toArray();
-                    $form_data = [];
-                    // $form_data['form_start'] = 'https://docs.google.com/forms/d/e/1FAIpQLSfTQ2DyudZ-cGmfqWjS1Gz4fPJK33jJXIa7nOi4vVm-LYwnfA/viewform?usp=pp_url';
+                    $form_data               = [];
                     $form_data['form_start'] = $googleFormLink;
                     $form_data['form_1']     = 'entry.309041911=';
                     $form_data['form_2']     = 'entry.2024238832=';
@@ -64,7 +58,6 @@ class AppServiceProvider extends ServiceProvider
                     $form_data['form_5']     = 'entry.1491559044=';
                     $self                    = $relasi_karyawan->toArray();
 
-                    // if($self['level_jabatan'])
                     $form_self = $form_data['form_start']
                         . '&' . $form_data['form_1'] . Auth::user()->npp
                         . '&' . $form_data['form_2'] . $self['nama_karyawan']
@@ -78,7 +71,6 @@ class AppServiceProvider extends ServiceProvider
                         $data_atasan = RelasiKaryawan::where('npp_karyawan', $atasan['npp_atasan'])->first();
                         if ($data_atasan) {
                             $data_atasan->toArray();
-                            // $full_form = $form_data['form_start'].'&'.$form_data['form_1'].'&'.$form_data['form_2'].'&'.$form_data['form_3'].'&'.$form_data['form_4'].'&'.$form_data['form_5'];
                             $atasan = json_decode($relasi_atasan->pluck('npp_atasan')->toJson());
                             $form_atasan = $form_data['form_start']
                                 . '&' . $form_data['form_1'] . Auth::user()->npp
@@ -128,10 +120,6 @@ class AppServiceProvider extends ServiceProvider
                             $daftarStaff[$key]['LINK_STAFF'] = $form_staff;
                         }
                     }
-                    // }else{
-                    //     $form_data = $form_link;
-                    // }
-
                     $custom_data = [
                         'NPP'       => Auth::user()->npp,
                         'LINK_SELF' => $form_self ?? '',

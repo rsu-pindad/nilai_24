@@ -31,6 +31,15 @@
                            violet />
         </div>
       </div>
+      <div class="flex flex-row justify-around">
+        <div class="m-4">
+          <x-wireui-button label="Ekport DP3"
+                           wire:click="export()"
+                           spinner
+                           icon="calculator"
+                           light lime />
+        </div>
+      </div>
     </div>
     <div class="rounded-lg border-2 border-dashed border-gray-300 p-4 dark:border-gray-600">
       <livewire:Power.Sdm.Rekap.RekapDp3Table />

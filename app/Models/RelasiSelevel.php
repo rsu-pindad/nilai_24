@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Model;
 
 class RelasiSelevel extends Model
 {
     use HasFactory;
-    protected $table = 'populate_relasi_selevel';
 
+    protected $table = 'populate_relasi_selevel';
     protected $guard = 'id';
 
     protected $fillable = [
@@ -17,16 +19,17 @@ class RelasiSelevel extends Model
         'npp_selevel'
     ];
 
-    public function relasi_karyawan(){
+    public function relasi_karyawan(): BelongsTo
+    {
         return $this->belongsTo(RelasiKaryawan::class, 'relasi_karyawan_id');
     }
 
-    public function parent_selevel()
+    public function parent_selevel(): HasOne
     {
         return $this->hasOne(RelasiKaryawan::class, 'id', 'relasi_karyawan_id');
     }
 
-    public function identitas_selevel()
+    public function identitas_selevel(): HasOne
     {
         return $this->hasOne(RelasiKaryawan::class, 'npp_karyawan', 'npp_selevel');
     }

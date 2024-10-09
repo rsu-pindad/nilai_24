@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Model;
 
 class RelasiAtasan extends Model
@@ -18,9 +19,9 @@ class RelasiAtasan extends Model
         'npp_atasan'
     ];
 
-    public function relasi_karyawan()
+    public function relasi_karyawan(): BelongsTo
     {
-        return $this->belongsTo(RelasiKaryawan::class, 'relasi_karyawan_id');
+        return $this->belongsTo(RelasiKaryawan::class, 'relasi_karyawan_id', 'npp_karyawan');
     }
 
     public function relasi_baru_karyawan(): BelongsTo
@@ -28,7 +29,7 @@ class RelasiAtasan extends Model
         return $this->belongsTo(RelasiKaryawan::class, 'npp_atasan', 'npp_karyawan');
     }
 
-    public function parent_atasan()
+    public function parent_atasan(): HasOne
     {
         return $this->hasOne(RelasiKaryawan::class, 'id', 'relasi_karyawan_id');
     }

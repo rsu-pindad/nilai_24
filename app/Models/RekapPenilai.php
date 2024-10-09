@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -64,22 +65,22 @@ class RekapPenilai extends Model
         'npp_penilai_dinilai'
     ];
 
-    public function relasi_karyawan()
+    public function relasi_karyawan(): BelongsTo
     {
         return $this->belongsTo(RelasiKaryawan::class, 'npp_penilai', 'id');
     }
 
-    public function relasi_respon()
+    public function relasi_respon(): BelongsTo
     {
         return $this->belongsTo(PoolRespon::class, 'pool_respon_id', 'id');
     }
 
-    public function identitas_dinilai()
+    public function identitas_dinilai(): HasOne
     {
         return $this->hasOne(RelasiKaryawan::class, 'npp_karyawan', 'npp_dinilai');
     }
 
-    public function identitas_penilai()
+    public function identitas_penilai(): HasOne
     {
         return $this->hasOne(RelasiKaryawan::class, 'id', 'npp_penilai');
     }
