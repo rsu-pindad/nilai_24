@@ -32,13 +32,26 @@ class RekapRespon extends Component
         $pdfName        = $dataRekap->npp_penilai_dinilai . '.pdf';
         $this->judulPdf = 'Penilai : ' . $dataRekap->identitas_penilai->nama_karyawan . ' - ' . 'Dinilai : ' . $dataRekap->identitas_dinilai->nama_karyawan;
 
-        Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
-            ->orientation(Orientation::Portrait)
-            //    ->format(Format::A4)
-            ->margins(2, 2, 2, 2)
-            //    ->name($pdfName);
-            ->disk('public')
-            ->save('dokumen/' . $pdfName);
+        if (config('app.env') != 'local') {
+            Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+                ->withBrowsershot('/usr/bin/chromium-browser')
+                ->setCustomTempPath(storage_path())
+                ->orientation(Orientation::Portrait)
+                //    ->format(Format::A4)
+                ->margins(2, 2, 2, 2)
+                //    ->name($pdfName);
+                ->disk('public')
+                ->save('dokumen/' . $pdfName);
+        } else {
+            Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+                ->orientation(Orientation::Portrait)
+                //    ->format(Format::A4)
+                ->margins(2, 2, 2, 2)
+                //    ->name($pdfName);
+                ->disk('public')
+                ->save('dokumen/' . $pdfName);
+        }
+
         $this->urlPdf = Storage::disk('public')->url('dokumen/' . $pdfName);
     }
 
