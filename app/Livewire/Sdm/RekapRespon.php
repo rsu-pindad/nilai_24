@@ -40,7 +40,7 @@ class RekapRespon extends Component
                     ->setNodeBinary('/usr/bin/node')
                     ->setNpmBinary('/usr/bin/npm')
                     ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/')
-                    ->setChromePath('/var/www/penilaian.pmu.my.id/node_modules/puppeteer')
+                    ->setChromePath('/usr/bin/chromium-browser')
                     ->addChromiumArguments(['--disable-web-security', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
                     ->waitUntilNetworkIdle()
                     ->emulateMedia('screen')
