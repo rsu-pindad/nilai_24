@@ -38,7 +38,7 @@ class RekapRespon extends Component
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot
                 ->setCustomTempPath('/tmp')
-                ->setChromePath('/snap/bin/chromium')
+                ->setChromePath('/usr/bin/chromium-browser')
                 ->newHeadless();
                     // ->setNodeBinary('/usr/bin/node')
                     // ->setNpmBinary('/usr/bin/npm')
