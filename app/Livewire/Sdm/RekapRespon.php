@@ -37,17 +37,19 @@ class RekapRespon extends Component
         Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot
-                ->setCustomTempPath('/tmp')
-                ->setChromePath('/usr/bin/chromium-browser')
-                ->newHeadless();
-                    // ->setNodeBinary('/usr/bin/node')
-                    // ->setNpmBinary('/usr/bin/npm')
-                    // ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/')
-                    // ->setChromePath('/usr/bin/chromium-browser')
-                    // ->addChromiumArguments(['--disable-web-security', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
-                    // ->waitUntilNetworkIdle()
-                    // ->emulateMedia('screen')
-                    // ->showBackground();
+                    ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-131.0.6767.0/chrome-linux64/chrome')
+                    ->noSandbox()
+                    ->newHeadless();
+                // ->setCustomTempPath('/tmp')
+                // ->setChromePath('/usr/bin/chromium-browser')
+                // ->setNodeBinary('/usr/bin/node')
+                // ->setNpmBinary('/usr/bin/npm')
+                // ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/')
+                // ->setChromePath('/usr/bin/chromium-browser')
+                // ->addChromiumArguments(['--disable-web-security', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
+                // ->waitUntilNetworkIdle()
+                // ->emulateMedia('screen')
+                // ->showBackground();
                 // ->addChromiumArguments([
                 //     'allow-running-insecure-content',                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kAllowRunningInsecureContent&ss=chromium
                 //     'autoplay-policy' => 'user-gesture-required',                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kAutoplayPolicy&ss=chromium
