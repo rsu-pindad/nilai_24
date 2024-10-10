@@ -79,10 +79,10 @@ class RekapRespon extends Component
                     ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
                     // ->setChromePath('/usr/bin/chromium-browser')
                     ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-129.0.6668.100/chrome-linux64/chrome')
-                    ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/')
-                    ->timeout(60000)
-                    ->noSandbox()
-                    ->newHeadless();
+                    ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/');
+                    // ->timeout(60000)
+                    // ->noSandbox()
+                    // ->newHeadless();
                     // ->setNodeBinary('/usr/bin/node')
                     // ->setNpmBinary('/usr/bin/npm')
                     // ->setIncludePath('$PATH:/usr/bin')
