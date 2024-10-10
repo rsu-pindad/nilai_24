@@ -37,14 +37,17 @@ class RekapRespon extends Component
         Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot
-                    ->setNodeBinary('/usr/bin/node')
-                    ->setNpmBinary('/usr/bin/npm')
-                    ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/')
-                    ->setChromePath('/usr/bin/chromium-browser')
-                    ->addChromiumArguments(['--disable-web-security', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
-                    ->waitUntilNetworkIdle()
-                    ->emulateMedia('screen')
-                    ->showBackground();
+                ->setCustomTempPath('/tmp')
+                ->setChromePath('/snap/bin/chromium')
+                ->newHeadless();
+                    // ->setNodeBinary('/usr/bin/node')
+                    // ->setNpmBinary('/usr/bin/npm')
+                    // ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/')
+                    // ->setChromePath('/usr/bin/chromium-browser')
+                    // ->addChromiumArguments(['--disable-web-security', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
+                    // ->waitUntilNetworkIdle()
+                    // ->emulateMedia('screen')
+                    // ->showBackground();
                 // ->addChromiumArguments([
                 //     'allow-running-insecure-content',                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kAllowRunningInsecureContent&ss=chromium
                 //     'autoplay-policy' => 'user-gesture-required',                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kAutoplayPolicy&ss=chromium
