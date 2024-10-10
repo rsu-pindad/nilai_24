@@ -36,11 +36,11 @@ class RekapRespon extends Component
         // if (config('app.env') != 'local') {
         Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
             ->withBrowsershot(function (Browsershot $browsershot) {
-                $browsershot
-                    ->setCustomTempPath('/tmp')
-                    ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-131.0.6767.0/chrome-linux64/chrome')
-                    ->noSandbox()
-                    ->newHeadless();
+                // $browsershot
+                // ->setCustomTempPath('/tmp')
+                // ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-131.0.6767.0/chrome-linux64/chrome')
+                // ->noSandbox()
+                // ->newHeadless();
                 // ->setChromePath('/usr/bin/chromium-browser')
                 // ->setNodeBinary('/usr/bin/node')
                 // ->setNpmBinary('/usr/bin/npm')
@@ -75,14 +75,17 @@ class RekapRespon extends Component
                 //     'window-size' => '1920,1080',                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kWindowSize&ss=chromium
                 //     'single-process',                                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kSingleProcess&ss=chromium
                 // ]);
-                // ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
-                // ->setChromePath('/usr/bin/chromium-browser')
-                // ->timeout(60000)
-                // ->noSandbox();
-                // ->setNodeBinary('/usr/bin/node')
-                // ->setNpmBinary('/usr/bin/npm')
-                // ->setIncludePath('$PATH:/usr/bin')
-                // ->setNodeModulePath('/usr/lib/node_modules/')
+                $browsershot
+                    ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
+                    // ->setChromePath('/usr/bin/chromium-browser')
+                    ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-129.0.6668.100/chrome-linux64/chrome')
+                    ->timeout(60000)
+                    ->noSandbox()
+                    ->newHeadless();
+                    // ->setNodeBinary('/usr/bin/node')
+                    // ->setNpmBinary('/usr/bin/npm')
+                    // ->setIncludePath('$PATH:/usr/bin')
+                    // ->setNodeModulePath('/usr/lib/node_modules/')
                 // ->setCustomTempPath(storage_path())
                 // ->setOption('newHeadless', true)
             })
