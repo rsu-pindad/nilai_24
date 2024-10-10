@@ -105,29 +105,24 @@ class RekapRespon extends Component
         //     ->save('dokumen/' . $pdfName);
         // }
 
-        Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
-            ->withBrowsershot(function (Browsershot $browsershot) {
-                $browsershot
-                    ->setOption('args', ['--disable-web-security'])
-                    ->ignoreHttpsErrors()
-                    ->noSandbox()
-                    ->addChromiumArguments([
-                        'lang' => 'en-US,en;q=0.9',
-                        'hide-scrollbars',
-                        'enable-font-antialiasing',
-                        'force-device-scale-factor' => 1,
-                        'font-render-hinting'       => 'none',
-                        'user-data-dir'             => '/home/www-data/user-data',
-                        'disk-cache-dir'            => '/home/www-data/user-data/Default/Cache',
-                    ])
-                    ->setChromePath('/home/www-data/.cache/puppeteer/chrome/linux-129.0.6668.91/chrome-linux64/chrome')
-                    ->newHeadless()
-                    ->showBackground();
-            })
-            ->orientation(Orientation::Portrait)
-            ->margins(2, 2, 2, 2)
-            ->disk('public')
-            ->save('dokumen/' . $pdfName);
+        $html = view('pdf.dokumen-table', ['dataRekap' => $dataRekap])->render();
+        Browsershot::html($html)
+            ->setOption('args', ['--disable-web-security'])
+            ->ignoreHttpsErrors()
+            ->noSandbox()
+            ->addChromiumArguments([
+                'lang' => 'en-US,en;q=0.9',
+                'hide-scrollbars',
+                'enable-font-antialiasing',
+                'force-device-scale-factor' => 1,
+                'font-render-hinting'       => 'none',
+                'user-data-dir'             => '/home/www-data/user-data',
+                'disk-cache-dir'            => '/home/www-data/user-data/Default/Cache',
+            ])
+            ->setChromePath('/home/www-data/.cache/puppeteer/chrome/linux-129.0.6668.91/chrome-linux64/chrome')
+            ->newHeadless()
+            ->showBackground()
+            ->savePdf('storage/dokumen/' . $pdfName);
         $this->urlPdf = Storage::disk('public')->url('dokumen/' . $pdfName);
     }
 
