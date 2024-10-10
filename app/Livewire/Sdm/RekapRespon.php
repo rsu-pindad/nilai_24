@@ -38,15 +38,15 @@ class RekapRespon extends Component
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot
                     ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
-                    // ->setNodeBinary('/usr/bin/node')
-                    // ->setNpmBinary('/usr/bin/npm')
-                    // ->setIncludePath('$PATH:/usr/bin')
                     ->setChromePath('/usr/bin/chromium-browser')
-                    // ->setNodeModulePath('/usr/lib/node_modules/')
-                    // ->setCustomTempPath(storage_path())
-                    ->timeout(60000);  // Increase timeout to 60 seconds
+                    ->timeout(60000)
+                    ->noSandbox();
+                // ->setNodeBinary('/usr/bin/node')
+                // ->setNpmBinary('/usr/bin/npm')
+                // ->setIncludePath('$PATH:/usr/bin')
+                // ->setNodeModulePath('/usr/lib/node_modules/')
+                // ->setCustomTempPath(storage_path())
                 // ->setOption('newHeadless', true)
-                // ->noSandbox();
             })
             // ->format(Format::A4)
             ->orientation(Orientation::Portrait)
