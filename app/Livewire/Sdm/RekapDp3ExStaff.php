@@ -16,6 +16,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Enums\Orientation;
 use Spatie\LaravelPdf\Facades\Pdf;
 
@@ -77,13 +78,31 @@ class RekapDp3ExStaff extends Component
             $pdfName        = $dataKaryawan->npp_karyawan . '_final.pdf';
             $this->judulPdf = 'Personal : ' . $dataKaryawan->npp_karyawan . '/' . $dataKaryawan->nama_karyawan . '-' . $dataKaryawan->level_jabatan;
 
-            Pdf::view('pdf.dokumen-table-semua', ['rekap' => $rekap])
-                ->orientation(Orientation::Portrait)
-                //    ->format(Format::A4)
-                ->margins(2, 2, 2, 2)
-                //    ->name($pdfName);
-                ->disk('public')
-                ->save('dokumen/' . $pdfName);
+            // Pdf::view('pdf.dokumen-table-semua', ['rekap' => $rekap])
+            //     ->orientation(Orientation::Portrait)
+            //     //    ->format(Format::A4)
+            //     ->margins(2, 2, 2, 2)
+            //     //    ->name($pdfName);
+            //     ->disk('public')
+            //     ->save('dokumen/' . $pdfName);
+            $html = view('pdf.dokumen-table-semua', ['rekap' => $rekap])->render();
+            Browsershot::html($html)
+                ->setOption('args', ['--disable-web-security'])
+                ->ignoreHttpsErrors()
+                ->noSandbox()
+                ->addChromiumArguments([
+                    'lang' => 'en-US,en;q=0.9',
+                    'hide-scrollbars',
+                    'enable-font-antialiasing',
+                    'force-device-scale-factor' => 1,
+                    'font-render-hinting'       => 'none',
+                    'user-data-dir'             => '/home/www-data/user-data',
+                    'disk-cache-dir'            => '/home/www-data/user-data/Default/Cache',
+                ])
+                ->setChromePath('/home/www-data/.cache/puppeteer/chrome/linux-129.0.6668.91/chrome-linux64/chrome')
+                ->newHeadless()
+                ->showBackground()
+                ->savePdf('storage/dokumen/' . $pdfName);
             $this->urlPdf = Storage::disk('public')->url('dokumen/' . $pdfName);
 
             return $this->dispatch('lihatPersonalDokumen');
