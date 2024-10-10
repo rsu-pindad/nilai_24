@@ -34,16 +34,20 @@ class RekapRespon extends Component
         $this->judulPdf = 'Penilai : ' . $dataRekap->identitas_penilai->nama_karyawan . ' - ' . 'Dinilai : ' . $dataRekap->identitas_dinilai->nama_karyawan;
 
         // if (config('app.env') != 'local') {
-            Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
-                ->withBrowsershot(function (Browsershot $browsershot) {
-                    $browsershot
-                        ->setChromePath('/usr/bin/chromium-browser')
-                        ->setCustomTempPath(storage_path());
-                })
-                ->orientation(Orientation::Portrait)
-                ->margins(2, 2, 2, 2)
-                ->disk('public')
-                ->save('dokumen/' . $pdfName);
+        Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot
+                    ->setNodeBinary('/usr/bin/node')
+                    ->setNpmBinary('/usr/bin/npm')
+                    ->setIncludePath('$PATH:/usr/bin')
+                    ->setChromePath('/usr/bin/chromium-browser')
+                    ->setNodeModulePath('/usr/lib/node_modules/')
+                    ->setCustomTempPath(storage_path());
+            })
+            ->orientation(Orientation::Portrait)
+            ->margins(2, 2, 2, 2)
+            ->disk('public')
+            ->save('dokumen/' . $pdfName);
         // } else {
         //     Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
         //         ->orientation(Orientation::Portrait)
