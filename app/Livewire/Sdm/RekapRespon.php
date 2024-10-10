@@ -44,9 +44,10 @@ class RekapRespon extends Component
                     ->setNodeModulePath('/usr/lib/node_modules/')
                     // ->setCustomTempPath(storage_path())
                     ->timeout(60000)  // Increase timeout to 60 seconds
-                    ->setOption('newHeadless', true);
+                    ->setOption('newHeadless', true)
+                    ->noSandbox();
             })
-            ->format(Format::A4)
+            // ->format(Format::A4)
             ->orientation(Orientation::Portrait)
             ->margins(2, 2, 2, 2)
             ->disk('public')
