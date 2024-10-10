@@ -33,14 +33,72 @@ class RekapRespon extends Component
         $pdfName        = $dataRekap->npp_penilai_dinilai . '.pdf';
         $this->judulPdf = 'Penilai : ' . $dataRekap->identitas_penilai->nama_karyawan . ' - ' . 'Dinilai : ' . $dataRekap->identitas_dinilai->nama_karyawan;
 
-
+        // if (config('app.env') != 'local') {
         Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot
+                ->setCustomTempPath('/tmp')
+                ->setChromePath('/usr/bin/chromium-browser')
+                ->newHeadless();
+                    // ->setNodeBinary('/usr/bin/node')
+                    // ->setNpmBinary('/usr/bin/npm')
+                    // ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/')
+                    // ->setChromePath('/usr/bin/chromium-browser')
+                    // ->addChromiumArguments(['--disable-web-security', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
+                    // ->waitUntilNetworkIdle()
+                    // ->emulateMedia('screen')
+                    // ->showBackground();
+                // ->addChromiumArguments([
+                //     'allow-running-insecure-content',                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kAllowRunningInsecureContent&ss=chromium
+                //     'autoplay-policy' => 'user-gesture-required',                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kAutoplayPolicy&ss=chromium
+                //     'disable-component-update',                                                        // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableComponentUpdate&ss=chromium
+                //     'disable-domain-reliability',                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableDomainReliability&ss=chromium
+                //     'disable-features' => 'AudioServiceOutOfProcess,IsolateOrigins,site-per-process',  // https://source.chromium.org/search?q=file:content_features.cc&ss=chromium
+                //     'disable-print-preview',                                                           // https://source.chromium.org/search?q=lang:cpp+symbol:kDisablePrintPreview&ss=chromium
+                //     'disable-setuid-sandbox',                                                          // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSetuidSandbox&ss=chromium
+                //     'disable-site-isolation-trials',                                                   // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSiteIsolation&ss=chromium
+                //     'disable-speech-api',                                                              // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSpeechAPI&ss=chromium
+                //     'disable-web-security',                                                            // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableWebSecurity&ss=chromium
+                //     'disk-cache-size' => 33554432,                                                     // https://source.chromium.org/search?q=lang:cpp+symbol:kDiskCacheSize&ss=chromium
+                //     'enable-features' => 'SharedArrayBuffer',                                          // https://source.chromium.org/search?q=file:content_features.cc&ss=chromium
+                //     'hide-scrollbars',                                                                 // https://source.chromium.org/search?q=lang:cpp+symbol:kHideScrollbars&ss=chromium
+                //     'ignore-gpu-blocklist',                                                            // https://source.chromium.org/search?q=lang:cpp+symbol:kIgnoreGpuBlocklist&ss=chromium
+                //     'in-process-gpu',                                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kInProcessGPU&ss=chromium
+                //     'mute-audio',                                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kMuteAudio&ss=chromium
+                //     'no-default-browser-check',                                                        // https://source.chromium.org/search?q=lang:cpp+symbol:kNoDefaultBrowserCheck&ss=chromium
+                //     'no-pings',                                                                        // https://source.chromium.org/search?q=lang:cpp+symbol:kNoPings&ss=chromium
+                //     'no-sandbox',                                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kNoSandbox&ss=chromium
+                //     'no-zygote',                                                                       // https://source.chromium.org/search?q=lang:cpp+symbol:kNoZygote&ss=chromium
+                //     'use-gl'      => 'swiftshader',                                                    // https://source.chromium.org/search?q=lang:cpp+symbol:kUseGl&ss=chromium
+                //     'window-size' => '1920,1080',                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kWindowSize&ss=chromium
+                //     'single-process',                                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kSingleProcess&ss=chromium
+                // ]);
+                // ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
+                // ->setChromePath('/usr/bin/chromium-browser')
+                // ->timeout(60000)
+                // ->noSandbox();
+                // ->setNodeBinary('/usr/bin/node')
+                // ->setNpmBinary('/usr/bin/npm')
+                // ->setIncludePath('$PATH:/usr/bin')
+                // ->setNodeModulePath('/usr/lib/node_modules/')
+                // ->setCustomTempPath(storage_path())
+                // ->setOption('newHeadless', true)
+            })
+            // ->format(Format::A4)
             ->orientation(Orientation::Portrait)
-            //    ->format(Format::A4)
             ->margins(2, 2, 2, 2)
-            //    ->name($pdfName);
             ->disk('public')
             ->save('dokumen/' . $pdfName);
+        // } else {
+        // Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+        //     ->orientation(Orientation::Portrait)
+        //     //    ->format(Format::A4)
+        //     ->margins(2, 2, 2, 2)
+        //     //    ->name($pdfName);
+        //     ->disk('public')
+        //     ->save('dokumen/' . $pdfName);
+        // }
+
         $this->urlPdf = Storage::disk('public')->url('dokumen/' . $pdfName);
     }
 
