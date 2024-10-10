@@ -46,6 +46,7 @@ class RekapRespon extends Component
                     ->timeout(60000)  // Increase timeout to 60 seconds
                     ->setOption('newHeadless', true);
             })
+            ->format(Format::A4)
             ->orientation(Orientation::Portrait)
             ->margins(2, 2, 2, 2)
             ->disk('public')
