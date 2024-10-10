@@ -37,10 +37,10 @@ class RekapRespon extends Component
         Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot
+                    ->setCustomTempPath('/tmp')
                     ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-131.0.6767.0/chrome-linux64/chrome')
                     ->noSandbox()
                     ->newHeadless();
-                // ->setCustomTempPath('/tmp')
                 // ->setChromePath('/usr/bin/chromium-browser')
                 // ->setNodeBinary('/usr/bin/node')
                 // ->setNpmBinary('/usr/bin/npm')
