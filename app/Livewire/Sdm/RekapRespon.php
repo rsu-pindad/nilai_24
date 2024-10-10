@@ -34,67 +34,67 @@ class RekapRespon extends Component
         $this->judulPdf = 'Penilai : ' . $dataRekap->identitas_penilai->nama_karyawan . ' - ' . 'Dinilai : ' . $dataRekap->identitas_dinilai->nama_karyawan;
 
         // if (config('app.env') != 'local') {
-        Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
-            ->withBrowsershot(function (Browsershot $browsershot) {
-                $browsershot
-                // ->setCustomTempPath('/tmp')
-                // ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-131.0.6767.0/chrome-linux64/chrome')
-                // ->noSandbox()
-                // ->newHeadless();
-                // ->setChromePath('/usr/bin/chromium-browser')
-                // ->setNodeBinary('/usr/bin/node')
-                // ->setNpmBinary('/usr/bin/npm')
-                // ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/')
-                // ->setChromePath('/usr/bin/chromium-browser')
-                // ->addChromiumArguments(['--disable-web-security', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
-                // ->waitUntilNetworkIdle()
-                // ->emulateMedia('screen')
-                // ->showBackground();
-                ->addChromiumArguments([
-                    'allow-running-insecure-content',                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kAllowRunningInsecureContent&ss=chromium
-                    'autoplay-policy' => 'user-gesture-required',                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kAutoplayPolicy&ss=chromium
-                    'disable-component-update',                                                        // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableComponentUpdate&ss=chromium
-                    'disable-domain-reliability',                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableDomainReliability&ss=chromium
-                    'disable-features' => 'AudioServiceOutOfProcess,IsolateOrigins,site-per-process',  // https://source.chromium.org/search?q=file:content_features.cc&ss=chromium
-                    'disable-print-preview',                                                           // https://source.chromium.org/search?q=lang:cpp+symbol:kDisablePrintPreview&ss=chromium
-                    'disable-setuid-sandbox',                                                          // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSetuidSandbox&ss=chromium
-                    'disable-site-isolation-trials',                                                   // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSiteIsolation&ss=chromium
-                    'disable-speech-api',                                                              // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSpeechAPI&ss=chromium
-                    'disable-web-security',                                                            // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableWebSecurity&ss=chromium
-                    'disk-cache-size' => 33554432,                                                     // https://source.chromium.org/search?q=lang:cpp+symbol:kDiskCacheSize&ss=chromium
-                    'enable-features' => 'SharedArrayBuffer',                                          // https://source.chromium.org/search?q=file:content_features.cc&ss=chromium
-                    'hide-scrollbars',                                                                 // https://source.chromium.org/search?q=lang:cpp+symbol:kHideScrollbars&ss=chromium
-                    'ignore-gpu-blocklist',                                                            // https://source.chromium.org/search?q=lang:cpp+symbol:kIgnoreGpuBlocklist&ss=chromium
-                    'in-process-gpu',                                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kInProcessGPU&ss=chromium
-                    'mute-audio',                                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kMuteAudio&ss=chromium
-                    'no-default-browser-check',                                                        // https://source.chromium.org/search?q=lang:cpp+symbol:kNoDefaultBrowserCheck&ss=chromium
-                    'no-pings',                                                                        // https://source.chromium.org/search?q=lang:cpp+symbol:kNoPings&ss=chromium
-                    'no-sandbox',                                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kNoSandbox&ss=chromium
-                    'no-zygote',                                                                       // https://source.chromium.org/search?q=lang:cpp+symbol:kNoZygote&ss=chromium
-                    'use-gl'      => 'swiftshader',                                                    // https://source.chromium.org/search?q=lang:cpp+symbol:kUseGl&ss=chromium
-                    'window-size' => '1920,1080',                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kWindowSize&ss=chromium
-                    'single-process',                                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kSingleProcess&ss=chromium
-                ]);
-                // $browsershot
-                    // ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
-                    // ->setChromePath('/usr/bin/chromium-browser')
-                    // ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-129.0.6668.100/chrome-linux64/chrome')
-                    // ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/');
-                    // ->timeout(60000)
-                    // ->noSandbox()
-                    // ->newHeadless();
-                    // ->setNodeBinary('/usr/bin/node')
-                    // ->setNpmBinary('/usr/bin/npm')
-                    // ->setIncludePath('$PATH:/usr/bin')
-                    // ->setNodeModulePath('/usr/lib/node_modules/')
-                // ->setCustomTempPath(storage_path())
-                // ->setOption('newHeadless', true)
-            })
-            // ->format(Format::A4)
-            ->orientation(Orientation::Portrait)
-            ->margins(2, 2, 2, 2)
-            ->disk('public')
-            ->save('dokumen/' . $pdfName);
+        // Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+        //     ->withBrowsershot(function (Browsershot $browsershot) {
+        //         $browsershot
+        //         // ->setCustomTempPath('/tmp')
+        //         // ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-131.0.6767.0/chrome-linux64/chrome')
+        //         // ->noSandbox()
+        //         // ->newHeadless();
+        //         // ->setChromePath('/usr/bin/chromium-browser')
+        //         // ->setNodeBinary('/usr/bin/node')
+        //         // ->setNpmBinary('/usr/bin/npm')
+        //         // ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/')
+        //         // ->setChromePath('/usr/bin/chromium-browser')
+        //         // ->addChromiumArguments(['--disable-web-security', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
+        //         // ->waitUntilNetworkIdle()
+        //         // ->emulateMedia('screen')
+        //         // ->showBackground();
+        //         ->addChromiumArguments([
+        //             'allow-running-insecure-content',                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kAllowRunningInsecureContent&ss=chromium
+        //             'autoplay-policy' => 'user-gesture-required',                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kAutoplayPolicy&ss=chromium
+        //             'disable-component-update',                                                        // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableComponentUpdate&ss=chromium
+        //             'disable-domain-reliability',                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableDomainReliability&ss=chromium
+        //             'disable-features' => 'AudioServiceOutOfProcess,IsolateOrigins,site-per-process',  // https://source.chromium.org/search?q=file:content_features.cc&ss=chromium
+        //             'disable-print-preview',                                                           // https://source.chromium.org/search?q=lang:cpp+symbol:kDisablePrintPreview&ss=chromium
+        //             'disable-setuid-sandbox',                                                          // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSetuidSandbox&ss=chromium
+        //             'disable-site-isolation-trials',                                                   // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSiteIsolation&ss=chromium
+        //             'disable-speech-api',                                                              // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSpeechAPI&ss=chromium
+        //             'disable-web-security',                                                            // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableWebSecurity&ss=chromium
+        //             'disk-cache-size' => 33554432,                                                     // https://source.chromium.org/search?q=lang:cpp+symbol:kDiskCacheSize&ss=chromium
+        //             'enable-features' => 'SharedArrayBuffer',                                          // https://source.chromium.org/search?q=file:content_features.cc&ss=chromium
+        //             'hide-scrollbars',                                                                 // https://source.chromium.org/search?q=lang:cpp+symbol:kHideScrollbars&ss=chromium
+        //             'ignore-gpu-blocklist',                                                            // https://source.chromium.org/search?q=lang:cpp+symbol:kIgnoreGpuBlocklist&ss=chromium
+        //             'in-process-gpu',                                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kInProcessGPU&ss=chromium
+        //             'mute-audio',                                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kMuteAudio&ss=chromium
+        //             'no-default-browser-check',                                                        // https://source.chromium.org/search?q=lang:cpp+symbol:kNoDefaultBrowserCheck&ss=chromium
+        //             'no-pings',                                                                        // https://source.chromium.org/search?q=lang:cpp+symbol:kNoPings&ss=chromium
+        //             'no-sandbox',                                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kNoSandbox&ss=chromium
+        //             'no-zygote',                                                                       // https://source.chromium.org/search?q=lang:cpp+symbol:kNoZygote&ss=chromium
+        //             'use-gl'      => 'swiftshader',                                                    // https://source.chromium.org/search?q=lang:cpp+symbol:kUseGl&ss=chromium
+        //             'window-size' => '1920,1080',                                                      // https://source.chromium.org/search?q=lang:cpp+symbol:kWindowSize&ss=chromium
+        //             'single-process',                                                                  // https://source.chromium.org/search?q=lang:cpp+symbol:kSingleProcess&ss=chromium
+        //         ]);
+        //         // $browsershot
+        //             // ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
+        //             // ->setChromePath('/usr/bin/chromium-browser')
+        //             // ->setChromePath('/var/www/.cache/puppeteer/chrome/linux-129.0.6668.100/chrome-linux64/chrome')
+        //             // ->setNodeModulePath('/var/www/penilaian.pmu.my.id/node_modules/');
+        //             // ->timeout(60000)
+        //             // ->noSandbox()
+        //             // ->newHeadless();
+        //             // ->setNodeBinary('/usr/bin/node')
+        //             // ->setNpmBinary('/usr/bin/npm')
+        //             // ->setIncludePath('$PATH:/usr/bin')
+        //             // ->setNodeModulePath('/usr/lib/node_modules/')
+        //         // ->setCustomTempPath(storage_path())
+        //         // ->setOption('newHeadless', true)
+        //     })
+        //     // ->format(Format::A4)
+        //     ->orientation(Orientation::Portrait)
+        //     ->margins(2, 2, 2, 2)
+        //     ->disk('public')
+        //     ->save('dokumen/' . $pdfName);
         // } else {
         // Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
         //     ->orientation(Orientation::Portrait)
@@ -105,6 +105,29 @@ class RekapRespon extends Component
         //     ->save('dokumen/' . $pdfName);
         // }
 
+        Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot
+                    ->setOption('args', ['--disable-web-security'])
+                    ->ignoreHttpsErrors()
+                    ->noSandbox()
+                    ->addChromiumArguments([
+                        'lang' => 'en-US,en;q=0.9',
+                        'hide-scrollbars',
+                        'enable-font-antialiasing',
+                        'force-device-scale-factor' => 1,
+                        'font-render-hinting'       => 'none',
+                        'user-data-dir'             => '/home/www-data/user-data',
+                        'disk-cache-dir'            => '/home/www-data/user-data/Default/Cache',
+                    ])
+                    ->setChromePath('/home/www-data/.cache/puppeteer/chrome/linux-129.0.6668.91/chrome-linux64/chrome')
+                    ->newHeadless()
+                    ->showBackground();
+            })
+            ->orientation(Orientation::Portrait)
+            ->margins(2, 2, 2, 2)
+            ->disk('public')
+            ->save('dokumen/' . $pdfName);
         $this->urlPdf = Storage::disk('public')->url('dokumen/' . $pdfName);
     }
 
