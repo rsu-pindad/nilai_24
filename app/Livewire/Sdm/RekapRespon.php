@@ -34,32 +34,32 @@ class RekapRespon extends Component
         $this->judulPdf = 'Penilai : ' . $dataRekap->identitas_penilai->nama_karyawan . ' - ' . 'Dinilai : ' . $dataRekap->identitas_dinilai->nama_karyawan;
 
         // if (config('app.env') != 'local') {
-        Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
-            ->withBrowsershot(function (Browsershot $browsershot) {
-                $browsershot
-                    ->setNodeBinary('/usr/bin/node')
-                    ->setNpmBinary('/usr/bin/npm')
-                    ->setIncludePath('$PATH:/usr/bin')
-                    ->setChromePath('/usr/bin/chromium-browser')
-                    ->setNodeModulePath('/usr/lib/node_modules/')
-                    // ->setCustomTempPath(storage_path())
-                    ->timeout(60000)  // Increase timeout to 60 seconds
-                    ->setOption('newHeadless', true)
-                    ->noSandbox();
-            })
-            // ->format(Format::A4)
-            ->orientation(Orientation::Portrait)
-            ->margins(2, 2, 2, 2)
-            ->disk('public')
-            ->save('dokumen/' . $pdfName);
+        // Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+        //     ->withBrowsershot(function (Browsershot $browsershot) {
+        //         $browsershot
+        //             ->setNodeBinary('/usr/bin/node')
+        //             ->setNpmBinary('/usr/bin/npm')
+        //             ->setIncludePath('$PATH:/usr/bin')
+        //             ->setChromePath('/usr/bin/chromium-browser')
+        //             ->setNodeModulePath('/usr/lib/node_modules/')
+        //             // ->setCustomTempPath(storage_path())
+        //             ->timeout(60000)  // Increase timeout to 60 seconds
+        //             ->setOption('newHeadless', true)
+        //             ->noSandbox();
+        //     })
+        //     // ->format(Format::A4)
+        //     ->orientation(Orientation::Portrait)
+        //     ->margins(2, 2, 2, 2)
+        //     ->disk('public')
+        //     ->save('dokumen/' . $pdfName);
         // } else {
-        //     Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
-        //         ->orientation(Orientation::Portrait)
-        //         //    ->format(Format::A4)
-        //         ->margins(2, 2, 2, 2)
-        //         //    ->name($pdfName);
-        //         ->disk('public')
-        //         ->save('dokumen/' . $pdfName);
+            Pdf::view('pdf.dokumen-table', ['dataRekap' => $dataRekap])
+                ->orientation(Orientation::Portrait)
+                //    ->format(Format::A4)
+                ->margins(2, 2, 2, 2)
+                //    ->name($pdfName);
+                ->disk('public')
+                ->save('dokumen/' . $pdfName);
         // }
 
         $this->urlPdf = Storage::disk('public')->url('dokumen/' . $pdfName);
